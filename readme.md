@@ -29,3 +29,5 @@ Credits to Kaelri, Gavatx, Flo, joshj132, x966123, kenz0, chrfb, JSMorley, gergu
 [gib]: http://taichou-henk.deviantart.com
 [var]: http://varelse42.deviantart.com
 [poi]: http://poiru.deviantart.com
+
+More info on our website: http://omnimo.info/
