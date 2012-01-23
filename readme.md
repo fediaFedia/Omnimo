@@ -1,6 +1,7 @@
 Omnimo UI for Rainmeter
 =======================
 
+
 What is Omnimo?
 ---------------
 
@@ -10,21 +11,21 @@ Bugs
 ----
 For any bug you may encounter [fill an issue][bug] on [GitHub][ghp]. Fork and send a [pull request][pul] if willing to fix a bug you found!
 
-	[bug]: https://github.com/fediaFedia/Omnimo/issues
-	[ghp]: https://github.com/fediaFedia/Omnimo/
-	[pul]: https://github.com/fediaFedia/Omnimo/pull/new/master
+[bug]: https://github.com/fediaFedia/Omnimo/issues
+[ghp]: https://github.com/fediaFedia/Omnimo/
+[pul]: https://github.com/fediaFedia/Omnimo/pull/new/master
 
 License
 -------
 Licensed under [Creative Commons Attribution-NonCommercial-NoDerivs 3.0 License][lic].
 
-	[lic]: http://creativecommons.org/licenses/by-nc-nd/3.0/
+[lic]: http://creativecommons.org/licenses/by-nc-nd/3.0/
 
 Thanks
 ------
 [Giblet][gib], [Varelse42][var] and [poiru][poi] for their contribution to the project.
 Credits to Kaelri, Gavatx, Flo, joshj132, x966123, kenz0, chrfb, JSMorley, gerguter, and translators!
 
-	[gib]: http://taichou-henk.deviantart.com
-	[var]: http://varelse42.deviantart.com
-	[poi]: http://poiru.deviantart.com
+[gib]: http://taichou-henk.deviantart.com
+[var]: http://varelse42.deviantart.com
+[poi]: http://poiru.deviantart.com
