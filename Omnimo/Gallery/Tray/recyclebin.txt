@@ -1,0 +1,9 @@
+[TrayMeasure]
+Measure=Plugin
+Plugin=Plugins\RecycleManager.dll
+UpdateDivider=10
+RecycleType=SIZE
+MaxValue=1073741825
+MinValue=1073741824
+TrayMeter=BITMAP
+TrayBitmap=WP7\Gallery\Tray\rm\recyclebin\%02i.ico

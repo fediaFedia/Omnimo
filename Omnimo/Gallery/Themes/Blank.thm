@@ -1,0 +1,36 @@
+[Rainmeter]
+DisableVersionCheck=0
+Logging=0
+TrayExecuteL=!execute ["#skinspath#\WP7\Common\OmnimoApp.exe" ToggleIcons][!RainmeterToggleFade *]
+TrayExecuteM=!execute [!RainmeterToggleConfig "WP7\Gallery" "gallery.ini"]
+
+
+[WP7]
+Active=1
+WindowX=(#workareawidth#-55)
+WindowY=15
+AlphaValue=255
+FadeDuration=250
+ClickThrough=0
+Draggable=1
+HideOnMouseOver=0
+SavePosition=1
+SnapEdges=0
+KeepOnScreen=1
+AutoSelectScreen=0
+AlwaysOnTop=0
+
+[WP7\Gallery]
+Active=1
+WindowX=(#ScreenAreaWidth#/2-327)
+WindowY=(#ScreenAreaHeight#/2-148)
+AlphaValue=255
+FadeDuration=250
+ClickThrough=0
+Draggable=1
+HideOnMouseOver=0
+SavePosition=1
+SnapEdges=0
+KeepOnScreen=1
+AutoSelectScreen=0
+AlwaysOnTop=0

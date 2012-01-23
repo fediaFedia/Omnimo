@@ -1,0 +1,2 @@
+[Variables]
+Icon=2

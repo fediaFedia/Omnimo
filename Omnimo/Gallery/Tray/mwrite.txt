@@ -1,0 +1,11 @@
+[TrayMeasure]
+Measure=Plugin
+Plugin=Plugins\Perfmon.dll
+PerfMonObject="LogicalDisk"
+PerfMonCounter="Disk Bytes/sec"
+PerfMonInstance="C:"
+PerfMonDifference=1
+MaxValue=1
+MinValue=0
+TrayMeter=BITMAP
+TrayBitmap=WP7\Gallery\Tray\rm\hdd_access\%02i.ico

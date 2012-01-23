@@ -1,0 +1,20 @@
+[Variables]
+Appname1=Photoshop
+Appname2=uTorrent
+Appname3=Miranda IM
+Appname4=Paint.net
+Appname5=Notepad
+Appname6=MS Word
+App1=Photoshop.exe
+App2=uTorrent.exe
+App3=Miranda.exe
+App4=Paintdotnet.exe
+App5=Notepad.exe
+App6=winword.exe
+Appicon1=photoshop.png
+Appicon2=utorrent.png
+Appicon3=miranda.png
+Appicon4=paintnet.png
+Appicon5=notepad.png
+Appicon6=word.png
+PanelTitle=My Apps

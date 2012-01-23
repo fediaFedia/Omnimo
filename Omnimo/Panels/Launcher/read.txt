@@ -1,0 +1,3 @@
+If you want to change the icon of your program and the icon isn't availble, then download the icon you want and put it to icons folder, in settings for the AppIcon set it to the name of your new icon.
+
+Credits to ~chrfb for the icons

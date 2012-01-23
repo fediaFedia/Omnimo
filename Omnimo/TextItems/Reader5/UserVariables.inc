@@ -1,0 +1,21 @@
+[Variables]
+RSS1=http://feeds.gawker.com/lifehacker/full
+RSS1Name=lifehacker
+RSS2=http://reddit.com/.rss
+RSS2Name=reddit
+RSS3=http://pheedo.msnbc.msn.com/id/3032091/device/rss
+RSS3Name=msnbc
+RSS4=http://rss.cnn.com/rss/edition.rss
+RSS4Name=cnn
+width=650
+FontSize=10
+height=450
+Update=10
+Title=rss
+Subtitle=feed headlines
+Hidebackground=1
+RSSMain=http://feeds.gawker.com/lifehacker/full
+RSS1Color=255
+RSS2Color=120
+RSS3Color=120
+RSS4Color=120

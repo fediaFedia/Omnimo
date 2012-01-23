@@ -1,0 +1,2 @@
+[Variables]
+UniversalIcon=folder.png

@@ -1,0 +1,9 @@
+[Variables]
+App1=mspaint.exe
+App2=notepad.exe
+App3=calc.exe
+App4=iexplore.exe
+Appicon1=paint.png
+Appicon2=notepad.png
+Appicon3=calculator.png
+Appicon4=iexplore.png

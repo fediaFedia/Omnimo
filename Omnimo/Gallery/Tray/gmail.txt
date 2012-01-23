@@ -1,0 +1,11 @@
+[TrayMeasure]
+Measure=Plugin
+Plugin=Plugins\WebParser.dll
+UpdateRate=900
+Url=https://USERNAME:PASSWORD@mail.google.com/mail/feed/atom
+RegExp="<fullcount>(.*)</fullcount>"
+StringIndex=1
+MaxValue=1
+MinValue=0
+TrayMeter=BITMAP
+TrayBitmap=WP7\Gallery\Tray\rm\gmail\%02i.ico

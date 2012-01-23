@@ -1,0 +1,10 @@
+[Variables]
+HideONshadow=1
+HideOFFshadow=1
+HideONcenter=0
+HideOFFcenter=1
+HideONrounded=0
+HideOFFrounded=0
+rounded=0
+center=0
+newhidden=0

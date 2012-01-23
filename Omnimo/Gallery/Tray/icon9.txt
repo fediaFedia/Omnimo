@@ -1,0 +1,4 @@
+[TrayMeasure] 
+Measure=CALC 
+TrayMeter=BITMAP 
+TrayBitmap="WP7\Gallery\Tray\icons\omnimo2.ico"

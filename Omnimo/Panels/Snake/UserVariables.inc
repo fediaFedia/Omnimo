@@ -1,0 +1,2 @@
+[Variables]
+Difficulty=Normal

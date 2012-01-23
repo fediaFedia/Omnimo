@@ -1,0 +1,1 @@
+WScript.CreateObject("WScript.Shell").Run("cmd.exe /c shutdown.cmd", 0)

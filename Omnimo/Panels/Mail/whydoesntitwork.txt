@@ -1,0 +1,22 @@
+If Mail does not work:
+
+- WebParser might not be able to connect to Internet. Check if other skins that require internet connection work. If they don't, add Rainmeter to the exception list on your firewall and check your proxy settings in Internet Explorer (Tools -> Internet Options).
+- Make sure you entered the username and password correctly
+- Make sure you entered the username without the @gmail.com part
+- Change your password to not contain any special characters, such as # $ % & *
+- Restart Rainmeter
+- Move out of Germany
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Workaround for custom domain names:
+
+If you're using a custom domain name tied to your google account, something like michael@domain.com you can try this:
+
+Instead of entering the google account name, enter the complete address, but replace the @ with %40
+
+So you need to enter something like michael%40domain.com into the field.
+This is not guaranteed to work, though.
+
+Thanks to Christian for finding this

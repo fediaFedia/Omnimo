@@ -1,0 +1,23 @@
+0. Download and install µTorrent
+1. Open µTorrent and go to Options -> Preferences -> Web UI.
+2. Check Enable Web UI and enter your preferred username and password
+3. Check Alternative listening port and make sure it's 8080
+4. Go to Options -> Preferences -> Advanced and change webui.token_auth to false
+5. Click OK
+6. Hover the µTorrent panel and click the settings icon in the top right corner to open settings
+7. Enter your µTorrent path (eg. C:\Program Files (x86)\uTorrent\utorrent.exe)
+8. Enter the username you just set in µTorrent and press Set
+9. Enter the password you just set in µTorrent and press Set
+10. Close the config tool
+
+Enjoy :-)
+
+If µTorrent does not work:
+
+- WebParser might be affected by a proxy. Check your proxy settings in Internet Explorer (Tools -> Internet Options).
+- Make sure you're running µTorrent 2.2 or newer
+- Change your password to not contain any special characters, such as # $ % & *
+- Check if you followed the instructions correctly (set alternative listening port to 8080 etc.)
+- Make sure you entered the username and password correctly
+- Make sure all your torrents aren't set to Forced [F]
+- Restart Rainmeter

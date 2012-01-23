@@ -1,0 +1,2 @@
+[Variables]
+SysInfoData=0

@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Custom TrayMeter Pack #2</title>
+<style type="text/css">
+<!--
+html {
+	border-left: 80px solid #333;
+}
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12pt;
+	color: #777;
+	background-color: #EEE;
+	width: 600px;
+	padding: 40px;
+	margin: 0;
+	border-left: 4px solid #888;
+}
+a:link {
+	color: #555;
+}
+h1 {
+	font-size: 200%;
+}
+h2 {
+	font-size: 120%;
+}
+h4 {
+	background-color: #333;
+	color: #EEE;
+	padding: 0.5em 1em;
+	margin-left: -44px;
+}
+img {
+	border: 1px solid #777;
+}
+.code {
+	border: 1px solid #666666;
+	padding: 1em;
+	background-color: #FFFFFF;
+	font-family: "Courier New", Courier, monospace;
+	overflow: auto;
+}
+hr {
+	color: #EEEEEE;
+	border-top-width: 3px;
+	border-top-style: dashed;
+	border-top-color: #999999;
+	margin: 4em 0;
+}
+-->
+</style>
+</head>
+<body>
+<h1 align="center">Custom TrayMeter Pack #2</h1>
+<h3 align="center">TrayMeasure Configs & Images</h3>
+<div align="center"><img src="CustomTrayMeterPack2.png" /></div>
+<p><strong>TrayMeter</strong> is special Meter of Rainmeter that can show the value of various Measures as a tray icon. You can utilize as useful notification tool or tiny meter.</p>
+<p>&nbsp;</p>
+<h2>Usage :</h2>
+<ol>
+<li>Unzip, and then install to <strong>Skins</strong> folder.</li>
+<li>Close Rainmeter.exe temporarily.</li>
+<li>Open <strong>Rainmeter.ini</strong> with the text editor, Choose the following one config and add the config. (The added place is not cared about anywhere if it is not each configs inside.)</li>
+<li>Save file and then restart Rainmeter.exe</li>
+</ol>
+<h2>Notice :</h2>
+<ul>
+<li>The applied TrayMeter is <u>only one</u>.</li>
+<li>Replace it if other <strong>[TrayMeasure]</strong> section already exists.</li>
+<li>Delete the added config to return it.</li>
+<li>Windows2000 does not support a 32-bit tray icon. (so it is not displayed finely.)</li>
+</ul>
+<p>&nbsp;</p>
+<h2>Config List :</h2>
+<!--######################################################-->
+<h4>Calendar</h4>
+<p><strong>Feature :</strong> Displays dates</p>
+<p><strong>Config :</strong></p>
+<pre class="code">
+[TrayMeasure]
+Measure=TIME
+Format=%d
+MaxValue=31
+MinValue=1
+TrayMeter=BITMAP
+TrayBitmap=CustomTrayMeterPack2\date\date.png
+</pre>
+<p>&nbsp;</p>
+<!--######################################################-->
+<h4>Disk used</h4>
+<p><strong>Feature :</strong> Displays disk status with a pie chart.</p>
+<p><strong>Config :</strong></p>
+<pre class="code">
+[TrayMeasure]
+Measure=FreeDiskSpace
+Drive="C:\"
+InvertMeasure=1
+TrayMeter=BITMAP
+TrayBitmap=CustomTrayMeterPack2\disk\%02i.ico
+</pre>
+<p><strong>Notes :</strong></p>
+<ul>
+<li>You can choose a drive by <u>Drive</u>.</li>
+</ul>
+<p>&nbsp;</p>
+<!--######################################################-->
+<h4>Net In/Out</h4>
+<p><strong>Feature :</strong> Displays net access status. </p>
+<p><strong>Config :</strong></p>
+<pre class="code">
+[TrayMeasure]
+Measure=NetTotal
+MaxValue=1
+MinValue=0
+TrayMeter=BITMAP
+TrayBitmap=CustomTrayMeterPack2\net\%02i.ico
+</pre>
+<p>&nbsp;</p>
+<!--######################################################-->
+<h4>Gmail notifier</h4>
+<p><strong>Feature :</strong> Gmail notifier</p>
+<p><strong>Config :</strong></p>
+<pre class="code">
+[TrayMeasure]
+Measure=Plugin
+Plugin=Plugins\WebParser.dll
+UpdateRate=900
+Url=https://USERNAME:PASSWORD@mail.google.com/mail/feed/atom
+RegExp="&lt;fullcount&gt;(.*)&lt;/fullcount&gt;"
+StringIndex=1
+MaxValue=1
+MinValue=0
+TrayMeter=BITMAP
+TrayBitmap=CustomTrayMeterPack2\gmail\%02i.ico
+</pre>
+<p><strong>Notes :</strong></p>
+<ul>
+<li>Define the <u>Url</u>. (Don't include "@gmail.com" in USERNAME.)</li>
+</ul>
+<p>&nbsp;</p>
+<!--######################################################-->
+<h4>Weather conditions</h4>
+<p><strong>Feature :</strong> Displays current weather condition from AccuWeather.com</p>
+<p><strong>Config :</strong></p>
+<pre class="code">
+[TrayMeasure]
+Measure=Plugin
+Plugin=Plugins\WebParser.dll
+UpdateRate=1800
+Url=http://rss.accuweather.com/rss/liveweather_rss.asp?metric=0&locCode=ASI|JP|JA041|TOKYO
+RegExp="icons/(\d\d)_31x31\.gif"
+StringIndex=1
+ErrorString=45
+MaxValue=45
+MinValue=1
+TrayMeter=BITMAP
+TrayBitmap=CustomTrayMeterPack2\accuweather\%02i.ico
+</pre>
+<p><strong>Notes :</strong></p>
+<ul>
+<li>Setup feed of your location in <u>Url</u>.<br />
+Your location feed can be found on the following pages.<br />
+<a href="http://www.accuweather.com/rss-center.asp">http://www.accuweather.com/rss-center.asp</a>
+</li>
+</ul>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h2>Credits:</h2>
+<p>Icon resources from <a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango Icon Theme</a>, <a href="http://www.stardock.com/">Stardock</a></p>
+
+<p>&nbsp;</p>
+<h2>Author:</h2>
+<p><strong><i>kenz0</i></strong></p>
+<ul>
+<li>WEB: <a href="http://kenz0.s201.xrea.com/portfolio/skinlist/rainmeter_skins.html">http://kenz0.s201.xrea.com/...</a></li>
+<li>E-Mail: <a href="mailto:mail2kenz0@gmail.com">mail2kenz0@gmail.com</a></li>
+</ul>
+</body>
+</html>

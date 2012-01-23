@@ -1,0 +1,13 @@
+[Variables]
+iconsize=100
+width=450
+FontSize=12
+height=450
+Update=600
+Hidebackground=1
+aero=1
+RssMain=#rss2#
+Rss1Color=120
+Rss2Color=255
+Rss3Color=120
+Rss4Color=120

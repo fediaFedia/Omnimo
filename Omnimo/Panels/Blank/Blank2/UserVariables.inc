@@ -1,0 +1,2 @@
+[Variables]
+Title=Blank0

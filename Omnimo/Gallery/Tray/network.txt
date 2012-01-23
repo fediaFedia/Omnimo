@@ -1,0 +1,6 @@
+[TrayMeasure]
+Measure=NetTotal
+MaxValue=1
+MinValue=0
+TrayMeter=BITMAP
+TrayBitmap=WP7\Gallery\Tray\rm\net\%02i.ico

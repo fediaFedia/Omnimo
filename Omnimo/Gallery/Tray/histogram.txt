@@ -1,0 +1,5 @@
+[TrayMeasure]
+Measure=CPU
+TrayMeter=HISTOGRAM 
+TrayColor1=40,40,40 
+TrayColor2=27,160,225
