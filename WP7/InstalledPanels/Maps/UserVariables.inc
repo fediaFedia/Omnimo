@@ -1,0 +1,2 @@
+[Variables]
+StartLocation=Logstor, Denmark

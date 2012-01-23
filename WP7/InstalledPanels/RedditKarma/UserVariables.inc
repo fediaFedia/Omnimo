@@ -1,0 +1,2 @@
+[Variables]
+username=Xyrfo

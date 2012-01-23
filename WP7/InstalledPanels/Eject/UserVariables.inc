@@ -1,0 +1,2 @@
+[Variables]
+DiskDrive=D
