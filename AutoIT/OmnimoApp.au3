@@ -18,7 +18,7 @@
 ; Hide Tray Icon
 Opt("TrayIconHide", 1)
 
-; �Torrent
+; µTorrent
 ; Command line arguments:
 ; [2]: username
 ; [3]: password
@@ -328,7 +328,7 @@ ElseIf $CmdLine[1] == 'PanelCombos' Then
 	$Checkbox10 = GUICtrlCreateCheckbox("Gmail", 8, 224, 57, 17)
 	$Checkbox11 = GUICtrlCreateCheckbox("Deviantart", 105, 8, 89, 17)
 	$Checkbox12 = GUICtrlCreateCheckbox("System info", 105, 32, 89, 17)
-	$Checkbox13 = GUICtrlCreateCheckbox("�Torrent", 105, 56, 89, 17)
+	$Checkbox13 = GUICtrlCreateCheckbox("µTorrent", 105, 56, 89, 17)
 	$Checkbox14 = GUICtrlCreateCheckbox("Weather", 105, 80, 89, 17)
 	$Checkbox15 = GUICtrlCreateCheckbox("Movies", 105, 104, 65, 17)
 	$Checkbox16 = GUICtrlCreateCheckbox("NowPlaying", 105, 128, 89, 17)
