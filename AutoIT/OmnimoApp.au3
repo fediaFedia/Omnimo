@@ -127,18 +127,26 @@ ElseIf $CmdLine[1] == 'Clipboard' Then
 ElseIf $CmdLine[1] == 'ToggleIcons' Then
     $hParent = WinGetHandle("Program Manager")
     $hListView = ControlGetHandle($hParent, "", "SysListView321")
+
+    ; State == 7 => desktop icons are shown
+    ; State == 5 => desktop icons are hidden
     $state = WinGetState($hListView)
-    ; If state is 7 then desktop icons are shown
-    If $state == '7' Then
-        WinSetState($hListView, '', @SW_HIDE)
-    ; If state is 5 then desktop icons are hidden
-    ElseIf $state == '5' Then
+
+    If $CmdLine[2] == 'Show' Then
         WinSetState($hListView, '', @SW_SHOW)
+    ElseIf $CmdLine[2] == 'Hide' Then
+        WinSetState($hListView, '', @SW_HIDE)
+    Else
+        If $state == '7' Then
+            WinSetState($hListView, '', @SW_HIDE)
+        ElseIf $state == '5' Then
+            WinSetState($hListView, '', @SW_SHOW)
+        EndIf
     EndIf
     
     ; HACK!!! The numbers aren't always 5 and 7 on some systems so this might be buggy
-
     
+
 ; Set variable in color.inc
 ; Command line arguments:
 ; [2] Variable
