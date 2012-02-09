@@ -28,16 +28,18 @@ To exit most of the overlay applets like maps, simply click anywhere outside of 
 Enable Fahrenheit 5 day forecast by selecting it from the weather variants
 Are you a graphics designer? Check out the Kuler panel
 Keep rainmeter up to date for better stability
-Omnimo updates are announced on deviantart, google "omnimo" to find the main page
+Omnimo updates are announced on fediafedia.deviantart.com or Omnimo.info
 Re-enable the + button: rightclick the rainmeter tray icon, then Configs\WP7\galleryplus
 Conserve performance by using less realtime panels
 There are a lot of panels not shown in the gallery, use the context menus to access them.
 You can select different themes from the themes gallery
 You can ad your own themes to the 2 free slots in the themes gallery
 If you need a resolution optimized theme, use the resolution themes switcher
-Interesting fact: Omnimo 3 has well over 350 configs, much more than in any other suite
 If your panel doesn't snap very well, hold Shift and drag it for a perfect position
 You can enable blur behind panels on Windows Vista or 7
 You can open TextItems gallery from the T icon that appears near the arrow
 If some panels don't show information - try refreshing them
-You can customize the PanelCombos toggler
+You can customize the PanelCombos toggler with different functions
+You can change the language of Omnimo by going to WP7\Common\Variables\Languages and doubleclicking a shortcut
+Omnimo may or may not have been an inspiration for the actual Windows 8 UI
+Omnimo is Open Source and on github! https://github.com/fediaFedia/Omnimo/
