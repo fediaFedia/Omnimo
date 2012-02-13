@@ -1,2 +1,2 @@
 [Variables]
-Player=Winamp
+Player=WMP
