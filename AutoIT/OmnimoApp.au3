@@ -1,10 +1,10 @@
-#region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_outfile=..\WP7\Common\OmnimoApp.exe
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Fileversion=1.0.0.0
 #AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2011
-#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <WinAPI.au3>
 #include <GDIPlus.au3>
@@ -18,7 +18,7 @@
 ; Hide Tray Icon
 Opt("TrayIconHide", 1)
 
-; ÂµTorrent
+; µTorrent
 ; Command line arguments:
 ; [2]: username
 ; [3]: password
@@ -27,7 +27,7 @@ Opt("TrayIconHide", 1)
 If $CmdLine[1] == 'uTorrent' Then
     InetRead('http://' & $CmdLine[2] & ':' & $CmdLine[3] & '@127.0.0.1:8080/gui/?action=' & $CmdLine[4] & '&hash=' & $CmdLine[5], 1 + 16)
 
-    
+
 ; Power Plan
 ; Command line arguments:
 ; [2] Power mode
@@ -40,7 +40,7 @@ ElseIf $CmdLine[1] == 'PowerPlan' Then
         Run('powercfg /setactive a1841308-3541-4fab-bc81-f71556f20b4a ', "", @SW_HIDE)
     EndIf
 
-    
+
 ; Set display brightness
 ; http://www.autoitscript.com/forum/topic/127668-tinybrightnesscontroler-v-1002/
 ; Command line arguments:
@@ -54,7 +54,7 @@ ElseIf $CmdLine[1] == 'SetBrightness' Then
     ; Second argument is 100 to set the display brightness only for battery power
     _SetDisplayBrightness($CmdLine[2], 100)
 
-    
+
 ; Change skin
 ; Command line arguments:
 ; [2] Skin
@@ -64,7 +64,7 @@ ElseIf $CmdLine[1] == 'Skin' Then
     FileCopy($CmdLine[3] & '\WP7\Common\Color\' & $CmdLine[2] & '.inc', $CmdLine[3] & '\WP7\Common\Color\color.inc', 1)
     ShellExecute($CmdLine[4] & "Rainmeter.exe", "!RainmeterRefresh *")
 
-    
+
 ; Change language
 ; Command line arguments:
 ; [2] Language
@@ -72,14 +72,14 @@ ElseIf $CmdLine[1] == 'Skin' Then
 ElseIf $CmdLine[1] == 'Lang' Then
     FileCopy($CmdLine[3] & '\WP7\Common\Variables\Languages\' & $CmdLine[2] & '.inc', $CmdLine[3] & '\WP7\Common\Variables\Languages\lang.inc', 1)
 
-    
+
 ; Change wallpaper
 ; Command line arguments:
 ; [2] Wallpaper
 ElseIf $CmdLine[1] == 'Wall' Then
     _SetWallpaper($CmdLine[2])
 
-    
+
 ; Change tray icon
 ; Command line arguments:
 ; [2] Tray icon
@@ -100,7 +100,7 @@ ElseIf $CmdLine[1] == 'Tray' Then
     ProcessWaitClose("Rainmeter.exe")
     ShellExecute($CmdLine[3] & "Rainmeter.exe")
 
-    
+
 ; Change theme
 ; Command line arguments:
 ; [2] Theme
@@ -115,14 +115,14 @@ ElseIf $CmdLine[1] == 'Themes' Then
     FileCopy($CmdLine[5] & '\WP7\Gallery\Themes\' & $CmdLine[2] & '.thm', $CmdLine[4] & '\Rainmeter.ini', 1)
     ShellExecute($CmdLine[3] & "Rainmeter.exe")
 
-    
+
 ; Put stuff to clipboard
 ; Command line arguments:
 ; [2] Text
 ElseIf $CmdLine[1] == 'Clipboard' Then
     ClipPut($CmdLine[2])
 
-    
+
 ; Toggle desktop icons
 ElseIf $CmdLine[1] == 'ToggleIcons' Then
     $hParent = WinGetHandle("Program Manager")
@@ -143,9 +143,9 @@ ElseIf $CmdLine[1] == 'ToggleIcons' Then
             WinSetState($hListView, '', @SW_SHOW)
         EndIf
     EndIf
-    
+
     ; HACK!!! The numbers aren't always 5 and 7 on some systems so this might be buggy
-    
+
 
 ; Set variable in color.inc
 ; Command line arguments:
@@ -162,7 +162,7 @@ ElseIf $CmdLine[1] == 'SetColor' Then
     IniWrite($CmdLine[4] & '\WP7\Common\Color\Color.inc', 'Variables', $CmdLine[2], $Red & ',' & $Green & ',' & $Blue)
     ShellExecute($CmdLine[5] & "Rainmeter.exe", "!RainmeterRefresh *")
 
-    
+
 ; VLC radio
 ; Command line arguments:
 ; [2] VLC path
@@ -170,10 +170,12 @@ ElseIf $CmdLine[1] == 'SetColor' Then
 ElseIf $CmdLine[1] == 'Radio' Then
     ; Restart VLC with the new channel
     ProcessClose("vlc.exe")
-    ProcessWaitClose("vlc.exe")
-    ShellExecute($CmdLine[2], '-I=dummy ' & '"' & $CmdLine[3] & '"')
+	ProcessWaitClose("vlc.exe")
+	If $CmdLine[2] <> 'Kill' Then
+		ShellExecute($CmdLine[2], '-I=dummy ' & '"' & $CmdLine[3] & '"')
+	EndIf
 
-    
+
 ; Power buttons
 ; Command line arguments:
 ; [2] Command
@@ -207,7 +209,7 @@ ElseIf $CmdLine[1] == 'Power' Then
         Run('rundll32.exe PowrProf.dll,SetSuspendState', "", @SW_HIDE)
     EndIf
 
-    
+
 ; Windows Update
 ; Command line arguments:
 ; [2] Program path
@@ -222,18 +224,18 @@ ElseIf $CmdLine[1] == 'Update' Then
         $line = FileReadLine($file, -2)
     EndIf
     FileClose($file)
-    
+
     ; Refresh panel
     ShellExecute($CmdLine[2] & "\Rainmeter.exe", "!RainmeterSetVariable Updates " & $line & " WP7\InstalledPanels\WindowsUpdate")
     ShellExecute($CmdLine[2] & "\Rainmeter.exe", "!RainmeterUpdate WP7\InstalledPanels\WindowsUpdate")
 
-    
+
 ; Take a screenshot
 ; Command line arguments:
 ; [2] Skins path
 ElseIf $CmdLine[1] == 'Screenshot' Then
     $config = $CmdLine[2] & '\WP7\Panels\Camera\UserVariables.inc'
-    
+
     ; Read variables
     $Delay = IniRead($config, 'Variables', 'Delay', '0')
     $CaptureCursor = IniRead($config, 'Variables', 'CaptureCursor', 'False')
@@ -242,7 +244,7 @@ ElseIf $CmdLine[1] == 'Screenshot' Then
     $SaveTo = IniRead($config, 'Variables', 'SaveTo', @UserProfileDir & '\Pictures')
     $SaveTo = StringReplace($SaveTo, '%USERPROFILE%', @UserProfileDir)
     Sleep(Int($Delay) * 1000)
-    
+
     If $CaptureCursor == 'False' Then
         _ScreenCapture_Capture($SaveTo & '\' & @MDAY & '-' & @MON & '-' & @YEAR & '_' & @HOUR & '-' & @MIN & '.' & $FileFormat, Default, Default, @DesktopWidth, @DesktopHeight, False)
     Else
@@ -252,7 +254,7 @@ ElseIf $CmdLine[1] == 'Screenshot' Then
         ShellExecute($SaveTo & '\' & @MDAY & '-' & @MON & '-' & @YEAR & '_' & @HOUR & '-' & @MIN & '.' & $FileFormat)
     EndIf
 
-    
+
 ; File / Folder selector
 ; Command line arguments:
 ; [2] Image / Folder / App
@@ -287,7 +289,7 @@ ElseIf $CmdLine[1] == 'Select' Then
         If @error Then ; Something awful just happened
             Exit
         EndIf
-        
+
         ; Get file extension, amazingly bullet-proof method
         $ext = StringRight($file, 3)
         If $ext = 'exe' Then
@@ -302,19 +304,19 @@ ElseIf $CmdLine[1] == 'Select' Then
         EndIf
         IniWrite($CmdLine[7] & "\UserVariables.inc", "Variables", $CmdLine[3], $path)
         IniWrite($CmdLine[7] & "\UserVariables.inc", "Variables", $CmdLine[4], $info)
-        
+
         ; Open an icon select dialog
         $icon = FileOpenDialog("Choose an icon", $CmdLine[6] & '\WP7\Panels\Launcher\Icons', "Images (*.png;*.jpg;*.jpeg;*.bmp)", 1)
-        
+
         If @error Then ; Something awful just happened
             Exit
         EndIf
-        
+
         IniWrite($CmdLine[7] & "\UserVariables.inc", "Variables", $CmdLine[5], $icon)
         ShellExecute($CmdLine[9] & "Rainmeter.exe", "!RainmeterRefresh " & $CmdLine[8])
     EndIf
 
-    
+
 ; Panel Combos config tool
 ; Command line arguments:
 ; [2] Skins path
@@ -336,7 +338,7 @@ ElseIf $CmdLine[1] == 'PanelCombos' Then
     $Checkbox10 = GUICtrlCreateCheckbox("Gmail", 8, 224, 57, 17)
     $Checkbox11 = GUICtrlCreateCheckbox("Deviantart", 105, 8, 89, 17)
     $Checkbox12 = GUICtrlCreateCheckbox("System info", 105, 32, 89, 17)
-    $Checkbox13 = GUICtrlCreateCheckbox("ÂµTorrent", 105, 56, 89, 17)
+    $Checkbox13 = GUICtrlCreateCheckbox("µTorrent", 105, 56, 89, 17)
     $Checkbox14 = GUICtrlCreateCheckbox("Weather", 105, 80, 89, 17)
     $Checkbox15 = GUICtrlCreateCheckbox("Movies", 105, 104, 65, 17)
     $Checkbox16 = GUICtrlCreateCheckbox("NowPlaying", 105, 128, 89, 17)
