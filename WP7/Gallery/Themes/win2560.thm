@@ -369,7 +369,7 @@ SnapEdges=1
 KeepOnScreen=1
 AutoSelectScreen=0
 AlwaysOnTop=0
-[WP7\Panels\RecycleBin]
+[WP7\Panels\MediaControl]
 Active=1
 WindowX=1390
 WindowY=272
