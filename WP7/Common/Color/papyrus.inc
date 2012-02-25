@@ -1,6 +1,5 @@
 ;BEWARE! Editing this file manually can unlock quite a few skinning features, but it can also break. EVERYTHING.
 
-
 [Variables]
 Padding=0
 Imagedir=#skinspath#\WP7\Common\Panel\Papyrus

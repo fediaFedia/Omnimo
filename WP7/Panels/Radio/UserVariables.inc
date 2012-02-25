@@ -17,6 +17,5 @@ Station7Title="181 - Classic Rock"
 Station8Link=RadioParadise.pls
 Station8Title="Paradise Radio"
 
-
 ;change pathtoVLC to your path if it doesnt work
 ;click the help button for more info on this

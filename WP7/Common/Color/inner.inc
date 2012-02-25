@@ -1,6 +1,5 @@
 ;BEWARE! Editing this file manually can unlock quite a few skinning features, but it can also break. EVERYTHING.
 
-
 [Variables]
 DefaultFontSize=(#height#/12-1)
 yposition=1.2
@@ -42,8 +41,6 @@ FontFaceUI=Segoe UI
 FontFaceLight=Segoe UI Light
 loadingbg=0,0,0,192
 hideloadingtext=0
-
-
 
 ;defaults:
 ;FontType=Segoe WP Semibold
