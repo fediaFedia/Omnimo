@@ -12,7 +12,10 @@ echo Building AutoIT extensions...
 FOR /R "." %%G IN (*.au3) DO "%autwrapperdir%\AutoIt3Wrapper.exe" /in %%G /%upx%
 
 :: For ricers: uncomment the following line and comment the above to build for X64
-:: FOR /R ".\AutoIT" %%G IN (*.au3) DO "%autwrapperdir%\AutoIt3Wrapper.exe" /in %%G /%upx% /x64
+:: FOR /R "." %%G IN (*.au3) DO "%autwrapperdir%\AutoIt3Wrapper.exe" /in %%G /%upx% /x64
+
+:: Delete unnecessary exe
+del ColorChooser.exe
 
 echo All done!
 exit
