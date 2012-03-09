@@ -10,3 +10,4 @@ Action4=shell:games
 Name5=Log off
 Action5=#currentpath#\logoff.lnk
 FontFace=Segoe WP Light
+Iconvisibility=180

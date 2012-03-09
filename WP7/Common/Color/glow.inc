@@ -1,6 +1,8 @@
 ;BEWARE! Editing this file manually can unlock quite a few skinning features, but it can also break. EVERYTHING.
 
+
 [Variables]
+arrowcolor=255,255,255
 DefaultFontSize=(#height#/12-1)
 yposition=1.2
 globalblurenable=0
@@ -35,6 +37,10 @@ ItemShadowOffsetX=+1
 TextItemShadow=1
 TextItemShadowColor=0,0,0
 bevel=0
+rotationangle=0
+rotationangle1=0
+rotationangle2=0
+textangle=0
 FontType=Segoe WP Semibold
 FontTypeWP=Segoe WP
 FontFaceUI=Segoe UI

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This document is intended only for use by authorized licensees of The  -->
+<!-- Weather Channel. Unauthorized use is prohibited.  Copyright 1995-2010, -->
+<!-- The Weather Channel Interactive, Inc.  All Rights Reserved.            -->
+<weather ver="2.0">
+  <head>
+    <locale>en_US</locale>
+    <form>MEDIUM</form>
+    <ut>F</ut>
+    <ud>mi</ud>
+    <us>mph</us>
+    <up>in</up>
+    <ur>in</ur>
+  </head>
+  <loc id="LHXX0002">
+    <dnam>Kaunas, Lithuania</dnam>
+    <tm>3:29 PM</tm>
+    <lat>54.90</lat>
+    <lon>23.91</lon>
+    <sunr>5:20 AM</sunr>
+    <suns>9:23 PM</suns>
+    <zone>3</zone>
+  </loc>
+  <cc>
+    <lsup>5/14/10 3:20 PM Local Time</lsup>
+    <obst>Kaunas, LITHUANIA</obst>
+    <tmp>70</tmp>
+    <flik>70</flik>
+    <t>Thunder in the Vicinity</t>
+    <icon>38</icon>
+    <bar>
+      <r>29.68</r>
+      <d>steady</d>
+    </bar>
+    <wind>
+      <s>14</s>
+      <gust>N/A</gust>
+      <d>80</d>
+      <t>E</t>
+    </wind>
+    <hmid>60</hmid>
+    <vis>6.2</vis>
+    <uv>
+      <i>2</i>
+      <t>Low</t>
+    </uv>
+    <dewp>55</dewp>
+    <moon>
+      <icon>0</icon>
+      <t>New</t>
+    </moon>
+  </cc>
+  <dayf>
+    <lsup>5/14/10 2:21 PM Local Time</lsup>
+    <day d="0" t="Friday" dt="May 14">
+      <hi>N/A</hi>
+      <low>57</low>
+      <sunr>5:20 AM</sunr>
+      <suns>9:23 PM</suns>
+      <part p="d">
+        <icon>44</icon>
+        <t>N/A</t>
+        <wind>
+          <s>N/A</s>
+          <gust>N/A</gust>
+          <d>N/A</d>
+          <t>N/A</t>
+        </wind>
+        <bt>N/A</bt>
+        <ppcp>80</ppcp>
+        <hmid>N/A</hmid>
+      </part>
+      <part p="n">
+        <icon>4</icon>
+        <t>T-Storms</t>
+        <wind>
+          <s>8</s>
+          <gust>N/A</gust>
+          <d>123</d>
+          <t>ESE</t>
+        </wind>
+        <bt>T-Storms</bt>
+        <ppcp>80</ppcp>
+        <hmid>87</hmid>
+      </part>
+    </day>
+    <day d="1" t="Saturday" dt="May 15">
+      <hi>67</hi>
+      <low>53</low>
+      <sunr>5:18 AM</sunr>
+      <suns>9:25 PM</suns>
+      <part p="d">
+        <icon>11</icon>
+        <t>Showers</t>
+        <wind>
+          <s>8</s>
+          <gust>N/A</gust>
+          <d>177</d>
+          <t>S</t>
+        </wind>
+        <bt>Showers</bt>
+        <ppcp>60</ppcp>
+        <hmid>84</hmid>
+      </part>
+      <part p="n">
+        <icon>45</icon>
+        <t>Showers Early</t>
+        <wind>
+          <s>4</s>
+          <gust>N/A</gust>
+          <d>124</d>
+          <t>SE</t>
+        </wind>
+        <bt>Shwrs Early</bt>
+        <ppcp>60</ppcp>
+        <hmid>88</hmid>
+      </part>
+    </day>
+    <day d="2" t="Sunday" dt="May 16">
+      <hi>74</hi>
+      <low>53</low>
+      <sunr>5:16 AM</sunr>
+      <suns>9:27 PM</suns>
+      <part p="d">
+        <icon>28</icon>
+        <t>Mostly Cloudy</t>
+        <wind>
+          <s>10</s>
+          <gust>N/A</gust>
+          <d>57</d>
+          <t>ENE</t>
+        </wind>
+        <bt>M Cloudy</bt>
+        <ppcp>20</ppcp>
+        <hmid>69</hmid>
+      </part>
+      <part p="n">
+        <icon>11</icon>
+        <t>Showers</t>
+        <wind>
+          <s>5</s>
+          <gust>N/A</gust>
+          <d>43</d>
+          <t>NE</t>
+        </wind>
+        <bt>Showers</bt>
+        <ppcp>60</ppcp>
+        <hmid>86</hmid>
+      </part>
+    </day>
+    <day d="3" t="Monday" dt="May 17">
+      <hi>67</hi>
+      <low>52</low>
+      <sunr>5:14 AM</sunr>
+      <suns>9:29 PM</suns>
+      <part p="d">
+        <icon>11</icon>
+        <t>Showers</t>
+        <wind>
+          <s>6</s>
+          <gust>N/A</gust>
+          <d>77</d>
+          <t>ENE</t>
+        </wind>
+        <bt>Showers</bt>
+        <ppcp>60</ppcp>
+        <hmid>87</hmid>
+      </part>
+      <part p="n">
+        <icon>11</icon>
+        <t>Showers</t>
+        <wind>
+          <s>3</s>
+          <gust>N/A</gust>
+          <d>64</d>
+          <t>ENE</t>
+        </wind>
+        <bt>Showers</bt>
+        <ppcp>60</ppcp>
+        <hmid>90</hmid>
+      </part>
+    </day>
+    <day d="4" t="Tuesday" dt="May 18">
+      <hi>68</hi>
+      <low>51</low>
+      <sunr>5:13 AM</sunr>
+      <suns>9:30 PM</suns>
+      <part p="d">
+        <icon>39</icon>
+        <t>Scattered Showers</t>
+        <wind>
+          <s>8</s>
+          <gust>N/A</gust>
+          <d>80</d>
+          <t>E</t>
+        </wind>
+        <bt>Sct Showers</bt>
+        <ppcp>30</ppcp>
+        <hmid>75</hmid>
+      </part>
+      <part p="n">
+        <icon>11</icon>
+        <t>Showers</t>
+        <wind>
+          <s>4</s>
+          <gust>N/A</gust>
+          <d>24</d>
+          <t>NNE</t>
+        </wind>
+        <bt>Showers</bt>
+        <ppcp>30</ppcp>
+        <hmid>82</hmid>
+      </part>
+    </day>
+  </dayf>
+</weather>
+

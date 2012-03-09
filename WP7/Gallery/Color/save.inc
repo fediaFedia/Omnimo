@@ -7,4 +7,4 @@ HideONrounded=0
 HideOFFrounded=0
 rounded=0
 center=0
-newhidden=0
+newhidden=1

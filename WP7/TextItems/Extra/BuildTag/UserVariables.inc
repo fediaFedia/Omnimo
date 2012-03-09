@@ -1,5 +1,9 @@
 Edit the info below:
 
 [variables]
-UpperLine=Microsoft Pre-release Windows Operating System
-BottomLine=Evaluation Copy. Build 8021.winmain.120314-1436.718931c1658f9394
+UpperLine=Windows 8 Consumer Preview
+BottomLine=Evaluation Copy. Build 8250
+
+FontFace=Segoe WP
+FontSize=11
+FontColor=255,255,255
