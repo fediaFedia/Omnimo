@@ -1,3 +1,6 @@
 [Variables]
 Title=Photos
-action=http://flickr.com
+action=%USERPROFILE%\Pictures
+PicturesFolder=#SKINSPATH#WP7\Panels\Slideshow\Sample
+SlideshowSpeed=20
+Subfolders=1

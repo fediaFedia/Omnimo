@@ -48,7 +48,7 @@ end -- function Initialize
 -- ###############################################################################
 function Update()
 
-	SKIN:Bang("!RainmeterDisableMeasure MeasureLuaScript")
+	SKIN:Bang("!DisableMeasure MeasureLuaScript")
 	
 	sCurrentPressure = msMeasurePressure:GetStringValue()
 	sCurrentChange = msMeasureChange:GetStringValue()

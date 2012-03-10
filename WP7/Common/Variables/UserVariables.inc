@@ -15,3 +15,4 @@ DESKTOPOff=on
 DESKTOPOn=off1
 blurtest=1
 ttgallerystyle=Dark
+CodePage=1251

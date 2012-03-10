@@ -1,5 +1,5 @@
 [Rainmeter]
-TrayExecuteM=!execute [!RainmeterToggleConfig "WP7\Gallery" "gallery.ini"]
+TrayExecuteM=!execute [!ToggleConfig "WP7\Gallery" "gallery.ini"]
 
 [WP7\Gallery\Color]
 Active=0

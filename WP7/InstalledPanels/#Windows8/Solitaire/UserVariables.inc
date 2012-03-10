@@ -1,3 +1,3 @@
 [Variables]
 Title=Solitaire
-action=sol.exe
+action=%PROGRAMFILES%\Microsoft Games\Solitaire\solitaire.exe

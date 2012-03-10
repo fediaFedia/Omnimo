@@ -1,7 +1,7 @@
 [Rainmeter]
 DisableVersionCheck=0
 Logging=0
-TrayExecuteM=!execute [!RainmeterToggleConfig "WP7\Gallery" "gallery.ini"]
+TrayExecuteM=!execute [!ToggleConfig "WP7\Gallery" "gallery.ini"]
 
 
 

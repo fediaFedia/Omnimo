@@ -21,5 +21,7 @@ FolderAction4=%USERPROFILE%
 FolderName5=Program Files
 FolderAction5=%PROGRAMFILES%
 
-SidebarColor=255,255,255,220
-TextColor=30,30,30
+SidebarColor=30,30,30,220
+TextColor=240,240,240
+width=300
+Blur=1
