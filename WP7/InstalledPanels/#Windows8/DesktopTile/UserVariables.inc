@@ -9,3 +9,4 @@ showpicturestext=0
 PicturesFolderText=D:\Users\User\Pictures\150 Top Quality Wallpapers
 PicturesButtonAction=#open#
 FramePadding=0
+title=Desktop
