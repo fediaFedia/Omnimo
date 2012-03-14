@@ -214,7 +214,7 @@ GUIRegisterMsg($CC_WM_SYSCOMMAND, 'CC_WM_SYSCOMMAND')
 ;                                 HSB (Hue, Saturation, Brightness)
 ;                                 3-item array of values for the Hue, Saturation, and Brightness, respectively.
 ;
-;                                 [0] - H (0-360)°
+;                                 [0] - H (0-360)?
 ;                                 [1] - S (0-100)%
 ;                                 [2] - B (0-100)%
 ;
@@ -331,7 +331,7 @@ Func _ColorChooserDialog($iColor = 0, $hParent = 0, $iRefType = 0, $iReturnType 
 	GUICtrlCreateLabel('L:', 86 , 329 + $H1 + $H2, 13, 14)
 	$ccData[15] = GUICtrlCreateInput('', 100, 327 + $H1 + $H2, 34, 19)
 	GUICtrlCreateLabel('H:', 153, 279 + $H1 + $H2, 13, 14)
-	GUICtrlCreateLabel('°' , 202, 279 + $H1 + $H2, 14, 14)
+	GUICtrlCreateLabel('?' , 202, 279 + $H1 + $H2, 14, 14)
 	$ccData[16] = GUICtrlCreateInput('', 167, 277 + $H1 + $H2, 34, 19)
 	GUICtrlCreateLabel('S:', 153, 304 + $H1 + $H2, 13, 14)
 	GUICtrlCreateLabel('%' , 202, 304 + $H1 + $H2, 14, 14)

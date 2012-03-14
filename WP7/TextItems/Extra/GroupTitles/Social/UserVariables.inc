@@ -2,4 +2,4 @@
 Text=Social
 FontSize=48
 FontColor=255,255,255,230
-FontFace=Segoe WP Light
+FontFace=SEgoe WP Light

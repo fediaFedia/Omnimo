@@ -14,6 +14,6 @@ Icon4=#skinspath#\WP7\Panels\Launcher\Icons\notepad2.png
 Name5=Google Earth
 Action5=googleearth.exe
 Icon5=#skinspath#\WP7\Panels\Launcher\Icons\GOOGLE EARTH.png
-FontFace=Segoe WP Light
+FontFace=#FontFaceLight#
 Iconvisibility=180
 icondistance=5

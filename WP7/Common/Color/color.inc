@@ -3,13 +3,13 @@
 
 [Variables]
 arrowcolor=255,255,255
-DefaultFontSize=(#height#/12-1)
+DefaultFontSize=(#height#/15-1)
 yposition=1.2
 globalblurenable=0
 blurtype=0
 blurcornerradius=0
 Padding=0
-Imagedir=#skinspath#\WP7\Common\Panel\Default
+Imagedir=#skinspath#\WP7\Common\Panel\W8
 ColorSkin=27,161,226
 ColorSkin2=143,191,38
 ColorSkinHover=255,0,255
@@ -21,14 +21,14 @@ TextColor2=255,255,255
 PanelTitleOpacity=255
 TextItemAccentColor=27,161,226
 Shadow=none
-Overlay=none
+Overlay=W8
 OverlayDark=smooth
 overlaydarkalpha=1
 bordercolor=255,255,255
 align=left
 darkcolor=41,41,41
 darkercolor=11,11,11
-xposition=18.75
+xposition=15
 Shape=default
 ItemShadow=1
 ItemShadowColor=0,0,0
@@ -43,8 +43,8 @@ rotationangle2=0
 textangle=0
 FontType=Segoe WP Semibold
 FontTypeWP=Segoe WP
-FontFaceUI=Segoe UI
-FontFaceLight=Segoe UI Light
+FontFaceUI=Segoe WP
+FontFaceLight=Segoe WP Light
 loadingbg=0,0,0,192
 hideloadingtext=0
 

@@ -14,6 +14,6 @@ Icon4=#skinspath#\WP7\Panels\Launcher\Icons\skype.png
 Name5=Paint
 Action5=%WINDIR%\system32\mspaint.exe
 Icon5=#skinspath#\WP7\Panels\Launcher\Icons\paint.png
-FontFace=Segoe WP Light
+FontFace=#FontFaceLight#
 Iconvisibility=180
 icondistance=5

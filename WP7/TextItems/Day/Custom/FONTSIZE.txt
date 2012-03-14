@@ -1,7 +1,7 @@
 [variables]
 FontSize=50
 FontColor=255,255,255,230
-FontFace=Segoe WP Light
+FontFace=#FontFaceLight#
 Universal=%A %d, %H:%M   
 
 Feel free to adjust the size and colors to your liking, 255,255,255 is a RGB color code, and 230 is transparency - 255 is 100% opaque, less than 255 is more transparent
