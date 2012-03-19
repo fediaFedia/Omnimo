@@ -25,3 +25,7 @@ SidebarColor=30,30,30,220
 TextColor=240,240,240
 width=300
 Blur=1
+
+Hub1=Time
+Hub2=Weather
+Hub3=Mail
