@@ -1,2 +1,2 @@
 [Variables]
-Notes=When work seems overhelming, remember that you're going to die.
+Notes=When work seems overwhelming, remember that you're going to die.

@@ -41,10 +41,10 @@ rotationangle=0
 rotationangle1=0
 rotationangle2=0
 textangle=0
-FontType=Segoe WP Semibold
-FontTypeWP=Segoe WP
-FontFaceUI=Segoe WP
-FontFaceLight=Segoe WP Light
+FontType=Segoe UI Semibold
+FontTypeWP=Segoe UI
+FontFaceUI=Segoe UI
+FontFaceLight=Segoe UI Light
 loadingbg=0,0,0,192
 hideloadingtext=0
 

@@ -31,7 +31,6 @@ There are a lot of panels not shown in the gallery, use the context menus to acc
 You can select different themes from the themes gallery
 If your panel doesn't snap very well, hold Shift and drag it for a perfect position
 You can enable blur behind panels on Windows Vista or 7
-You can open TextItems gallery from the T icon that appears near the arrow
 If some panels don't show information - try refreshing them
 You can customize the PanelCombos toggler with different functions
 You can change the language of Omnimo by going to WP7\Common\Variables\Languages and double-clicking a shortcut
