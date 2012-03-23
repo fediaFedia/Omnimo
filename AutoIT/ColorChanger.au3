@@ -5,17 +5,14 @@
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Fileversion=1.0.0.0
-#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2011
+#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2012
+#AutoIt3Wrapper_AU3Check_Parameters=-w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
-#include <ButtonConstants.au3>
-#include <GUIConstantsEx.au3>
-#include <GUIListBox.au3>
-#include <StaticConstants.au3>
-#include <WindowsConstants.au3>
-#include <WinAPI.au3>
-#include <ColorChooser.au3>
 #include <File.au3>
+
+#include "ColorChooser.au3"
+#include "Common.au3"
 
 ; Create GUI
 $Form1 = GUICreate("Change panel color", 369, 258, 336, 287)
@@ -61,20 +58,22 @@ $c14 = GUICtrlCreateGraphic(320, 72, $width, $heigth)
 $c14b = GUICtrlCreateGraphic(319, 71, $width+2, $heigth+2)
 $c15 = GUICtrlCreateGraphic(320, 112, $width, $heigth)
 $c15b = GUICtrlCreateGraphic(319, 111, $width+2, $heigth+2)
-$plus = GUICtrlCreatePic("plus.jpg", 320, 152, 33, 33)
 $c16 = GUICtrlCreateGraphic(320, 152, $width, $heigth)
 $c16b = GUICtrlCreateGraphic(319, 151, $width+2, $heigth+2)
+$plus = GUICtrlCreatePic("plus.jpg", 320, 152, 33, 33)
 
-global $elems[19] = [$c1, $c2, $c3, $c4, $c5, $c6, $c7, $c8, $c9, $c10, $c11, $c12, $c13, $c14, $c15, $c16, $plus, $Button1, $Button2]
-global $elemsb[16] = [$c1b, $c2b, $c3b, $c4b, $c5b, $c6b, $c7b, $c8b, $c9b, $c10b, $c11b, $c12b, $c13b, $c14b, $c15b, $c16b]
+Global $elems[19] = [$c1, $c2, $c3, $c4, $c5, $c6, $c7, $c8, $c9, $c10, $c11, $c12, $c13, $c14, $c15, $c16, $plus, $Button1, $Button2]
+Global $elemsb[16] = [$c1b, $c2b, $c3b, $c4b, $c5b, $c6b, $c7b, $c8b, $c9b, $c10b, $c11b, $c12b, $c13b, $c14b, $c15b, $c16b]
 
 ; Read colors into an array
-global $colors[17]
+Global $colors[17]
 _FileReadToArray('colors.txt', $colors)
+If @error Then _OmnimoError("Individual Panel Color", "Unable to read colors from colors.txt.")
 
 ; Read blacklist into an array
-global $blacklist[100]
+Global $blacklist[100]
 _FileReadToArray('blacklist.txt', $blacklist)
+If @error Then _OmnimoError("Individual Panel Color", "Unable to read blacklist from blacklist.txt.")
 
 ; Colorize buttons and add borders
 For $i = 0 To 15 Step 1
@@ -90,18 +89,21 @@ For $i = 16 To 18 Step 1
 	GUICtrlSetState($elems[$i], $GUI_HIDE)
 Next
 
-$SkinPath = $CmdLine[1]
-$ProgramPath = $CmdLine[2]
-$Opacity = IniRead($SkinPath & '\WP7\Common\Color\Color.inc', 'Variables', 'Opacity', '255')
-$file = FileOpen($CmdLine[3] & '\Rainmeter.ini', 0)
+If $CmdLine[0] < 1 Then _OmnimoError("Individual Panel Color", "Too few command line arguments specified.")
+
+Const $SettingsPath = $CmdLine[1]
+Const $SkinPath = IniRead($SettingsPath & 'Rainmeter.ini', 'Rainmeter', 'SkinPath', @UserProfileDir & '\Documents\Rainmeter\Skins\')
+Const $Opacity = IniRead($SkinPath & '\WP7\Common\Color\Color.inc', 'Variables', 'Opacity', '255')
+
+$file = FileOpen($SettingsPath & '\Rainmeter.ini', 0)
+If $file = -1 Then _OmnimoError("Individual Panel Color", "Unable to open Rainmeter.ini for reading.")
 
 ; Read active skins from Rainmeter.ini
 While 1
     $line = FileReadLine($file)
-    If @error = -1 Then
-		ExitLoop
+    If @error = -1 Then ExitLoop
 	; Only want panels here
-	ElseIf StringInStr($line, '[WP7\Panels') OR StringInStr($line, '[WP7\InstalledPanels') OR StringInStr($line, '[WP7\DonatorPanels') Then
+	If StringInStr($line, '[WP7\Panels') OR StringInStr($line, '[WP7\InstalledPanels') OR StringInStr($line, '[WP7\DonatorPanels') Then
 		If FileReadLine($file) <> 'Active=0' Then
 			$mark = False
 			For $j = 1 To $blacklist[0]
@@ -109,8 +111,8 @@ While 1
 					$mark = True ; Panel was on blacklist!
 				EndIf
 			Next
-			If $mark == False Then
-				GUICtrlSetData($List1, StringRegExpReplace($line, "[\[\]]", ""))
+			If Not $mark Then
+				GUICtrlSetData($List1, StringReplace(StringRegExpReplace($line, "[\[\]]", ""), "WP7\", ""))
 			EndIf
 		EndIf
 	EndIf
@@ -176,22 +178,22 @@ While 1
 			$Color = _HexToRGB($Data)
 		Case $Button2
 			; List all ini files in panel's directory
-			$filelist = _FileListToArray($SkinPath & GUICtrlRead($List1), '*.ini', 1)
+			$filelist = _FileListToArray($SkinPath & 'WP7\' & GUICtrlRead($List1), '*.ini', 1)
 			; Write 'ColorSkin' variable to each file
 			For $i = 1 To UBound($filelist)-1
-				IniWrite($SkinPath & GUICtrlRead($list1) & '\' & $filelist[$i], "Variables", "ColorSkin", $Color)
+				IniWrite($SkinPath & 'WP7\' & GUICtrlRead($list1) & '\' & $filelist[$i], "Variables", "ColorSkin", $Color)
 			Next
-			; Refresh Rainmeter
-			ShellExecute($ProgramPath & 'Rainmeter.exe', '!RainmeterRefresh ' & GUICtrlRead($list1))
+			; Refresh panel
+			SendBang("!Refresh WP7\" & GUICtrlRead($list1))
 		Case $Button1
 			; List all ini files in panel's directory
-			$filelist = _FileListToArray($SkinPath & GUICtrlRead($List1), '*.ini', 1)
-			; Delete 'ColorSkin' variable from eahc file
+			$filelist = _FileListToArray($SkinPath & 'WP7\' & GUICtrlRead($List1), '*.ini', 1)
+			; Delete 'ColorSkin' variable from each file
 			For $i = 1 To UBound($filelist)-1
-				IniDelete($SkinPath & GUICtrlRead($list1) & '\' & $filelist[$i], "Variables", "ColorSkin")
+				IniDelete($SkinPath & 'WP7\' & GUICtrlRead($list1) & '\' & $filelist[$i], "Variables", "ColorSkin")
 			Next
-			; Refresh Rainmeter
-			ShellExecute($ProgramPath & 'Rainmeter.exe', '!RainmeterRefresh ' & GUICtrlRead($list1))
+			; Refresh panel
+			SendBang("!Refresh WP7\" & GUICtrlRead($list1))
 	EndSwitch
 WEnd
 
