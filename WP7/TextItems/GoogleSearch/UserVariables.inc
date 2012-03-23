@@ -1,5 +1,5 @@
 [Variables]
-SearchWidth=730
+SearchWidth=750
 SearchEngineT=Google
 SearchEngine=http://www.google.#languagedomain#/search?q=
 DisableRoundedEdges=1

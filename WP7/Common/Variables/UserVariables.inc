@@ -17,4 +17,4 @@ blurtest=1
 ttgallerystyle=Dark
 CodePage=1251
 HideHeaders=0
-HideCloseButton=1
+HideCloseButton=0
