@@ -1,22 +1,24 @@
+#NoTrayIcon
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_outfile=..\WP7\Common\OmnimoApp.exe
+#AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Fileversion=1.0.0.0
-#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2011
+#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2012
+#AutoIt3Wrapper_AU3Check_Parameters=-w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
+#include <File.au3>
 #include <WinAPI.au3>
 #include <GDIPlus.au3>
-#include <Constants.au3>
 #include <ScreenCapture.au3>
-#include <ButtonConstants.au3>
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
-#include <File.au3>
 
-; Hide Tray Icon
-Opt("TrayIconHide", 1)
+#include "Common.au3"
+
+Switch $CmdLine[1]
 
 ; µTorrent
 ; Command line arguments:
@@ -24,15 +26,17 @@ Opt("TrayIconHide", 1)
 ; [3]: password
 ; [4]: action
 ; [5]: hash
-If $CmdLine[1] == 'uTorrent' Then
+Case 'uTorrent'
+	If $CmdLine[0] < 5 Then _OmnimoError("Error", "Too few command line arguments specified.")
     InetRead('http://' & $CmdLine[2] & ':' & $CmdLine[3] & '@127.0.0.1:8080/gui/?action=' & $CmdLine[4] & '&hash=' & $CmdLine[5], 1 + 16)
 
 
 ; Power Plan
 ; Command line arguments:
 ; [2] Power mode
-ElseIf $CmdLine[1] == 'PowerPlan' Then
-    If $CmdLine[2] == 'HighPerformance' Then
+Case 'PowerPlan'
+	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	If $CmdLine[2] == 'HighPerformance' Then
         Run('powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c', "", @SW_HIDE)
     ElseIf $CmdLine[2] == 'Balanced' Then
         Run('powercfg /setactive 381b4222-f694-41f0-9685-ff5bb260df2e', "", @SW_HIDE)
@@ -45,38 +49,49 @@ ElseIf $CmdLine[1] == 'PowerPlan' Then
 ; http://www.autoitscript.com/forum/topic/127668-tinybrightnesscontroler-v-1002/
 ; Command line arguments:
 ; [2] Brightness level
-ElseIf $CmdLine[1] == 'SetBrightness' Then
+Case 'SetBrightness'
+	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
     $tagDISPLAY_BRIGHTNESS = "ubyte ucDisplayPolicy;ubyte ucACBrightness;ubyte ucDCBrightness"
     Global Const $IOCTL_VIDEO_QUERY_DISPLAY_BRIGHTNESS = Int(0x00230498)
     Global Const $IOCTL_VIDEO_SET_DISPLAY_BRIGHTNESS = Int(0x0023049C)
     Global Const $IOCTL_VIDEO_QUERY_SUPPORTED_BRIGHTNESS = Int(0x00230494)
     Global Const $hLCD = _WinAPI_CreateFile("\\.\LCD", 3, 2, 7)
-    ; Second argument is 100 to set the display brightness only for battery power
-    _SetDisplayBrightness($CmdLine[2], 100)
+
+	If StringLeft($CmdLine[2], 1) = '+' Then
+		$brightness = _GetDisplayBrightness() + Int(StringTrimLeft($CmdLine[2], 1))
+	ElseIf StringLeft($CmdLine[2], 1) = '-' Then
+		$brightness = _GetDisplayBrightness() - Int(StringTrimLeft($CmdLine[2], 1))
+	Else
+		$brightness = Int($CmdLine[2])
+	EndIf
+
+	_SetDisplayBrightness($brightness, $brightness)
 
 
 ; Change skin
 ; Command line arguments:
 ; [2] Skin
 ; [3] Skin path
-; [4] Program path
-ElseIf $CmdLine[1] == 'Skin' Then
+Case 'Skin'
+	If $CmdLine[0] < 3 Then _OmnimoError("Error", "Too few command line arguments specified.")
     FileCopy($CmdLine[3] & '\WP7\Common\Color\' & $CmdLine[2] & '.inc', $CmdLine[3] & '\WP7\Common\Color\color.inc', 1)
-    ShellExecute($CmdLine[4] & "Rainmeter.exe", "!RainmeterRefresh *")
+	SendBang("!Refresh *")
 
 
 ; Change language
 ; Command line arguments:
 ; [2] Language
 ; [3] Skin path
-ElseIf $CmdLine[1] == 'Lang' Then
+Case 'Lang'
+	If $CmdLine[0] < 3 Then _OmnimoError("Error", "Too few command line arguments specified.")
     FileCopy($CmdLine[3] & '\WP7\Common\Variables\Languages\' & $CmdLine[2] & '.inc', $CmdLine[3] & '\WP7\Common\Variables\Languages\lang.inc', 1)
 
 
 ; Change wallpaper
 ; Command line arguments:
 ; [2] Wallpaper
-ElseIf $CmdLine[1] == 'Wall' Then
+Case 'Wall'
+	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
     _SetWallpaper($CmdLine[2])
 
 
@@ -86,17 +101,10 @@ ElseIf $CmdLine[1] == 'Wall' Then
 ; [3] Program path
 ; [4] Settings path
 ; [5] Skins path
-ElseIf $CmdLine[1] == 'Tray' Then
-    ; Delete previous entry from rainmeter.ini
-    IniDelete($CmdLine[4] & '\Rainmeter.ini', 'TrayMeasure')
-    $TrayFile = FileOpen($CmdLine[5] & '\WP7\Gallery\Tray\' & $CmdLine[2] & '.txt')
-    $Lines = FileRead($TrayFile)
-    FileClose($TrayFile)
-    $RainmeterINI = FileOpen($CmdLine[4] & 'Rainmeter.ini', 1)
-    FileWrite($RainmeterINI, $Lines)
-    FileClose($RainmeterINI)
-    ; Restart Rainmeter
-    ShellExecute($CmdLine[3] & "Rainmeter.exe", "!RainmeterQuit")
+Case 'Tray'
+	If $CmdLine[0] < 5 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	IniWriteSection($CmdLine[4] & 'Rainmeter.ini', 'TrayMeasure', IniReadSection($CmdLine[5] & '\WP7\Gallery\Tray\' & $CmdLine[2] & '.txt', 'TrayMeasure'))
+	SendBang("!Quit")
     ProcessWaitClose("Rainmeter.exe")
     ShellExecute($CmdLine[3] & "Rainmeter.exe")
 
@@ -107,9 +115,10 @@ ElseIf $CmdLine[1] == 'Tray' Then
 ; [3] Program path
 ; [4] Settings path
 ; [5] Skins path
-ElseIf $CmdLine[1] == 'Themes' Then
+Case 'Themes'
+	If $CmdLine[0] < 5 Then _OmnimoError("Error", "Too few command line arguments specified.")
     ; Close Rainmeter
-    ShellExecute($CmdLine[3] & "Rainmeter.exe", "!RainmeterQuit")
+	SendBang("!Quit")
     ProcessWaitClose("Rainmeter.exe")
     ; Replace Rainmeter.ini with new theme
     FileCopy($CmdLine[5] & '\WP7\Gallery\Themes\' & $CmdLine[2] & '.thm', $CmdLine[4] & '\Rainmeter.ini', 1)
@@ -119,12 +128,29 @@ ElseIf $CmdLine[1] == 'Themes' Then
 ; Put stuff to clipboard
 ; Command line arguments:
 ; [2] Text
-ElseIf $CmdLine[1] == 'Clipboard' Then
+Case 'Clipboard'
+	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
     ClipPut($CmdLine[2])
 
 
+; Eject disc
+Case 'Eject'
+	$drive = DriveGetDrive("CDROM")
+	If @error Then _OmnimoError("Error", "Unable to find an optical disc drive.")
+	For $i = 1 To $drive[0]
+		CDTray($drive[$i], "open")
+	Next
+
+
+; Turn monitor off
+Case 'Monitor'
+	Monitor("off")
+
+
 ; Toggle desktop icons
-ElseIf $CmdLine[1] == 'ToggleIcons' Then
+; Command line arguments:
+; [2] Show / Hide (optional)
+Case 'ToggleIcons'
     $hParent = WinGetHandle("Program Manager")
     $hListView = ControlGetHandle($hParent, "", "SysListView321")
 
@@ -132,9 +158,9 @@ ElseIf $CmdLine[1] == 'ToggleIcons' Then
     ; State == 5 => desktop icons are hidden
     $state = WinGetState($hListView)
 
-    If $CmdLine[2] == 'Show' Then
+    If $CmdLine[2] = 'Show' Then
         WinSetState($hListView, '', @SW_SHOW)
-    ElseIf $CmdLine[2] == 'Hide' Then
+    ElseIf $CmdLine[2] = 'Hide' Then
         WinSetState($hListView, '', @SW_HIDE)
     Else
         If $state == '7' Then
@@ -152,22 +178,23 @@ ElseIf $CmdLine[1] == 'ToggleIcons' Then
 ; [2] Variable
 ; [3] Color
 ; [4] Skins path
-; [5] Program path
-ElseIf $CmdLine[1] == 'SetColor' Then
+Case 'SetColor'
+	If $CmdLine[0] < 4 Then _OmnimoError("Error", "Too few command line arguments specified.")
     $nColor = $CmdLine[3]
     ; Convert HEX to RGB
     $Blue = BitAND($nColor, 0xFF)
     $Green = BitAND(BitShift($nColor, 8), 0xFF)
     $Red = BitAND(BitShift($nColor, 16), 0xFF)
     IniWrite($CmdLine[4] & '\WP7\Common\Color\Color.inc', 'Variables', $CmdLine[2], $Red & ',' & $Green & ',' & $Blue)
-    ShellExecute($CmdLine[5] & "Rainmeter.exe", "!RainmeterRefresh *")
+	SendBang("!Refresh *")
 
 
 ; VLC radio
 ; Command line arguments:
 ; [2] VLC path
 ; [3] Channel
-ElseIf $CmdLine[1] == 'Radio' Then
+Case 'Radio'
+	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
     ; Restart VLC with the new channel
     ProcessClose("vlc.exe")
 	ProcessWaitClose("vlc.exe")
@@ -180,60 +207,54 @@ ElseIf $CmdLine[1] == 'Radio' Then
 ; Command line arguments:
 ; [2] Command
 ; [3] Time to sleep
-; [4] Program path
-ElseIf $CmdLine[1] == 'Power' Then
-    ; Shutdown
-    If $CmdLine[2] == 'Shutdown' Then
-        Sleep(Int($CmdLine[3]) * 1000)
-        ShellExecute($CmdLine[4] & "Rainmeter.exe", "!RainmeterDeactivateConfig WP7\TextItems\Extra\PowerButtons\Dialogue")
-        Run('shutdown.exe /s /t 00', "", @SW_HIDE)
-    ; Restart
-    ElseIf $CmdLine[2] == 'Restart' Then
-        Sleep(Int($CmdLine[3]) * 1000)
-        ShellExecute($CmdLine[4] & "Rainmeter.exe", "!RainmeterDeactivateConfig WP7\TextItems\Extra\PowerButtons\Dialogue")
-        Run('shutdown.exe /r /t 00', "", @SW_HIDE)
-    ; Log off
-    ElseIf $CmdLine[2] == 'Logoff' Then
-        Sleep(Int($CmdLine[3]) * 1000)
-        ShellExecute($CmdLine[4] & "Rainmeter.exe", "!RainmeterDeactivateConfig WP7\TextItems\Extra\PowerButtons\Dialogue")
-        Run('shutdown.exe /l', "", @SW_HIDE)
-    ; Sleep
-    ElseIf $CmdLine[2] == 'Sleep' Then
-        Sleep(Int($CmdLine[3]) * 1000)
-        ShellExecute($CmdLine[4] & "Rainmeter.exe", "!RainmeterDeactivateConfig WP7\TextItems\Extra\PowerButtons\Dialogue")
-        Run('rundll32.exe powrprof.dll,SetSuspendState 0,1,0', "", @SW_HIDE)
-    ; Hibernate
-    ElseIf $CmdLine[2] == 'Hibernate' Then
-        Sleep(Int($CmdLine[3]) * 1000)
-        ShellExecute($CmdLine[4] & "Rainmeter.exe", "!RainmeterDeactivateConfig WP7\TextItems\Extra\PowerButtons\Dialogue")
-        Run('rundll32.exe PowrProf.dll,SetSuspendState', "", @SW_HIDE)
-    EndIf
+Case 'Power'
+	If $CmdLine[0] < 3 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	Switch $CmdLine[2]
+		; Shutdown
+		Case 'Shutdown'
+			Sleep(Int($CmdLine[3]) * 1000)
+			SendBang("!DeactivateConfig WP7\TextItems\Extra\PowerButtons\Dialogue")
+			Run('shutdown.exe /s /t 00', "", @SW_HIDE)
+		; Restart
+		Case 'Restart'
+			Sleep(Int($CmdLine[3]) * 1000)
+			SendBang("!DeactivateConfig WP7\TextItems\Extra\PowerButtons\Dialogue")
+			Run('shutdown.exe /r /t 00', "", @SW_HIDE)
+		; Log off
+		Case 'Logoff'
+			Sleep(Int($CmdLine[3]) * 1000)
+			SendBang("!DeactivateConfig WP7\TextItems\Extra\PowerButtons\Dialogue")
+			Run('shutdown.exe /l', "", @SW_HIDE)
+		; Sleep
+		Case 'Sleep'
+			Sleep(Int($CmdLine[3]) * 1000)
+			SendBang("!DeactivateConfig WP7\TextItems\Extra\PowerButtons\Dialogue")
+			Run('rundll32.exe powrprof.dll,SetSuspendState 0,1,0', "", @SW_HIDE)
+		; Hibernate
+		Case 'Hibernate'
+			Sleep(Int($CmdLine[3]) * 1000)
+			SendBang("!DeactivateConfig WP7\TextItems\Extra\PowerButtons\Dialogue")
+			Run('rundll32.exe PowrProf.dll,SetSuspendState', "", @SW_HIDE)
+	EndSwitch
 
 
 ; Windows Update
-; Command line arguments:
-; [2] Program path
-; [3] Skins path
-ElseIf $CmdLine[1] == 'Update' Then
-    ; Hideous hack to run the Windows Update wbs file to actually check for updates...
-    $path = $CmdLine[3] & "\WP7\InstalledPanels\WindowsUpdate\"
-    RunWait(@ComSpec & " /c " & "cscript " & $path & "wupdate.vbs > " & $path & "output.txt", "", @SW_HIDE, $STDERR_CHILD + $STDOUT_CHILD)
-    $file = FileOpen($path & "output.txt", 0)
-    $line = FileReadLine($file, -1)
-    If $line = '' Or $line = '\n' Then
-        $line = FileReadLine($file, -2)
-    EndIf
-    FileClose($file)
+Case 'Update'
+	; Check for updates
+	$wupdate = ObjCreate("Microsoft.Update.Session")
+	$searcher = $wupdate.CreateUpdateSearcher()
+	$result = $searcher.Search("IsInstalled=0")
 
     ; Refresh panel
-    ShellExecute($CmdLine[2] & "\Rainmeter.exe", "!RainmeterSetVariable Updates " & $line & " WP7\InstalledPanels\WindowsUpdate")
-    ShellExecute($CmdLine[2] & "\Rainmeter.exe", "!RainmeterUpdate WP7\InstalledPanels\WindowsUpdate")
+	SendBang("!SetVariable Updates " & $result.Updates.Count & " WP7\InstalledPanels\WindowsUpdate")
+	SendBang("!Update WP7\InstalledPanels\WindowsUpdate")
 
 
 ; Take a screenshot
 ; Command line arguments:
 ; [2] Skins path
-ElseIf $CmdLine[1] == 'Screenshot' Then
+Case 'Screenshot'
+	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
     $config = $CmdLine[2] & '\WP7\Panels\Camera\UserVariables.inc'
 
     ; Read variables
@@ -245,12 +266,13 @@ ElseIf $CmdLine[1] == 'Screenshot' Then
     $SaveTo = StringReplace($SaveTo, '%USERPROFILE%', @UserProfileDir)
     Sleep(Int($Delay) * 1000)
 
-    If $CaptureCursor == 'False' Then
+    If $CaptureCursor = 'False' Then
         _ScreenCapture_Capture($SaveTo & '\' & @MDAY & '-' & @MON & '-' & @YEAR & '_' & @HOUR & '-' & @MIN & '.' & $FileFormat, Default, Default, @DesktopWidth, @DesktopHeight, False)
     Else
         _ScreenCapture_Capture($SaveTo & '\' & @MDAY & '-' & @MON & '-' & @YEAR & '_' & @HOUR & '-' & @MIN & '.' & $FileFormat, Default, Default, @DesktopWidth, @DesktopHeight, True)
     EndIf
-    If $OpenImageAfter == 'True' Then
+
+    If $OpenImageAfter = 'True' Then
         ShellExecute($SaveTo & '\' & @MDAY & '-' & @MON & '-' & @YEAR & '_' & @HOUR & '-' & @MIN & '.' & $FileFormat)
     EndIf
 
@@ -260,67 +282,59 @@ ElseIf $CmdLine[1] == 'Screenshot' Then
 ; [2] Image / Folder / App
 ; [3] Variable to write
 ; [4] Panel path
-; [5] Program path
-ElseIf $CmdLine[1] == 'Select' Then
+Case 'Select'
     ; Open an image select dialog
-    If $CmdLine[2] == 'Image' Then
+    If $CmdLine[2] = 'Image' Then
         $file = FileOpenDialog("Choose an image", @UserProfileDir & '\Pictures', "Images (*.png;*.jpg;*.jpeg;*.bmp)", 1)
-        If @error Then ; Something awful just happened
-            Exit
-        EndIf
+        If @error Then Exit
         IniWrite($CmdLine[4] & "\UserVariables.inc", "Variables", $CmdLine[3], $file)
-        ShellExecute($CmdLine[5] & "Rainmeter.exe", "!RainmeterRefresh " & $CmdLine[6])
+		SendBang("!Refresh " & $CmdLine[5])
 
     ; Open a folder select dialog
-    ElseIf $CmdLine[2] == 'Folder' Then
+    ElseIf $CmdLine[2] = 'Folder' Then
         $folder = FileSelectFolder("Choose a folder", "", 1)
-        If @error Then ; Something awful just happened
-            Exit
-        EndIf
+        If @error Then Exit
         $split = StringSplit($folder, "\")
         $FolderName = UBound($split) - 1
         IniWrite($CmdLine[4] & "\UserVariables.inc", "Variables", $CmdLine[3], $folder)
         IniWrite($CmdLine[4] & "\UserVariables.inc", "Variables", "FolderName", $split[$FolderName])
-        ShellExecute($CmdLine[5] & "Rainmeter.exe", "!RainmeterRefresh " & $CmdLine[6])
+        SendBang("!Refresh " & $CmdLine[5])
 
     ; Open an app select dialog
-    ElseIf $CmdLine[2] == 'App' Then
+    ElseIf $CmdLine[2] = 'App' Then
         $file = FileOpenDialog("Choose an application", @DesktopDir, "Apps (*.exe;*.lnk)", 1)
-        If @error Then ; Something awful just happened
-            Exit
-        EndIf
-
+        If @error Then Exit
         ; Get file extension, amazingly bullet-proof method
         $ext = StringRight($file, 3)
         If $ext = 'exe' Then
             $info = FileGetVersion($file, "ProductName")  ; Get program's name
             $path = $file
         ElseIf $ext = 'lnk' Then
-            Dim $szDrive, $szDir, $szFName, $szExt
+            Global $szDrive, $szDir, $szFName, $szExt
             $TestPath = _PathSplit($file, $szDrive, $szDir, $szFName, $szExt)
             $Shortcut = FileGetShortcut($file)
             $path = $Shortcut[0]
             $info = $TestPath[3]
         EndIf
+
         IniWrite($CmdLine[7] & "\UserVariables.inc", "Variables", $CmdLine[3], $path)
         IniWrite($CmdLine[7] & "\UserVariables.inc", "Variables", $CmdLine[4], $info)
 
         ; Open an icon select dialog
         $icon = FileOpenDialog("Choose an icon", $CmdLine[6] & '\WP7\Panels\Launcher\Icons', "Images (*.png;*.jpg;*.jpeg;*.bmp)", 1)
-
-        If @error Then ; Something awful just happened
-            Exit
-        EndIf
+        If @error Then Exit
 
         IniWrite($CmdLine[7] & "\UserVariables.inc", "Variables", $CmdLine[5], $icon)
-        ShellExecute($CmdLine[9] & "Rainmeter.exe", "!RainmeterRefresh " & $CmdLine[8])
+		SendBang("!Refresh " & $CmdLine[8])
     EndIf
 
 
 ; Panel Combos config tool
 ; Command line arguments:
 ; [2] Skins path
-ElseIf $CmdLine[1] == 'PanelCombos' Then
+Case 'PanelCombos'
+	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
+
     ; Create GUI
     $Form1_1 = GUICreate("", 208, 316, -1, -1, BitOR($WS_VISIBLE, $WS_SYSMENU), $WS_EX_TOOLWINDOW)
     GUISetBkColor(0xE1E1E1)
@@ -492,7 +506,8 @@ ElseIf $CmdLine[1] == 'PanelCombos' Then
         EndSwitch
 
     WEnd
-EndIf
+
+EndSwitch
 
 Func Check_Enabled($Toggle)
     Switch $Toggle
@@ -563,6 +578,25 @@ Func Check_Disable()
 
 EndFunc   ;==>Check_Disable
 
+Func _GetDisplayBrightness()
+    $DISPLAY_BRIGHTNESS = DllStructCreate($tagDISPLAY_BRIGHTNESS)
+    DllStructSetData($DISPLAY_BRIGHTNESS, "ucDisplayPolicy", 0x1)
+    DllStructSetData($DISPLAY_BRIGHTNESS, "ucACBrightness", 0x20)
+    DllStructSetData($DISPLAY_BRIGHTNESS, "ucDCBrightness", 0x20)
+    DllCall( _
+    "kernel32.dll", "int", _
+    "DeviceIoControl", _
+    "hwnd", $hLCD, _
+    "int", $IOCTL_VIDEO_QUERY_DISPLAY_BRIGHTNESS, _
+    "ptr", 0, _
+    "int", 0, _
+    "ptr", DllStructGetPtr($DISPLAY_BRIGHTNESS), _
+    "int", DllStructGetSize($DISPLAY_BRIGHTNESS), _
+    "int*", 0, _
+    "ptr", 0 )
+    Return SetError(@error, DllStructGetData($DISPLAY_BRIGHTNESS, "ucDCBrightness"), DllStructGetData($DISPLAY_BRIGHTNESS, "ucACBrightness"))
+EndFunc ;==> _GetDisplayBrightness ( )
+
 Func _SetDisplayBrightness($ac = -1, $dc = -1)
     $DISPLAY_BRIGHTNESS = DllStructCreate($tagDISPLAY_BRIGHTNESS)
     Local $policy = 0
@@ -601,7 +635,7 @@ Func _SetWallpaper($CurrentFile)
 EndFunc   ;==>_SetWallpaper
 
 Func _ImageResize($sInImage, $sOutImage, $iW, $iH)
-    Local $hWnd, $hDC, $hBMP, $hImage1, $hImage2, $hGraphic, $CLSID, $i = 0
+    Local $hWnd, $hDC, $hBMP, $hImage1, $hImage2, $hGraphic, $CLSID
     $hWnd = _WinAPI_GetDesktopWindow()
     $hDC = _WinAPI_GetDC($hWnd)
     $hBMP = _WinAPI_CreateCompatibleBitmap($hDC, $iW, $iH)
@@ -619,3 +653,17 @@ Func _ImageResize($sInImage, $sOutImage, $iW, $iH)
     _WinAPI_DeleteObject($hBMP)
     _GDIPlus_Shutdown()
 EndFunc   ;==>_ImageResize
+
+Func Monitor($io_control = "on")
+    Local $WM_SYSCommand = 274
+    Local $SC_MonitorPower = 61808
+    Local $HWND = WinGetHandle('[CLASS:Progman]')
+    Switch StringUpper($io_control)
+        Case "OFF"
+            DllCall("user32.dll", "int", "SendMessage", "hwnd", $HWND, "int", $WM_SYSCommand, "int", $SC_MonitorPower, "int", 2)
+        Case "ON"
+            DllCall("user32.dll", "int", "SendMessage", "hwnd", $HWND, "int", $WM_SYSCommand, "int", $SC_MonitorPower, "int", -1)
+        Case Else
+            MsgBox(32, @ScriptName, "Command usage: on/off")
+    EndSwitch
+EndFunc
