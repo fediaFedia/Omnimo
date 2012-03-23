@@ -1,142 +1,194 @@
-#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#NoTrayIcon
+#region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_outfile=..\WP7\Common\Config\config.exe
+#AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
-#AutoIt3Wrapper_Res_Description=Made for Omnimo UI
+#AutoIt3Wrapper_Res_Description=Omnimo Config Tool
 #AutoIt3Wrapper_Res_Fileversion=1.0.0.0
-#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2011
-#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2012
+#AutoIt3Wrapper_AU3Check_Parameters=-w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
+#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
 #include <GuiEdit.au3>
 
-$AppDataDir = EnvGet("APPDATA")
-$SystemDrive = EnvGet("SYSTEMDRIVE")
+#include "Common.au3"
 
-If FileFindFirstFile($AppDataDir & "\Rainmeter\Rainmeter.ini") <> -1 Then
-	$DataFolder = $AppDataDir & "\Rainmeter\"
-ElseIf FileFindFirstFile($SystemDrive & "\Program Files\Rainmeter\Rainmeter.ini") <> -1 Then
-	$DataFolder = $SystemDrive & "\Program Files\Rainmeter\"
-ElseIf FileFindFirstFile("..\..\..\..\Rainmeter.ini") <> -1 Then
-	$DataFolder = "..\..\..\..\"
-Else
-	MsgBox(4096, "Error", "Could not locate Rainmeter.ini")
-	Exit
-EndIf
+; Check arguments
+If $CmdLine[0] < 3 Then _OmnimoError("Omnimo Panel Config", "Too few command line arguments specified.")
 
-$SkinPath = IniRead($DataFolder & "Rainmeter.ini", "Rainmeter", "SkinPath", "")
-If $SkinPath = "" Then
-	MsgBox(4096, "Invalid SkinPath", "Your SkinPath in Rainmeter.ini looks to be empty")
-	Exit
-EndIf
+; Set up variables
+Const $font = "Segoe UI"
+Const $Config = $CmdLine[2]
+Const $DataFolder = $CmdLine[3]
 
-$font = "Segoe UI"
-$XPosition = IniRead($DataFolder & "Rainmeter.ini", $CmdLine[1], "WindowX", "")
-$YPosition = IniRead($DataFolder & "Rainmeter.ini", $CmdLine[1], "WindowY", "")
-$Size = IniRead($SkinPath & $CmdLine[1] & "\size.inc", "Variables", "Height","")
+Const $SkinPath = IniRead($DataFolder & "Rainmeter.ini", "Rainmeter", "SkinPath", @UserProfileDir & "\Documents\Rainmeter\Skins\")
+Const $XPosition = IniRead($DataFolder & "Rainmeter.ini", $Config, "WindowX", "0")
+Const $YPosition = IniRead($DataFolder & "Rainmeter.ini", $Config, "WindowY", "0")
+$Size = IniRead($SkinPath & $Config & "\size.inc", "Variables", "Height", "150")
 
-$Gui = GUICreate("Configure", $Size, $Size, $XPosition+5, $YPosition+5, BitOR($WS_VISIBLE,$WS_POPUP),$WS_EX_TOOLWINDOW)
+; Store variables and their descriptions into arrays
+Global $VarName[50]
+Global $VarDescription[50]
+Global $VarCount = 0
+Global $ChangeInput = 0
+Global $VariableInput
+Global $Comments = ""
+Global $CommentLimit = 5
+
+; Open configuration file for reading
+$CfgFile = FileOpen($SkinPath & $CmdLine[2] & "\RainConfigure.cfg", 0)
+If $CfgFile = -1 Then _OmnimoError("Unable to open RainConfigure.cfg", "The configuration tool was unable to open RainConfigure.cfg")
+
+FileReadLine($CfgFile) ; skip over section name
+
+; Read variables and their descriptions into arrays
+While 1
+	$name = FileReadLine($CfgFile)
+	If StringLeft($name, 1) = "#" Then
+		$Comments &= (StringTrimLeft($name, 1) & @CRLF)
+	ElseIf $name = "" Then
+		$Comments &= @CRLF
+	Else
+		$VarCount = $VarCount + 1
+		$VarName[$VarCount] = $name
+		$VarDescription[$VarCount] = FileReadLine($CfgFile)
+	EndIf
+	If $name = "[Files]" Then ExitLoop
+WEnd
+FileClose($CfgFile)
+
+$VarFile = $SkinPath & $CmdLine[2] & "\UserVariables.inc"
+$VarCount -= 1
+
+$GuiOptions = BitOR($WS_VISIBLE, $WS_POPUP)
+
+; Set up GUI measurements
+Switch $CmdLine[1]
+	Case "double"
+		$width = $Size * 2 + 10
+		$height = $Size
+		$listW = ($Size * 2 + 10) / 1.11
+		$listH = $Size * 0.64
+		$setX = $Size * 1.85
+		$buttonsY = $Size / 1.15
+		$inputY = $Size / 1.35 - 1
+
+	Case "doubleV"
+		$width = $Size
+		$height = $Size * 2 + 10
+		$listW = $Size / 1.11
+		$listH = $Size * 1.7
+		$setX = $Size / 1.35
+		$buttonsY = $Size * 1.92
+		$inputY = $Size * 1.78
+		$CommentLimit = 10
+
+	Case "text"
+		$Size = 150
+		$width = 200
+		$height = 310
+		$listW = 180.18
+		$listH = 255
+		$setX = 161.11
+		$buttonsY = 288
+		$inputY = 267
+		$GuiOptions = Default
+
+	Case Else
+		$width = $Size
+		$height = $Size
+		$listW = $Size / 1.11
+		$listH = $Size * 0.64
+		$setX = $Size / 1.35
+		$buttonsY = $Size / 1.15
+		$inputY = $Size / 1.35 - 1
+EndSwitch
+
+; Create GUI
+$Gui = GUICreate("Configure", $width, $height, $XPosition + 5, $YPosition + 5, $GuiOptions, $WS_EX_TOOLWINDOW)
 GUISetBkColor(0xe1e1e1)
-GUICtrlCreatePic("header.jpg", $Size/30, 0, $Size/3.75, $Size/30, Default)
-$VariableList = GUICtrlCreateList("", 10, 15, $Size/1.11111, $Size/5*3.2, BitOR($ES_AUTOVSCROLL,$ES_AUTOHSCROLL,$WS_HSCROLL,$WS_VSCROLL), 0)
+GUICtrlCreatePic("header.jpg", $Size / 30, 0, $Size / 3.75, $Size / 30, Default)
+
+; Create an edit control for comments if needed
+If $VarCount < $CommentLimit Then
+	$opts = 0
+	$prevlistH = $listH
+	$listH = $listH * ($VarCount / $CommentLimit) + $Size / 15
+	GUICtrlCreateEdit($Comments, 9, $listH, $listW, $prevlistH - $listH + $Size / 15, $ES_MULTILINE + $ES_AUTOVSCROLL, 0)
+	GUICtrlSetBkColor(-1, 0xe1e1e1)
+	GUICtrlSetColor(-1, 0x323232)
+	GUICtrlSetFont(-1, $Size / 15, 400, 0, $font)
+	GUICtrlSetState(-1, $GUI_DISABLE)
+Else
+	$opts = BitOR($ES_AUTOVSCROLL, $ES_AUTOHSCROLL, $WS_HSCROLL, $WS_VSCROLL)
+EndIf
+
+$VariableList = GUICtrlCreateList("", 10, 15, $listW, $listH, $opts, 0)
 GUICtrlSetBkColor(-1, 0xe1e1e1)
 GUICtrlSetColor(-1, 0x323232)
-GUICtrlSetFont(-1, $Size/15, 400, 0, $font)
-$VariableInput = GUICtrlCreateInput("", 0, $Size/1.35-1, $Size, $Size/7.5, -1, 0)
-GUICtrlSetFont(-1, $Size/15, 00, 0, $font)
-GUICtrlSetColor(-1, 0x000000)
-GUICtrlSetBkColor(-1, 0xd2d2d2)
-$Cancel = GUICtrlCreateLabel("Close", $Size/15, $Size/1.15, $Size/3, $Size/7.5)
+GUICtrlSetFont(-1, $Size / 15, 400, 0, $font)
+_CreateVariableInput(-1)
+$Close = GUICtrlCreateLabel("Close", $Size / 15, $buttonsY, $Size / 3, $Size / 7.5)
 GUICtrlSetColor(-1, 0x323232)
-GUICtrlSetFont(-1, $Size/15, 600, 0, $font)
-$Set = GUICtrlCreateLabel("Set", $Size/1.35,  $Size/1.15, $Size/3, $Size/7.5)
+GUICtrlSetFont(-1, $Size / 15, 600, 0, $font)
+$Set = GUICtrlCreateLabel("Set", $setX, $buttonsY, $Size / 3, $Size / 7.5)
 GUICtrlSetColor(-1, 0x323232)
-GUICtrlSetFont(-1, $Size/15, 600, 0, $font)
+GUICtrlSetFont(-1, $Size / 15, 600, 0, $font)
 
-GUISetState(@SW_SHOW)
+GUISetState()
 
-Dim $VarName[100]
-Dim $VarDescription[100]
-Dim $iniFiles[100]
-Dim $VarCount = 0
-Dim $FilesCount = 0
-Dim $EndIt = 0
-Dim $Foundini = 0
-
-$CfgFile = FileOpen($SkinPath & $CmdLine[1] & "\RainConfigure.cfg", 0)
-If $CfgFile = -1 Then
-	MsgBox(0, "Could not find RainConfigure.cfg", "The program was unable to find RainConfigure.cfg")
-	Exit
-EndIf
-$VariableSection = FileReadLine ($CfgFile)
-
-Do
-	$VarCount = $VarCount + 1
-	$VarName[$VarCount] = FileReadLine ($CfgFile)
-	$VarDescription[$VarCount] = FileReadLine ($CfgFile)
-	If $VarName[$VarCount] = "[Files]" Then $EndIt = 1
-Until $EndIt = 1
-
-$iniFiles[1] = $SkinPath & $CmdLine[1] & "\UserVariables.inc"
-$FilesCount = $FilesCount + 1
-
-While @error <> -1
-	$FilesCount = $FilesCount + 1
-	$iniFiles[$FilesCount] = FileReadLine($CfgFile)
-WEnd
-
-FileClose ($CfgFile)
-$VarCount = $VarCount - 1
-$FilesCount = $FilesCount - 1
-
-For $ListCount = 1 to $VarCount
-GUICtrlSetData($VariableList,$VarName[$ListCount] & "|")
+For $ListCount = 1 To $VarCount
+	GUICtrlSetData($VariableList, $VarName[$ListCount] & "|")
 Next
 
 While 1
-
 	$nMsg = GUIGetMsg()
-
 	Switch $nMsg
 
-		Case $GUI_EVENT_CLOSE
-			FileClose($CfgFile)
-			Exit
-
-		Case $Cancel
-			Exit
+		Case $GUI_EVENT_CLOSE, $Close
+			_quit()
 
 		Case $VariableList
 			$CurrentVarName = GUICtrlRead($VariableList)
+
+			; Set input field to block variables with 'password' in them
 			If StringInStr($CurrentVarName, "Password", 2) Then
-				GUICtrlDelete($VariableInput)
-				$VariableInput = GUICtrlCreateInput("", 0, $Size/1.35-1, $Size, $Size/7.5, BitOR($ES_AUTOHSCROLL, $ES_PASSWORD), 0)
-			Else
-				GUICtrlDelete($VariableInput)
-				$VariableInput = GUICtrlCreateInput("", 0, $Size/1.35-1, $Size, $Size/7.5, -1, 0)
+				_CreateVariableInput(BitOR($ES_AUTOHSCROLL, $ES_PASSWORD))
+				$ChangeInput = 1 ; recreate input field next time
+			ElseIf $ChangeInput = 1 Then
+				_CreateVariableInput(-1)
+				$ChangeInput = 0
 			EndIf
-			GUICtrlSetFont(-1, $Size/15, 400, 0, $font)
-			GUICtrlSetColor(-1, 0x000000)
-			GUICtrlSetBkColor(-1, 0xd2d2d2)
-			For $ListCount = 1 to $VarCount
-				if $VarName[$ListCount] = $CurrentVarName Then
+
+			For $ListCount = 1 To $VarCount
+				If $VarName[$ListCount] = $CurrentVarName Then
 					$CurrentVarDescription = $VarDescription[$ListCount]
 				EndIf
 			Next
+
+			; Show variable description as tooltip
 			ToolTip($CurrentVarDescription)
-			For $ListCount = 1 to $FilesCount
-				$Temp = IniRead($iniFiles[$ListCount], "Variables", $CurrentVarName,"")
-				$ini2Edit = $iniFiles[$ListCount]
-				GUICtrlSetData($VariableInput, $Temp)
-				ExitLoop
-			Next
+
+			GUICtrlSetData($VariableInput, IniRead($VarFile, "Variables", $CurrentVarName, ""))
 
 		Case $Set
-			For $ListCount = 1 to $FilesCount
-				$Temp = IniRead($iniFiles[$ListCount], "Variables", $CurrentVarName,"")
-				ShellExecute("refresh.exe", "/!RainmeterRefresh " & $CmdLine[1])
-				IniWrite($iniFiles[$ListCount], "Variables", $CurrentVarName, GUICtrlRead($VariableInput))
-			Next
+			; Write variable to file
+			IniWrite($VarFile, "Variables", $CurrentVarName, GUICtrlRead($VariableInput))
 
-EndSwitch
+	EndSwitch
 WEnd
+
+Func _quit()
+	SendBang("!RainmeterRefresh " & $CmdLine[2]) ; refresh config
+	Exit
+EndFunc   ;==>_quit
+
+Func _CreateVariableInput($opts)
+	GUICtrlDelete($VariableInput)
+	$VariableInput = GUICtrlCreateInput("", 0, $inputY, $width, $Size / 7.5, $opts, 0)
+	GUICtrlSetFont(-1, $Size / 15, 400, 0, $font)
+	GUICtrlSetColor(-1, 0x000000)
+	GUICtrlSetBkColor(-1, 0xd2d2d2)
+EndFunc
