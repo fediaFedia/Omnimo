@@ -147,6 +147,11 @@ Case 'Monitor'
 	Monitor("off")
 
 
+; Open Start Menu
+Case 'StartMenu'
+	Send("{LWIN}")
+
+
 ; Toggle desktop icons
 ; Command line arguments:
 ; [2] Show / Hide (optional)
