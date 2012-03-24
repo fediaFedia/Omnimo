@@ -52,6 +52,7 @@ $slider = GUICtrlCreateSlider(0, 1, $Width - 43, 25, $TBS_NOTICKS)
 $input = GUICtrlCreateInput($Size, $Width - 43, 3, 40, 20)
 $updown = GUICtrlCreateUpdown(-1)
 $closed = GUICtrlCreatePic("close.jpg", $Width, 0, 16, 26)
+$prevsize = $Size
 
 ; Set slider range and position
 GUICtrlSetLimit($slider, 300, 100)
@@ -60,6 +61,14 @@ GUICtrlSetData($slider, $Size)
 GUISetState(@SW_SHOW)
 
 While 1
+	Sleep(50)
+
+	$newsize = GuiCtrlRead($slider)
+	If $newsize <> $prevsize Then
+		GUICtrlSetData($input, $newsize)
+		$prevsize = $newsize
+	EndIf
+
 	$nMsg = GUIGetMsg()
 	Switch $nMsg
 
@@ -80,9 +89,6 @@ While 1
 
 		Case $updown, $input
 			GUICtrlSetData($slider, GUICtrlRead($input))
-
-		Case $slider
-			GUICtrlSetData($input, GUICtrlRead($slider))
 
 	EndSwitch
 WEnd
