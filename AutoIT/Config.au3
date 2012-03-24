@@ -148,7 +148,7 @@ While 1
 	Switch $nMsg
 
 		Case $GUI_EVENT_CLOSE, $Close
-			_quit()
+			Exit
 
 		Case $VariableList
 			$CurrentVarName = GUICtrlRead($VariableList)
@@ -176,14 +176,10 @@ While 1
 		Case $Set
 			; Write variable to file
 			IniWrite($VarFile, "Variables", $CurrentVarName, GUICtrlRead($VariableInput))
+			SendBang("!RainmeterRefresh " & $CmdLine[2]) ; refresh config
 
 	EndSwitch
 WEnd
-
-Func _quit()
-	SendBang("!RainmeterRefresh " & $CmdLine[2]) ; refresh config
-	Exit
-EndFunc   ;==>_quit
 
 Func _CreateVariableInput($opts)
 	GUICtrlDelete($VariableInput)
