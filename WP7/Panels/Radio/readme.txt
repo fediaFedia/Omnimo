@@ -1,8 +1,8 @@
 You need VLC to be installed for this panel to work.
 
-If you're using 64bit windows or a different partition for windows, change the VLC program path in config.
+If you're using 32-bit Windows or a different partition for windows, change the VLC program path in config.
 
-You can ad your own playlists by copying them in the Radio folder, then you need to edit StationLink to point to the playlist file.
+You can add your own playlists by copying them in the Radio folder, then you need to edit StationLink to point to the playlist file.
 
 For example:
 
@@ -11,7 +11,7 @@ Station1Title=your playlist name
 
 How to get station playlists:
 
-; Goto to http://shoutcast.com/
+; Go to http://shoutcast.com/
 ;
 ; Search for a choose the stations you want
 ; Download the .pls file for a station.  It
@@ -20,4 +20,3 @@ How to get station playlists:
 ; and place it in your Radio folder.
 ; Then just replace the name and description
 ; in the [Variables] section of this .ini file.
-
