@@ -69,7 +69,6 @@ Switch $CmdLine[1]
 	Case "double"
 		$width = $Size * 2 + 10
 		$height = $Size
-		$listW = ($Size * 2 + 10) / 1.11
 		$listH = $Size * 0.64
 		$setX = $Size * 1.85
 		$buttonsY = $Size / 1.15
@@ -78,7 +77,6 @@ Switch $CmdLine[1]
 	Case "doubleV"
 		$width = $Size
 		$height = $Size * 2 + 10
-		$listW = $Size / 1.11
 		$listH = $Size * 1.7
 		$setX = $Size / 1.35
 		$buttonsY = $Size * 1.92
@@ -89,7 +87,6 @@ Switch $CmdLine[1]
 		$Size = 150
 		$width = 200
 		$height = 310
-		$listW = 180.18
 		$listH = 255
 		$setX = 161.11
 		$buttonsY = 288
@@ -99,7 +96,6 @@ Switch $CmdLine[1]
 	Case Else
 		$width = $Size
 		$height = $Size
-		$listW = $Size / 1.11
 		$listH = $Size * 0.64
 		$setX = $Size / 1.35
 		$buttonsY = $Size / 1.15
@@ -116,7 +112,7 @@ If $VarCount < $CommentLimit Then
 	$opts = 0
 	$prevlistH = $listH
 	$listH = $listH * ($VarCount / $CommentLimit) + $Size / 15
-	GUICtrlCreateEdit($Comments, 9, $listH, $listW, $prevlistH - $listH + $Size / 15, $ES_MULTILINE + $ES_AUTOVSCROLL, 0)
+	GUICtrlCreateEdit($Comments, 9, $listH, $width - 18, $prevlistH - $listH + $Size / 15, $ES_MULTILINE + $ES_AUTOVSCROLL, 0)
 	GUICtrlSetBkColor(-1, 0xe1e1e1)
 	GUICtrlSetColor(-1, 0x323232)
 	GUICtrlSetFont(-1, $Size / 15, 400, 0, $font)
@@ -125,7 +121,7 @@ Else
 	$opts = BitOR($ES_AUTOVSCROLL, $ES_AUTOHSCROLL, $WS_HSCROLL, $WS_VSCROLL)
 EndIf
 
-$VariableList = GUICtrlCreateList("", 10, 15, $listW, $listH, $opts, 0)
+$VariableList = GUICtrlCreateList("", 10, 15, $width - 20, $listH, $opts, 0)
 GUICtrlSetBkColor(-1, 0xe1e1e1)
 GUICtrlSetColor(-1, 0x323232)
 GUICtrlSetFont(-1, $Size / 15, 400, 0, $font)
