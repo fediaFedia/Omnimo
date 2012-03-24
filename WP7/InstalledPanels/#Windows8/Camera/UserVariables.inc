@@ -1,3 +1,3 @@
 [Variables]
 Title=Camera
-action=none
+Action=None
