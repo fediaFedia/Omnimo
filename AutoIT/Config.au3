@@ -87,7 +87,7 @@ Switch $CmdLine[1]
 		$Size = 150
 		$width = 200
 		$height = 310
-		$listH = 255
+		$listH = 250
 		$setX = 161.11
 		$buttonsY = 288
 		$inputY = 267
