@@ -1,19 +1,16 @@
 You can change the color of any panel by using Individual Panel Color
 You can close any panel by middle-clicking it
-To accurately adjust the resizing slider, you can use the arrow keys
-In the color gallery, right-click an item or color to set for the hover state
 Almost every panel is resizable, click the bottom right corner icon to resize
 Right-click any panel and select the Settings item for additional options
-You can create themes in a form of color.inc which is in WP7\Common\Color folder
+You can create themes in a form of color.inc, located in WP7\Common\Color
 If a panel with rss feed stops working for no reason, restart Rainmeter
 You can hack Omnimo color settings and unlock some unfinished features in color.inc
-You can open the Omnimo gallery by clicking the rainmeter tray icon
+You can open the Omnimo gallery by clicking the Rainmeter tray icon
 If you need icons which have a WP7 feel, google for "ecqlipse 2"
-Try not to use too many panels which show realtime information
 SecuNotes and SecuLock are not as secure as you think
 Middle-click the bg config to adjust its settings, you can even enable aero
 Panels can adjust transparency in 2 ways - from skin menu and from color gallery
-If you like your desktop layout, you can save it as a theme in RainThemes
+If you like your desktop layout, you can save it as a theme in Manage Rainmeter
 Create your own panels with Panel Creator
 If you have Speedfan running but the panel doesnt work, set the FanNumber in settings
 Some panels have a help icon with instructions
@@ -25,7 +22,7 @@ To exit most of the overlay applets like maps, simply click anywhere outside of 
 Are you a graphics designer? Check out the Kuler panel
 Keep rainmeter up to date for better stability
 Omnimo updates are announced on fediafedia.deviantart.com or Omnimo.info
-Re-enable the + button: right-click the rainmeter tray icon, then Configs\WP7\galleryplus
+Re-enable the + button: right-click the rainmeter tray icon, then Configs\WP7\galleryarrow.ini
 Conserve performance by using less realtime panels
 There are a lot of panels not shown in the gallery, use the context menus to access them
 You can select different themes from the themes gallery

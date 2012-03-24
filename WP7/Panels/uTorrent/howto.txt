@@ -12,7 +12,7 @@
 
 Enjoy :-)
 
-If µTorrent does not work:
+If the panel does not work:
 
 - WebParser might be affected by a proxy. Check your proxy settings in Internet Explorer (Tools -> Internet Options).
 - Make sure you're running µTorrent 2.2 or newer

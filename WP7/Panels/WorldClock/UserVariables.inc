@@ -8,7 +8,6 @@ CityZone3=+4.0
 24Hour=%H:%M
 12Hour=%I:%M %p
 TimeFormat=#24Hour#
-ClockName=#24Hour#
 DayLightSavings1=1
 DayLightSavings2=0
 DayLightSavings3=1
