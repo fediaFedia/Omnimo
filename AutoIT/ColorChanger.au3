@@ -93,7 +93,9 @@ If $CmdLine[0] < 1 Then _OmnimoError("Individual Panel Color", "Too few command 
 
 Const $SettingsPath = $CmdLine[1]
 Const $SkinPath = IniRead($SettingsPath & 'Rainmeter.ini', 'Rainmeter', 'SkinPath', @UserProfileDir & '\Documents\Rainmeter\Skins\')
-Const $Opacity = IniRead($SkinPath & '\WP7\Common\Color\Color.inc', 'Variables', 'Opacity', '255')
+Const $Opacity = IniRead($SkinPath & '\WP7\Common\Color\color.inc', 'Variables', 'Opacity', '255')
+Global $Color = IniRead($SkinPath & '\WP7\Common\Color\color.inc', 'Variables', 'ColorSkin', '27,161,226,' & $Opacity) & ',' & $Opacity
+Global $Custom = $Color
 
 $file = FileOpen($SettingsPath & '\Rainmeter.ini', 0)
 If $file = -1 Then _OmnimoError("Individual Panel Color", "Unable to open Rainmeter.ini for reading.")
@@ -162,20 +164,12 @@ While 1
 		Case $c15
 			$Color = _ColorChoose($c15b, 14)
 		Case $c16
-			$Data = _ColorChooserDialog($Color, $Form1)
+			$Data = _ColorChooserDialog(_RGBToHex($Custom), $Form1)
 			GUICtrlSetBkColor($c16, $Data)
 			GUICtrlSetState($c16b, $GUI_SHOW)
 			_HideOthers($c16b)
 			$Color = _HexToRGB($Data)
-		Case $plus
-			_HideOthers('')
-			$Data = _ColorChooserDialog($Color, $Form1)
-			GUICtrlSetState($plus, $GUI_HIDE)
-			GUICtrlSetBkColor($c16, $Data)
-			GUICtrlSetState($c16, $GUI_SHOW)
-			GUICtrlSetState($c16b, $GUI_SHOW)
-			_HideOthers($c16b)
-			$Color = _HexToRGB($Data)
+			$Custom = $Color
 		Case $Button2
 			; List all ini files in panel's directory
 			$filelist = _FileListToArray($SkinPath & 'WP7\' & GUICtrlRead($List1), '*.ini', 1)
@@ -210,6 +204,12 @@ Func _HexToRGB($Color)
 	$Green = BitAND(BitShift($Color, 8), 0xFF)
 	$Red = BitAND(BitShift($Color, 16), 0xFF)
 	Return $Red & ',' & $Green & ',' & $Blue & ',' & $Opacity
+EndFunc
+
+; Convert RGB to Hex
+Func _RGBToHex($Color)
+	$split = StringSplit($Color, ',')
+	Return '0x' & Hex($split[1], 2) & Hex($split[2], 2) & Hex($split[3], 2)
 EndFunc
 
 ; Hide borders
