@@ -1,6 +1,6 @@
 [Variables]
-panel12=iTunesRemote
-panel15=LiveStocks
+panel12=RottenTomatoes
+panel15=QuickMeme
 panel16=Maps
 panel21=Notes++
 panel26=PremiumWeather

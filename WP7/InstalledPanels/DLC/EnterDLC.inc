@@ -1,4 +1,4 @@
 [Variables]
-panel1=amazon
+panel1=USDebt
 panel19=Movies
 panel14=Lastfm

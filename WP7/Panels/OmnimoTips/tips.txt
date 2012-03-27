@@ -8,6 +8,7 @@ You can hack Omnimo color settings and unlock some unfinished features in color.
 You can open the Omnimo gallery by clicking the Rainmeter tray icon
 If you need icons which have a WP7 feel, google for "ecqlipse 2"
 SecuNotes and SecuLock are not as secure as you think
+Double click the brightness icon in the sidebar to quickly turn off the monitor, and next time lock your door!
 Middle-click the bg config to adjust its settings, you can even enable aero
 Panels can adjust transparency in 2 ways - from skin menu and from color gallery
 If you like your desktop layout, you can save it as a theme in Manage Rainmeter
@@ -30,6 +31,6 @@ If your panel doesn't snap very well, hold Shift and drag it for a perfect posit
 You can enable blur behind panels on Windows Vista or 7
 If some panels don't show information - try refreshing them
 You can customize the PanelCombos toggler with different functions
-You can change the language of Omnimo by going to WP7\Common\Variables\Languages and double-clicking a shortcut
+You can change the language of Omnimo in the settings
 Omnimo may or may not have been an inspiration for the actual Windows 8 UI
 Omnimo is Open Source and on github! https://github.com/fediaFedia/Omnimo/

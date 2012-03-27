@@ -2,6 +2,6 @@
 GmailUsername=username
 GmailPassword=password
 CheckEvery=600
-Gmail=Not configured
+Gmail=Gmail
 MailIcon=1
-Configured=0
+Configured=1

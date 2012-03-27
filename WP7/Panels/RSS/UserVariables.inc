@@ -9,5 +9,5 @@ RSS4=http://rss.cnn.com/rss/edition.rss
 RSS4Name=CNN News
 RSS5=http://www.engadget.com/rss.xml
 RSS5Name=Engadget
-RSSMain=http://reddit.com/.rss
-RSSMainName=Reddit
+RSSMain=http://feeds.gawker.com/lifehacker/full
+RSSMainName=Lifehacker

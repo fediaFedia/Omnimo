@@ -1,2 +1,0 @@
-[Variables]
-zunelocation=zune.exe
