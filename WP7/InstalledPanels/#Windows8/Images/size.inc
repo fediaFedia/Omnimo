@@ -1,2 +1,2 @@
 [Variables]
-height=150
+height=120
