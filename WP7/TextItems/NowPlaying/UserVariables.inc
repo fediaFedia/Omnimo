@@ -1,5 +1,5 @@
 [Variables]
-Player=iTunes
+Player=WMP
 Ncolor=255,255,255,30
 FontSize=12
 Width=730
