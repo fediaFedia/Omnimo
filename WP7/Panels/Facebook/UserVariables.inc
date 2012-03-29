@@ -1,5 +1,5 @@
 [Variables]
 FeedTitle=Facebook
-FeedURL=pasteyourlinkhere
+FeedURL=pastelinkhere
 NUTime=60
 fontsize=10
