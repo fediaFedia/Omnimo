@@ -1,6 +1,5 @@
 ;BEWARE! Editing this file manually can unlock quite a few skinning features, but it can also break. EVERYTHING.
 
-
 [Variables]
 arrowcolor=255,255,255
 DefaultFontSize=(#height#/12-1)

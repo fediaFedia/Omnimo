@@ -1,6 +1,5 @@
 ;BEWARE! Editing this file manually can unlock quite a few skinning features, but it can also break. EVERYTHING.
 
-
 [Variables]
 Imagedir=#skinspath#\WP7\Common\Panel\Default
 ColorSkin=27,161,226
