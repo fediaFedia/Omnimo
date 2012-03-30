@@ -1,5 +1,5 @@
 #NoTrayIcon
-#region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_outfile=..\WP7\Common\Config\config.exe
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
@@ -7,7 +7,7 @@
 #AutoIt3Wrapper_Res_Fileversion=1.0.0.0
 #AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2012
 #AutoIt3Wrapper_AU3Check_Parameters=-w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
-#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
@@ -34,6 +34,7 @@ Global $VarDescription[50]
 Global $VarCount = 0
 Global $ChangeInput = 0
 Global $VariableInput
+Global $CurrentVarName
 Global $Comments = ""
 Global $CommentLimit = 5
 
@@ -81,16 +82,17 @@ Switch $CmdLine[1]
 		$setX = $Size / 1.35
 		$buttonsY = $Size * 1.92
 		$inputY = $Size * 1.78
-		$CommentLimit = 10
+		$CommentLimit = 13
 
 	Case "text"
 		$Size = 150
 		$width = 200
 		$height = 310
-		$listH = 250
+		$listH = 255
 		$setX = 161.11
 		$buttonsY = 288
 		$inputY = 267
+		$CommentLimit = 13
 		$GuiOptions = Default
 
 	Case Else
@@ -111,12 +113,13 @@ GUICtrlCreatePic("header.jpg", $Size / 30, 0, $Size / 3.75, $Size / 30, Default)
 If $VarCount < $CommentLimit Then
 	$opts = 0
 	$prevlistH = $listH
-	$listH = $listH * ($VarCount / $CommentLimit) + $Size / 15
+	$listH = $listH * ($VarCount / ($CommentLimit + 1)) + $Size / 10
 	GUICtrlCreateEdit($Comments, 9, $listH, $width - 18, $prevlistH - $listH + $Size / 15, $ES_MULTILINE + $ES_AUTOVSCROLL, 0)
 	GUICtrlSetBkColor(-1, 0xe1e1e1)
 	GUICtrlSetColor(-1, 0x323232)
 	GUICtrlSetFont(-1, $Size / 15, 400, 0, $font)
 	GUICtrlSetState(-1, $GUI_DISABLE)
+	If $CmdLine[1] = "text" Then $listH -= 15
 Else
 	$opts = BitOR($ES_AUTOVSCROLL, $ES_AUTOHSCROLL, $WS_HSCROLL, $WS_VSCROLL)
 EndIf
@@ -171,8 +174,13 @@ While 1
 
 		Case $Set
 			; Write variable to file
-			IniWrite($VarFile, "Variables", $CurrentVarName, GUICtrlRead($VariableInput))
-			SendBang("!RainmeterRefresh " & $CmdLine[2]) ; refresh config
+			GUICtrlSetColor($Set, 0x7A7A7A)
+			If $CurrentVarName <> "" Then
+				IniWrite($VarFile, "Variables", $CurrentVarName, GUICtrlRead($VariableInput))
+				SendBang("!RainmeterRefresh " & $CmdLine[2]) ; refresh config
+			EndIf
+			Sleep(100)
+			GUICtrlSetColor($Set, 0x323232)
 
 	EndSwitch
 WEnd
