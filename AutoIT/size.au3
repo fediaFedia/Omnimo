@@ -76,12 +76,14 @@ While 1
 			Exit
 
 		Case $closed
+			If $newsize = $Size Then Exit
+			IniWrite($SkinsPath & $Config & "\size.inc", "Variables", "Height", $newsize)
+
 			If $CmdLine[1] = "All" Then
 				_ResizePanels('WP7\Panels')
 				_ResizePanels('WP7\InstalledPanels')
 				SendBang("!Refresh *") ; refresh Rainmeter
 			Else
-				IniWrite($SkinsPath & $Config & "\size.inc", "Variables", "Height", GUICtrlRead($input))
 				SendBang("!Refresh " & $Config) ; refresh panel
 			EndIf
 
