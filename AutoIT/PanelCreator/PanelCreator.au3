@@ -37,9 +37,17 @@ EndIf
 
 Const $SkinPath = IniRead($DataFolder & "Rainmeter.ini", "Rainmeter", "SkinPath", @UserProfileDir & '\Documents\Rainmeter\Skins\')
 Const $ColorInc = $SkinPath & 'WP7\Common\color\color.inc'
+Const $PanelsInc = $SkinPath & "WP7\Gallery\MyPanels\panels.inc"
+
+If $CmdLine[0] > 1 And $CmdLine[1] = "Delete" Then
+	IniDelete($PanelsInc, "Variables", "Name" & $CmdLine[2])
+	IniDelete($PanelsInc, "Variables", "Path" & $CmdLine[2])
+	IniDelete($PanelsInc, "Variables", "Icon" & $CmdLine[2])
+	SendBang("!Refresh WP7\Gallery\MyPanels")
+	Exit
+EndIf
 
 ; Load variables from color.inc
-Const $xposition = IniRead($ColorInc, "Variables", "xposition", "15")
 Const $yposition = IniRead($ColorInc, "Variables", "yposition", "1.2")
 Const $fonttype = IniRead($ColorInc, "Variables", "FontType", "Segoe UI Semibold")
 Const $fonttypewp = IniRead($ColorInc, "Variables", "FontTypeWP", "Segoe WP")
@@ -71,6 +79,7 @@ GUICtrlSetState(-1, $GUI_DROPACCEPTED)
 ; Footer
 $footer = GUICtrlCreateGraphic(0, 258, 470, 27)
 GUICtrlSetBkColor(-1, 0x787878)
+GUICtrlSetState(-1, $GUI_DISABLE)
 
 ; Title, help and close images
 $title = GUICtrlCreatePic("Resources\title.jpg", 18, 19, 350, 45, Default, $GUI_WS_EX_PARENTDRAG)
@@ -101,6 +110,7 @@ $template3 = GUICtrlCreatePic("Templates\" & $templates[3] & '.jpg', 402, 195, 3
 $moaricons = GUICtrlCreateLabel("Get more icons", 25, 265, 100, 20)
 GUICtrlSetColor(-1, 0xdddddd)
 GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+; GUICtrlCreateButton("Get more icons", 25, 265, 100, 20)
 
 ; Author information
 GUICtrlCreateLabel("Created by Xyrfo Systems Incorporated", 274, 265)
@@ -151,6 +161,9 @@ While 1
 
 		Case $help
 			ShellExecute("http://omnimo.info/CustomizationGuide/PanelCreator.html")
+
+		Case $moaricons
+			ShellExecute("http://browse.deviantart.com/customization/icons/dock/?order=9")
 
 		Case $GUI_EVENT_DROPPED
 			$filen = @GUI_DragFile
@@ -261,14 +274,16 @@ Func _Exit()
 EndFunc   ;==>_Exit
 
 Func _LoadTemplate($filen)
+	If $oldimg = "Resources\droptext.jpg" Then _DrawPanelImage("")
+
 	; Read Panel Creator options from template
 	$fixeds = Int(IniRead($filen, "Variables", "FixedIconSize", "0"))
 	$split = Int(IniRead($filen, "Variables", "SplitString", "0"))
 
 	; Read title position from template
-	$textx = StringReplace(IniRead($filen, "text", "X", "0"), "#height#", "150", 0, 2)
-	$textx = Int(Execute(StringReplace($textx, "#xposition#", $xposition, 0, 2)))
-	$texty = StringReplace(IniRead($filen, "text", "Y", "0"), "#height#", "150", 0, 2)
+	$textx = StringReplace(IniRead($filen, "text", "X", "0"), "#Height#", "150", 0, 2)
+	$textx = Int(Execute(StringReplace($textx, "#xposition#", 15, 0, 2)))
+	$texty = StringReplace(IniRead($filen, "text", "Y", "0"), "#Height#", "150", 0, 2)
 	$texty = Int(Execute(StringReplace($texty, "#yposition#", $yposition, 0, 2)))
 
 	; Read font from template
@@ -280,14 +295,14 @@ Func _LoadTemplate($filen)
 
 	; Read font size from template
 	$fsize = IniRead($filen, "text", "FontSize", "12")
-	$fsize = StringReplace($fsize, "#height#", "150", 0, 2)
+	$fsize = StringReplace($fsize, "#Height#", "150", 0, 2)
 	$fsize = Int(Execute(StringReplace($fsize, "#defaultfontsize#", $deffsize, 0, 2)))
 
 	; Read icon dimensions from template
-	$iconx = Int(Execute(StringReplace(IniRead($filen, "icon", "X", "0"), "#height#", "150", 0, 2)))
-	$icony = Int(Execute(StringReplace(IniRead($filen, "icon", "Y", "0"), "#height#", "150", 0, 2)))
-	$iconw = Int(Execute(StringReplace(IniRead($filen, "icon", "W", "0"), "#height#", "150", 0, 2)))
-	$iconh = Int(Execute(StringReplace(IniRead($filen, "icon", "H", "0"), "#height#", "150", 0, 2)))
+	$iconx = Int(Execute(StringReplace(IniRead($filen, "icon", "X", "0"), "#Height#", "150", 0, 2)))
+	$icony = Int(Execute(StringReplace(IniRead($filen, "icon", "Y", "0"), "#Height#", "150", 0, 2)))
+	$iconw = Int(Execute(StringReplace(IniRead($filen, "icon", "W", "0"), "#Height#", "150", 0, 2)))
+	$iconh = Int(Execute(StringReplace(IniRead($filen, "icon", "H", "0"), "#Height#", "150", 0, 2)))
 
 	; Create font
 	$hBrush = _GDIPlus_BrushCreateSolid(0xFFFFFFFF)
@@ -311,25 +326,25 @@ Func _DrawPanelImage($img)
 		$imageh = _GDIPlus_ImageGetHeight($hImage)
 	EndIf
 
-	; Calculate image dimensions only if FixedIconSize is not set
+	; Don't calculate image dimensions if FixedIconSize is set
 	If $fixeds = 1 Then
 		_GDIPlus_GraphicsDrawImageRect($hBackbuffer, $hImage, $iconx - 5, $icony - 5, $iconw, $iconh)
 	Else
 		$ratio = $imagew / $imageh
 
 		; Science, bitches!
-		If $imagew > 108 Or $imageh > 108 Then
+		If $imagew > 106 Or $imageh > 106 Then
 			If $imagew >= $imageh Then
-				$imagew = 108
-				$imageh = 108 / $ratio
+				$imagew = 106
+				$imageh = 106 / $ratio
 			Else
-				$imageh = 108
-				$imagew = 108 * $ratio
+				$imageh = 106
+				$imagew = 106 * $ratio
 			EndIf
 		EndIf
 
-		$imagex = 75 - ($imagew / 2)
-		$imagey = 72 - ($imageh / 2)
+		$imagex = 74 - ($imagew / 2)
+		$imagey = 71 - ($imageh / 2)
 
 		_GDIPlus_GraphicsDrawImageRect($hBackbuffer, $hImage, $imagex, $imagey, $imagew, $imageh)
 	EndIf
@@ -374,12 +389,12 @@ Func _CreatePanel()
 
 	; Copy image to panel directory
 	If $ext = '.panelc' Then
-		FileCopy($oldimg, $folderpath & '\' & $foldername & '.png', 1 + 8)
-		IniWrite($inipath, 'Variables', 'Image', $foldername & '.png')
+		$imgfilen = $foldername & '.png'
 	Else
-		FileCopy($oldimg, $folderpath, 1 + 8)
-		IniWrite($inipath, 'Variables', 'Image', $fname & $ext)
+		$imgfilen = $fname & $ext
 	EndIf
+	FileCopy($oldimg, $folderpath & '\' & $imgfilen, 1 + 8)
+	IniWrite($inipath, 'Variables', 'Image', $imgfilen)
 
 	; Write name and action to the panel
 	If $split Then
@@ -404,6 +419,20 @@ Func _CreatePanel()
 	; Create size.inc
 	IniWrite($folderpath & '\' & 'size.inc', 'Variables', 'Height', '150')
 
+	; Write panel info to panels.inc
+	For $i = 1 To 36
+		If IniRead($PanelsInc, "Variables", "Name" & $i, "-1") = "-1" Then ExitLoop
+	Next
+
+	If $i = 37 Then
+		Local $answer = MsgBox(52, "Omnimo Panel Creator", "The My Panels gallery is full. Would you like to overwrite the last panel?")
+		If $answer <> 7 Then $i -= 1
+	EndIf
+
+	IniWrite($PanelsInc, "Variables", "Name" & $i, $title)
+	IniWrite($PanelsInc, "Variables", "Path" & $i, $foldername)
+	IniWrite($PanelsInc, "Variables", "Icon" & $i, $imgfilen)
+
 	; Activate panel
 	If Not $exists Then
 		SendBang("!RefreshApp")
@@ -414,6 +443,7 @@ Func _CreatePanel()
 		Else
 			SendBang("!ActivateConfig WP7\Panels\" & $foldername & ' ' & $foldername & '.ini')
 		EndIf
+		SendBang("!Refresh WP7\Gallery\MyPanels")
 	EndIf
 EndFunc   ;==>_CreatePanel
 
