@@ -20,6 +20,11 @@
 
 Switch $CmdLine[1]
 
+; Open Start Menu
+Case 'StartMenu'
+	Send("{LWIN}")
+
+
 ; µTorrent
 ; Command line arguments:
 ; [2]: username
@@ -147,11 +152,6 @@ Case 'Monitor'
 	Monitor("off")
 
 
-; Open Start Menu
-Case 'StartMenu'
-	Send("{LWIN}")
-
-
 ; Toggle desktop icons
 ; Command line arguments:
 ; [2] Show / Hide (optional)
@@ -163,17 +163,18 @@ Case 'ToggleIcons'
     ; State == 5 => desktop icons are hidden
     $state = WinGetState($hListView)
 
-    If $CmdLine[2] = 'Show' Then
-        WinSetState($hListView, '', @SW_SHOW)
-    ElseIf $CmdLine[2] = 'Hide' Then
-        WinSetState($hListView, '', @SW_HIDE)
-    Else
-        If $state == '7' Then
-            WinSetState($hListView, '', @SW_HIDE)
-        ElseIf $state == '5' Then
-            WinSetState($hListView, '', @SW_SHOW)
-        EndIf
-    EndIf
+	Switch $CmdLine[2]
+		Case 'Show'
+			WinSetState($hListView, '', @SW_SHOW)
+		Case 'Hide'
+			WinSetState($hListView, '', @SW_HIDE)
+		Case 'Toggle'
+			If $state = '7' Then
+				WinSetState($hListView, '', @SW_HIDE)
+			ElseIf $state = '5' Then
+				WinSetState($hListView, '', @SW_SHOW)
+			EndIf
+	EndSwitch
 
     ; HACK!!! The numbers aren't always 5 and 7 on some systems so this might be buggy
 
