@@ -1,0 +1,5 @@
+[HighScores]
+Easy=
+Normal=
+Hard=
+Insane=
