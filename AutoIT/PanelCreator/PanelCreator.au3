@@ -36,13 +36,16 @@ Else
 EndIf
 
 Const $SkinPath = IniRead($DataFolder & "Rainmeter.ini", "Rainmeter", "SkinPath", @UserProfileDir & '\Documents\Rainmeter\Skins\')
-Const $ColorInc = $SkinPath & 'WP7\Common\color\color.inc'
+Const $ColorInc = $SkinPath & "WP7\Common\color\color.inc"
 Const $PanelsInc = $SkinPath & "WP7\Gallery\MyPanels\panels.inc"
 
 If $CmdLine[0] > 1 And $CmdLine[1] = "Delete" Then
+	$path = IniRead($PanelsInc, "Variables", "Path" & $CmdLine[2], "Name")
+	DirRemove($SkinPath & "WP7\Panels\" & $path, 1)
 	IniDelete($PanelsInc, "Variables", "Name" & $CmdLine[2])
 	IniDelete($PanelsInc, "Variables", "Path" & $CmdLine[2])
 	IniDelete($PanelsInc, "Variables", "Icon" & $CmdLine[2])
+	SendBang("!DeactivateConfig WP7\Panels\" & $path)
 	SendBang("!Refresh WP7\Gallery\MyPanels")
 	Exit
 EndIf
@@ -110,10 +113,9 @@ $template3 = GUICtrlCreatePic("Templates\" & $templates[3] & '.jpg', 402, 195, 3
 $moaricons = GUICtrlCreateLabel("Get more icons", 25, 265, 100, 20)
 GUICtrlSetColor(-1, 0xdddddd)
 GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
-; GUICtrlCreateButton("Get more icons", 25, 265, 100, 20)
 
 ; Author information
-GUICtrlCreateLabel("Created by Xyrfo Systems Incorporated", 274, 265)
+$copyright = GUICtrlCreateLabel("Created by Xyrfo Systems Incorporated", 274, 265)
 GUICtrlSetColor(-1, 0xdddddd)
 GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
 
@@ -164,6 +166,9 @@ While 1
 
 		Case $moaricons
 			ShellExecute("http://browse.deviantart.com/customization/icons/dock/?order=9")
+
+		Case $copyright
+			ShellExecute("http://www.xyrfo.com")
 
 		Case $GUI_EVENT_DROPPED
 			$filen = @GUI_DragFile
@@ -420,13 +425,13 @@ Func _CreatePanel()
 	IniWrite($folderpath & '\' & 'size.inc', 'Variables', 'Height', '150')
 
 	; Write panel info to panels.inc
-	For $i = 1 To 36
+	For $i = 1 To 40
 		If IniRead($PanelsInc, "Variables", "Name" & $i, "-1") = "-1" Then ExitLoop
 	Next
 
-	If $i = 37 Then
+	If $i = 41 Then
 		Local $answer = MsgBox(52, "Omnimo Panel Creator", "The My Panels gallery is full. Would you like to overwrite the last panel?")
-		If $answer <> 7 Then $i -= 1
+		If $answer = 6 Then $i -= 1
 	EndIf
 
 	IniWrite($PanelsInc, "Variables", "Name" & $i, $title)
