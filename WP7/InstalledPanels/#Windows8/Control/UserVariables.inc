@@ -1,3 +1,3 @@
 [Variables]
-Title=Control Panel
+Title=#ControlPanel#
 action=control.exe

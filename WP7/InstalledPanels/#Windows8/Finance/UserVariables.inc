@@ -1,5 +1,5 @@
 [Variables]
-Title=Finance
+Title=#Finance#
 action=www.google.com/finance
 
 Quote1=http://www.google.com/finance?q=INDEXBOM:AAPL

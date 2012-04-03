@@ -1,3 +1,3 @@
 [Variables]
-Title=Calendar
+Title=#Calendar#
 action=http://calendar.google.com/

@@ -1,3 +1,3 @@
 [Variables]
-Title=Music
+Title=#Music#
 action=wmplayer.exe

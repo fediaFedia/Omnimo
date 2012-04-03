@@ -15,4 +15,4 @@ Query=Microsoft
 Channel=TheOnion
 RSS1=http://lifehacker.com/tag/top/index.xml
 RSS1Name=lifehacker
-width=730
+width=760

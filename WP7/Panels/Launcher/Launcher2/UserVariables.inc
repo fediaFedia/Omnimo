@@ -33,4 +33,4 @@ Appicon5=Media Player - Zune.png
 Appicon6=immiranda.png
 Appicon7=utorrent.png
 Appicon8=TRASH - FULL.png
-PanelTitle=Programs
+PanelTitle=Applications

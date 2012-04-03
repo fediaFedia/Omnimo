@@ -1,3 +1,3 @@
 [Variables]
-Title=Video
+Title=#Videos#
 action=http://youtube.com

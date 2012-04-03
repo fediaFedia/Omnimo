@@ -1,3 +1,3 @@
 [Variables]
-Title=Mail
+Title=#Mail#
 action=http://gmail.com/

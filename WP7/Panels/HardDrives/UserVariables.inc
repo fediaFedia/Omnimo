@@ -7,5 +7,5 @@ DriveLabel3=E
 DriveLabel4=H
 DriveLabel5=G
 DriveLabel6=J
-PanelTitle=STORAGE
+PanelTitle=#STORAGE#
 =

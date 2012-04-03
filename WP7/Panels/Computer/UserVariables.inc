@@ -1,3 +1,3 @@
 [Variables]
-Icon=#currentpath#\3.png
+Icon=#currentpath#\1.png
 PanelName=#Computer#

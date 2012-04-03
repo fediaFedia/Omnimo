@@ -33,4 +33,4 @@ Appicon5=ITUNES.png
 Appicon6=google earth.png
 Appicon7=wmp.png
 Appicon8=calc.png
-PanelTitle=Applications
+PanelTitle=#Programs#

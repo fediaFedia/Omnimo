@@ -1,7 +1,7 @@
 [Variables]
 
-Width=1920
-Height=900
+Width=1280
+Height=700
 Color1=0,0,0,150
 Color2=0,0,0,120
 gradientangle=90

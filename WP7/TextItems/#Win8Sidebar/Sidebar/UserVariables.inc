@@ -10,6 +10,11 @@ AppAction4=wmplayer.exe
 AppName5=Windows Explorer
 AppAction5=explorer.exe
 
+hub1name=#Time#
+hub2name=#Weather#
+hub3name=#Mail#
+
+
 FolderName1=User Folder
 FolderAction1=%USERPROFILE%
 FolderName2=Desktop
