@@ -1,5 +1,5 @@
 [Variables]
-WeatherCode=DAXX0045
+WeatherCode=DAXX0002
 Unit=c
 ShowYahooIcon=no
 tempfontsize=50

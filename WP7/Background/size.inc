@@ -1,6 +1,6 @@
 [Variables]
 
-Width=1280
+Width=1366
 Height=700
 Color1=0,0,0,150
 Color2=0,0,0,120
