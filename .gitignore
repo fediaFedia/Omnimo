@@ -1,0 +1,14 @@
+# WebParser left-over files
+DownloadFile/
+
+# Archive files
+*.7z
+*.zip
+*.rar
+
+# Graphics files
+*.psd
+*.ai
+
+# OS generated files
+Thumbs.db
