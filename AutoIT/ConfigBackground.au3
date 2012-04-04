@@ -1,6 +1,7 @@
 #NoTrayIcon
 #region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_outfile=..\WP7\Background\Config.exe
+#AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Fileversion=1.0.0.0

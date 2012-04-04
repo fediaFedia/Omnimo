@@ -5,7 +5,7 @@
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Omnimo Panel Resizer
 #AutoIt3Wrapper_Res_Fileversion=1.0.0.0
-#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2011
+#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2012
 #AutoIt3Wrapper_AU3Check_Parameters=-w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
