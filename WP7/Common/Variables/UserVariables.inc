@@ -16,5 +16,5 @@ DESKTOPOn=off1
 blurtest=1
 ttgallerystyle=Dark
 CodePage=1251
-HideHeaders=1
+HideHeaders=0
 HideCloseButton=1
