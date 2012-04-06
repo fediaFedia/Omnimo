@@ -2,7 +2,7 @@
 Player=WMP
 Ncolor=255,255,255,30
 FontSize=12
-Width=730
+Width=650
 HeaderTitle=music info
 Title=now
 Subtitle=playing
