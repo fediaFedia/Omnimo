@@ -1,9 +1,9 @@
 #NoTrayIcon
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_outfile=..\WP7\Common\Config\config.exe
-#AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Omnimo Config Tool
+#AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Fileversion=1.0.0.0
 #AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2012
 #AutoIt3Wrapper_AU3Check_Parameters=-w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
@@ -12,6 +12,8 @@
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
 #include <GuiEdit.au3>
+#include <Constants.au3>
+#include <StaticConstants.au3>
 
 #include "Common.au3"
 
@@ -27,6 +29,11 @@ Const $SkinPath = IniRead($DataFolder & "Rainmeter.ini", "Rainmeter", "SkinPath"
 Const $XPosition = IniRead($DataFolder & "Rainmeter.ini", $Config, "WindowX", "0")
 Const $YPosition = IniRead($DataFolder & "Rainmeter.ini", $Config, "WindowY", "0")
 $Size = IniRead($SkinPath & $Config & "\size.inc", "Variables", "Height", "150")
+$ConfigBackgroundColor = IniRead($SkinPath & "WP7\Common\Variables\UserVariables.inc", "Variables", "ConfigBackgroundColor", "0xe1e1e1")
+$ConfigBackgroundColor2 = IniRead($SkinPath & "WP7\Common\Variables\UserVariables.inc", "Variables", "ConfigBackgroundColor2", "0xd2d2d2")
+$ConfigTextColor = IniRead($SkinPath & "WP7\Common\Variables\UserVariables.inc", "Variables", "ConfigTextColor", "0x323232")
+$CloseString = IniRead($SkinPath & "WP7\Common\Variables\Languages\lang.inc", "Variables", "CloseString", "Close")
+$SetString = IniRead($SkinPath & "WP7\Common\Variables\Languages\lang.inc", "Variables", "SetString", "Set")
 
 ; Store variables and their descriptions into arrays
 Global $VarName[50]
@@ -63,7 +70,7 @@ FileClose($CfgFile)
 $VarFile = $SkinPath & $CmdLine[2] & "\UserVariables.inc"
 $VarCount -= 1
 
-$GuiOptions = BitOR($WS_VISIBLE, $WS_POPUP)
+$GuiOptions = BitOR($WS_VISIBLE, $WS_BORDER, $WS_POPUP)
 
 ; Set up GUI measurements
 Switch $CmdLine[1]
@@ -71,7 +78,7 @@ Switch $CmdLine[1]
 		$width = $Size * 2 + 10
 		$height = $Size
 		$listH = $Size * 0.64
-		$setX = $Size * 1.85
+		$setX = $Size * 1.53
 		$buttonsY = $Size / 1.15
 		$inputY = $Size / 1.35 - 1
 
@@ -79,7 +86,7 @@ Switch $CmdLine[1]
 		$width = $Size
 		$height = $Size * 2 + 10
 		$listH = $Size * 1.7
-		$setX = $Size / 1.35
+		$setX = $Size / 2.1
 		$buttonsY = $Size * 1.92
 		$inputY = $Size * 1.78
 		$CommentLimit = 13
@@ -88,8 +95,8 @@ Switch $CmdLine[1]
 		$Size = 150
 		$width = 200
 		$height = 310
-		$listH = 255
-		$setX = 161.11
+		$listH = 250
+		$setX = 120
 		$buttonsY = 288
 		$inputY = 267
 		$CommentLimit = 13
@@ -99,14 +106,14 @@ Switch $CmdLine[1]
 		$width = $Size
 		$height = $Size
 		$listH = $Size * 0.64
-		$setX = $Size / 1.35
+		$setX = $Size / 2.1
 		$buttonsY = $Size / 1.15
 		$inputY = $Size / 1.35 - 1
 EndSwitch
 
 ; Create GUI
 $Gui = GUICreate("Configure", $width, $height, $XPosition + 5, $YPosition + 5, $GuiOptions, $WS_EX_TOOLWINDOW)
-GUISetBkColor(0xe1e1e1)
+GUISetBkColor($ConfigBackgroundColor)
 GUICtrlCreatePic("header.jpg", $Size / 30, 0, $Size / 3.75, $Size / 30, Default)
 
 ; Create an edit control for comments if needed
@@ -115,8 +122,8 @@ If $VarCount < $CommentLimit Then
 	$prevlistH = $listH
 	$listH = $listH * ($VarCount / ($CommentLimit + 1)) + $Size / 10
 	GUICtrlCreateEdit($Comments, 9, $listH, $width - 18, $prevlistH - $listH + $Size / 15, $ES_MULTILINE + $ES_AUTOVSCROLL, 0)
-	GUICtrlSetBkColor(-1, 0xe1e1e1)
-	GUICtrlSetColor(-1, 0x323232)
+	GUICtrlSetBkColor(-1, $ConfigBackgroundColor)
+	GUICtrlSetColor(-1, $ConfigTextColor)
 	GUICtrlSetFont(-1, $Size / 15, 400, 0, $font)
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	If $CmdLine[1] = "text" Then $listH -= 15
@@ -125,15 +132,15 @@ Else
 EndIf
 
 $VariableList = GUICtrlCreateList("", 10, 15, $width - 20, $listH, $opts, 0)
-GUICtrlSetBkColor(-1, 0xe1e1e1)
-GUICtrlSetColor(-1, 0x323232)
+GUICtrlSetBkColor(-1, $ConfigBackgroundColor)
+GUICtrlSetColor(-1, $ConfigTextColor)
 GUICtrlSetFont(-1, $Size / 15, 400, 0, $font)
 _CreateVariableInput(-1)
-$Close = GUICtrlCreateLabel("Close", $Size / 15, $buttonsY, $Size / 3, $Size / 7.5)
-GUICtrlSetColor(-1, 0x323232)
+$Close = GUICtrlCreateLabel($CloseString, ($Size / 15 - 5), $buttonsY, $Size / 2.2, $Size / 7.5)
+GUICtrlSetColor(-1, $ConfigTextColor)
 GUICtrlSetFont(-1, $Size / 15, 600, 0, $font)
-$Set = GUICtrlCreateLabel("Set", $setX, $buttonsY, $Size / 3, $Size / 7.5)
-GUICtrlSetColor(-1, 0x323232)
+$Set = GUICtrlCreateLabel($SetString, $setX, $buttonsY, ($Size / 2), $Size / 7.5, $SS_RIGHT)
+GUICtrlSetColor(-1, $ConfigTextColor)
 GUICtrlSetFont(-1, $Size / 15, 600, 0, $font)
 
 GUISetState()
@@ -180,7 +187,7 @@ While 1
 				SendBang("!RainmeterRefresh " & $CmdLine[2]) ; refresh config
 			EndIf
 			Sleep(100)
-			GUICtrlSetColor($Set, 0x323232)
+			GUICtrlSetColor($Set, $ConfigTextColor)
 
 	EndSwitch
 WEnd
@@ -189,6 +196,6 @@ Func _CreateVariableInput($opts)
 	GUICtrlDelete($VariableInput)
 	$VariableInput = GUICtrlCreateInput("", 0, $inputY, $width, $Size / 7.5, $opts, 0)
 	GUICtrlSetFont(-1, $Size / 15, 400, 0, $font)
-	GUICtrlSetColor(-1, 0x000000)
-	GUICtrlSetBkColor(-1, 0xd2d2d2)
+	GUICtrlSetColor(-1, $ConfigTextColor)
+	GUICtrlSetBkColor(-1, $ConfigBackgroundColor2)
 EndFunc
