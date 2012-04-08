@@ -13,7 +13,7 @@
 #include <WindowsConstants.au3>
 #include <GuiEdit.au3>
 #include <StaticConstants.au3>
-
+#include <MouseOnEvent.au3>
 #include "Common.au3"
 
 ; Check arguments
@@ -115,6 +115,7 @@ EndSwitch
 ; Create GUI
 $Gui = GUICreate("Configure", $width, $height, $XPosition + 5, $YPosition + 5, $GuiOptions, $WS_EX_TOOLWINDOW)
 GUISetBkColor($BgColor)
+_MouseSetOnEvent($MOUSE_WHEELUP_EVENT , "_WheelDown", "", "", $Gui, -1)
 GUICtrlCreatePic("header.jpg", $Size / 30, 0, $Size / 3.75, $Size / 30, Default)
 
 ; Create an edit control for comments if needed
@@ -199,4 +200,8 @@ Func _CreateVariableInput($opts)
 	GUICtrlSetFont(-1, $Size / 15, 400, 0, $font)
 	GUICtrlSetColor(-1, $TextColor)
 	GUICtrlSetBkColor(-1, $BgColor2)
+EndFunc
+
+Func _WheelDown()
+	Exit
 EndFunc

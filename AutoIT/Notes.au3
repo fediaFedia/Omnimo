@@ -12,7 +12,7 @@
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
 #include <EditConstants.au3>
-
+#include <MouseOnEvent.au3>
 #include "Common.au3"
 
 If $CmdLine[0] < 1 Then _OmnimoError("miniNotes", "Too few command line arguments specified.")
@@ -28,7 +28,7 @@ Const $text = StringReplace(IniRead($SkinPath & "WP7\Panels\miniNotes\Notes.txt"
 
 $Gui = GUICreate("Notes", $Size, $Size, $XPosition + 5, $YPosition + 5, BitOR($WS_VISIBLE, $WS_POPUP), $WS_EX_TOOLWINDOW)
 GUISetBkColor(0x292929)
-
+_MouseSetOnEvent($MOUSE_WHEELUP_EVENT , "_WheelDown", "", "", $Gui, -1)
 $Drag = GUICtrlCreatePic("gradient.jpg", $Size / 30, 0, $Size / 3.75, $Size / 30, Default, $GUI_WS_EX_PARENTDRAG)
 $Notes = GUICtrlCreateEdit($text, 10, 10, $Size - 20, $Size / 3 * 2, BitOR($ES_MULTILINE, $ES_AUTOVSCROLL, $ES_WANTRETURN), 0)
 GUICtrlSetFont(-1, $Size / 15, 400, 0, $font)
@@ -65,3 +65,7 @@ While 1
 	EndSwitch
 
 WEnd
+
+Func _WheelDown()
+	Exit
+EndFunc
