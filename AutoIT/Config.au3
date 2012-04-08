@@ -12,7 +12,6 @@
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
 #include <GuiEdit.au3>
-#include <Constants.au3>
 #include <StaticConstants.au3>
 
 #include "Common.au3"
@@ -26,14 +25,16 @@ Const $Config = $CmdLine[2]
 Const $DataFolder = $CmdLine[3]
 
 Const $SkinPath = IniRead($DataFolder & "Rainmeter.ini", "Rainmeter", "SkinPath", @UserProfileDir & "\Documents\Rainmeter\Skins\")
+Const $Variables = $SkinPath & "WP7\Common\Variables\"
 Const $XPosition = IniRead($DataFolder & "Rainmeter.ini", $Config, "WindowX", "0")
 Const $YPosition = IniRead($DataFolder & "Rainmeter.ini", $Config, "WindowY", "0")
+
 $Size = IniRead($SkinPath & $Config & "\size.inc", "Variables", "Height", "150")
-$ConfigBackgroundColor = IniRead($SkinPath & "WP7\Common\Variables\UserVariables.inc", "Variables", "ConfigBackgroundColor", "0xe1e1e1")
-$ConfigBackgroundColor2 = IniRead($SkinPath & "WP7\Common\Variables\UserVariables.inc", "Variables", "ConfigBackgroundColor2", "0xd2d2d2")
-$ConfigTextColor = IniRead($SkinPath & "WP7\Common\Variables\UserVariables.inc", "Variables", "ConfigTextColor", "0x323232")
-$CloseString = IniRead($SkinPath & "WP7\Common\Variables\Languages\lang.inc", "Variables", "CloseString", "Close")
-$SetString = IniRead($SkinPath & "WP7\Common\Variables\Languages\lang.inc", "Variables", "SetString", "Set")
+$BgColor = IniRead($Variables & "UserVariables.inc", "Variables", "ConfigBackgroundColor", "0xe1e1e1")
+$BgColor2 = IniRead($Variables & "UserVariables.inc", "Variables", "ConfigBackgroundColor2", "0xd2d2d2")
+$TextColor = IniRead($Variables & "UserVariables.inc", "Variables", "ConfigTextColor", "0x323232")
+$CloseString = IniRead($Variables & "Languages\lang.inc", "Variables", "CloseString", "Close")
+$SetString = IniRead($Variables & "Languages\lang.inc", "Variables", "SetString", "Set")
 
 ; Store variables and their descriptions into arrays
 Global $VarName[50]
@@ -113,7 +114,7 @@ EndSwitch
 
 ; Create GUI
 $Gui = GUICreate("Configure", $width, $height, $XPosition + 5, $YPosition + 5, $GuiOptions, $WS_EX_TOOLWINDOW)
-GUISetBkColor($ConfigBackgroundColor)
+GUISetBkColor($BgColor)
 GUICtrlCreatePic("header.jpg", $Size / 30, 0, $Size / 3.75, $Size / 30, Default)
 
 ; Create an edit control for comments if needed
@@ -122,8 +123,8 @@ If $VarCount < $CommentLimit Then
 	$prevlistH = $listH
 	$listH = $listH * ($VarCount / ($CommentLimit + 1)) + $Size / 10
 	GUICtrlCreateEdit($Comments, 9, $listH, $width - 18, $prevlistH - $listH + $Size / 15, $ES_MULTILINE + $ES_AUTOVSCROLL, 0)
-	GUICtrlSetBkColor(-1, $ConfigBackgroundColor)
-	GUICtrlSetColor(-1, $ConfigTextColor)
+	GUICtrlSetBkColor(-1, $BgColor)
+	GUICtrlSetColor(-1, $TextColor)
 	GUICtrlSetFont(-1, $Size / 15, 400, 0, $font)
 	GUICtrlSetState(-1, $GUI_DISABLE)
 	If $CmdLine[1] = "text" Then $listH -= 15
@@ -132,15 +133,15 @@ Else
 EndIf
 
 $VariableList = GUICtrlCreateList("", 10, 15, $width - 20, $listH, $opts, 0)
-GUICtrlSetBkColor(-1, $ConfigBackgroundColor)
-GUICtrlSetColor(-1, $ConfigTextColor)
+GUICtrlSetBkColor(-1, $BgColor)
+GUICtrlSetColor(-1, $TextColor)
 GUICtrlSetFont(-1, $Size / 15, 400, 0, $font)
 _CreateVariableInput(-1)
 $Close = GUICtrlCreateLabel($CloseString, ($Size / 15 - 5), $buttonsY, $Size / 2.2, $Size / 7.5)
-GUICtrlSetColor(-1, $ConfigTextColor)
+GUICtrlSetColor(-1, $TextColor)
 GUICtrlSetFont(-1, $Size / 15, 600, 0, $font)
 $Set = GUICtrlCreateLabel($SetString, $setX, $buttonsY, ($Size / 2), $Size / 7.5, $SS_RIGHT)
-GUICtrlSetColor(-1, $ConfigTextColor)
+GUICtrlSetColor(-1, $TextColor)
 GUICtrlSetFont(-1, $Size / 15, 600, 0, $font)
 
 GUISetState()
@@ -187,7 +188,7 @@ While 1
 				SendBang("!RainmeterRefresh " & $CmdLine[2]) ; refresh config
 			EndIf
 			Sleep(100)
-			GUICtrlSetColor($Set, $ConfigTextColor)
+			GUICtrlSetColor($Set, $TextColor)
 
 	EndSwitch
 WEnd
@@ -196,6 +197,6 @@ Func _CreateVariableInput($opts)
 	GUICtrlDelete($VariableInput)
 	$VariableInput = GUICtrlCreateInput("", 0, $inputY, $width, $Size / 7.5, $opts, 0)
 	GUICtrlSetFont(-1, $Size / 15, 400, 0, $font)
-	GUICtrlSetColor(-1, $ConfigTextColor)
-	GUICtrlSetBkColor(-1, $ConfigBackgroundColor2)
+	GUICtrlSetColor(-1, $TextColor)
+	GUICtrlSetBkColor(-1, $BgColor2)
 EndFunc
