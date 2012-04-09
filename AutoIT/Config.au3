@@ -155,7 +155,8 @@ While 1
 	$nMsg = GUIGetMsg()
 	Switch $nMsg
 
-		Case $GUI_EVENT_CLOSE, $Close
+			Case $GUI_EVENT_CLOSE, $Close
+			Sleep(100)
 			Exit
 
 		Case $VariableList
