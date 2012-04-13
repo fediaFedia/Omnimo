@@ -29,7 +29,7 @@ Formats which you can use under Universal day item:
 %y Year without century, as decimal number (00 – 99)
 %Y Year with century, as decimal number
 
-You can use as many as you like at once, you can seperate them with comas, dots and whatever.
+You can use as many as you like at once, you can separate them with commas, dots and whatever.
 
 Examples:
 

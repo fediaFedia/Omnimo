@@ -1,6 +1,6 @@
 A simple customizable background
 
-In the settings box type your desired width (in pixesl), click SET, then type your Height and click Set. 
+In the settings box type your desired width (in pixels), click SET, then type your Height and click Set. 
 Notice how the background dimensions change after you clicked set.
 
 You can customize the color and angle, here's how:
@@ -11,6 +11,6 @@ on the very right side you can see colors for Red, Green and blue - that's RGB! 
 and type the RGB numbers in the settings box. If you want to control transparency of the color, after the RGB color,
 type a number from 0 (completelly transparent) to 255 (completelly opaque). Dont forget to click Set. Do the same for the second color.
 
-If you want to control the angle of the gradient, in the settings under GradientAngle type sth like 45 or 90 or 180 degrees.
+If you want to control the angle of the gradient, in the settings under GradientAngle type something like 45 or 90 or 180 degrees.
 
-It's recommended to make this skin clickthrough after you finished configuring it. You can later access it's menu from the rainmeter tray icon.
+It's recommended to make this skin click through after you have finished configuring it. You can later access its menu from the Rainmeter tray icon.

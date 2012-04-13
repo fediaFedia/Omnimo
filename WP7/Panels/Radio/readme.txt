@@ -1,6 +1,6 @@
 You need VLC to be installed for this panel to work.
 
-If you're using 32-bit Windows or a different partition for windows, change the VLC program path in config.
+If you're using 32-bit Windows or a different partition for Windows, change the VLC program path in config.
 
 You can add your own playlists by copying them in the Radio folder, then you need to edit StationLink to point to the playlist file.
 

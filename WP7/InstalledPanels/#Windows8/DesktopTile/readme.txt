@@ -6,8 +6,4 @@ The other one hides everything including itself, so in order to bring it back yo
 
 TrayExecuteM=!execute [!Toggle *]
 
-Save and refresh, then middle click the rainmeter tray icon.
-
-
-
-Functionality to be added later: The tile will also show\hide desktop icons automatically. Will have to ask Xyrfo about this.
+Save and refresh, then middle click the Rainmeter tray icon.
