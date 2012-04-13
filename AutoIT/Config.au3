@@ -13,8 +13,9 @@
 #include <WindowsConstants.au3>
 #include <GuiEdit.au3>
 #include <StaticConstants.au3>
-#include <MouseOnEvent.au3>
-#include "Common.au3"
+
+#include "Includes\MouseOnEvent.au3"
+#include "Includes\Common.au3"
 
 ; Check arguments
 If $CmdLine[0] < 3 Then _OmnimoError("Omnimo Panel Config", "Too few command line arguments specified.")
@@ -115,7 +116,6 @@ EndSwitch
 ; Create GUI
 $Gui = GUICreate("Configure", $width, $height, $XPosition + 5, $YPosition + 5, $GuiOptions, $WS_EX_TOOLWINDOW)
 GUISetBkColor($BgColor)
-_MouseSetOnEvent($MOUSE_WHEELUP_EVENT , "_WheelDown", "", "", $Gui, -1)
 GUICtrlCreatePic("header.jpg", $Size / 30, 0, $Size / 3.75, $Size / 30, Default)
 
 ; Create an edit control for comments if needed
@@ -147,6 +147,8 @@ GUICtrlSetFont(-1, $Size / 15, 600, 0, $font)
 
 GUISetState()
 
+_MouseSetOnEvent($MOUSE_WHEELUP_EVENT , "_WheelDown", "", "", $Gui, -1)
+
 For $ListCount = 1 To $VarCount
 	GUICtrlSetData($VariableList, $VarName[$ListCount] & "|")
 Next
@@ -155,8 +157,8 @@ While 1
 	$nMsg = GUIGetMsg()
 	Switch $nMsg
 
-			Case $GUI_EVENT_CLOSE, $Close
-			Sleep(100)
+		Case $GUI_EVENT_CLOSE, $Close
+			Sleep(50)
 			Exit
 
 		Case $VariableList

@@ -7,19 +7,17 @@ set upx=nopack
 set x64=
 
 :: AutoIt3Wrapper directory
-set autwrapperdir=%PROGRAMFILES(X86)%\AutoIt3\SciTE\AutoIt3Wrapper
+for /f "skip=1 delims=" %%x in ('wmic cpu get addresswidth') do if not defined AddressWidth set AddressWidth=%%x
 
-echo Building AutoIT extensions...
+if %AddressWidth%==64 (
+	set autwrapperdir=%PROGRAMFILES(X86)%\AutoIt3\SciTE\AutoIt3Wrapper
+) else (
+	set autwrapperdir=%PROGRAMFILES%\AutoIt3\SciTE\AutoIt3Wrapper
+)
 
 :: Build scripts
+echo Building AutoIT extensions...
 FOR %%G IN (*.au3) DO "%autwrapperdir%\AutoIt3Wrapper.exe" /in %%G /%upx% %x64%
-
-:: Don't forget the Panel Creator!
-"%autwrapperdir%\AutoIt3Wrapper.exe" /in "PanelCreator\PanelCreator.au3" /%upx% %x64%
-
-:: Delete unnecessary exes
-del Common.exe
-del ColorChooser.exe
 
 echo All done!
 exit

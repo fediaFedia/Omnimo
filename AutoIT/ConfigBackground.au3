@@ -13,7 +13,7 @@
 #include <SliderConstants.au3>
 #include <WindowsConstants.au3>
 
-#include "Common.au3"
+#include "Includes\Common.au3"
 
 ; Create GUI
 $GUI = GUICreate("Configure background", 350, 350, -1, -1, BitOR($WS_SYSMENU, $WS_BORDER, $WS_CLIPSIBLINGS))

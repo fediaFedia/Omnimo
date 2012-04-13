@@ -14,7 +14,7 @@
 #include <WindowsConstants.au3>
 #include <SliderConstants.au3>
 
-#include "Common.au3"
+#include "Includes\Common.au3"
 
 ; Check arguments
 If $CmdLine[0] < 3 Then _OmnimoError("Omnimo Panel Resizer", "Too few command line arguments specified.")

@@ -16,7 +16,7 @@
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
 
-#include "Common.au3"
+#include "Includes\Common.au3"
 
 Switch $CmdLine[1]
 

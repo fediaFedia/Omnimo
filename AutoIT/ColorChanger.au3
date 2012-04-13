@@ -11,8 +11,8 @@
 
 #include <File.au3>
 
-#include "ColorChooser.au3"
-#include "Common.au3"
+#include "Includes\ColorChooser.au3"
+#include "Includes\Common.au3"
 
 ; Create GUI
 $Form1 = GUICreate("Change panel color", 369, 258, 336, 287)
@@ -21,7 +21,6 @@ $Label1 = GUICtrlCreateLabel("Active panels", 8, 8, 68, 17)
 $Button1 = GUICtrlCreateButton("Default color", 198, 216, 78, 25)
 $Button2 = GUICtrlCreateButton("Apply color", 278, 216, 78, 25)
 
-FileInstall("plus.jpg", @ScriptDir & '\plus.jpg')
 GUISetState(@SW_SHOW)
 
 $width = 33
