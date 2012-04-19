@@ -195,6 +195,29 @@ Case 'SetColor'
 	SendBang("!Refresh *")
 
 
+; Use Aero blur color as panel color
+; Command line arguments:
+; [2] Skins path
+Case 'ColorizationColor'
+	If Not (@OSVersion = "WIN_8" Or @OSVersion = "WIN_7" Or @OSVersion = "WIN_VISTA") Then Exit
+	If $CmdLine[0] < 3 Then _OmnimoError("Error", "Too few command line arguments specified.")
+
+	$ColorizationColor = RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM", "ColorizationColor")
+	If @error Then _OmnimoError("Error", "Unable to read Aero blur color from the registry.")
+
+	$ColorizationHex = "0x" & Hex(Int($ColorizationColor))
+	$ColorizationRgb = _HexToRGB($ColorizationHex)
+	$Alpha = BitAnd(BitShift($ColorizationHex, 24), 0xFF)
+
+	Const $SkinsPath = $CmdLine[1]
+	Const $ColorInc = $SkinsPath & "\WP7\Common\Color\color.inc"
+
+	IniWrite($ColorInc, "Variables", "ColorDecimal", $ColorizationRgb)
+	IniWrite($ColorInc, "Variables", "Alpha", $Alpha)
+
+	; SendBang(!Refresh *)
+
+
 ; VLC radio
 ; Command line arguments:
 ; [2] VLC path
@@ -672,4 +695,11 @@ Func Monitor($io_control = "on")
         Case Else
             MsgBox(32, @ScriptName, "Command usage: on/off")
     EndSwitch
+EndFunc
+
+Func _HexToRGB($Color)
+	$Blue = BitAND($Color, 0xFF)
+	$Green = BitAND(BitShift($Color, 8), 0xFF)
+	$Red = BitAND(BitShift($Color, 16), 0xFF)
+	Return $Red & ',' & $Green & ',' & $Blue
 EndFunc
