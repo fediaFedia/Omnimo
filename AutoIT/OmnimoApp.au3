@@ -186,21 +186,16 @@ Case 'ToggleIcons'
 ; [4] Skins path
 Case 'SetColor'
 	If $CmdLine[0] < 4 Then _OmnimoError("Error", "Too few command line arguments specified.")
-    $nColor = $CmdLine[3]
-    ; Convert HEX to RGB
-    $Blue = BitAND($nColor, 0xFF)
-    $Green = BitAND(BitShift($nColor, 8), 0xFF)
-    $Red = BitAND(BitShift($nColor, 16), 0xFF)
-    IniWrite($CmdLine[4] & '\WP7\Common\Color\Color.inc', 'Variables', $CmdLine[2], $Red & ',' & $Green & ',' & $Blue)
+    IniWrite($CmdLine[4] & '\WP7\Common\Color\Color.inc', 'Variables', $CmdLine[2], _HexToRGB($CmdLine[3]))
 	SendBang("!Refresh *")
 
 
-; Use Aero blur color as panel color
+; Set Aero blur color as panel color
 ; Command line arguments:
 ; [2] Skins path
 Case 'ColorizationColor'
 	If Not (@OSVersion = "WIN_8" Or @OSVersion = "WIN_7" Or @OSVersion = "WIN_VISTA") Then Exit
-	If $CmdLine[0] < 3 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
 
 	$ColorizationColor = RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM", "ColorizationColor")
 	If @error Then _OmnimoError("Error", "Unable to read Aero blur color from the registry.")
@@ -215,7 +210,7 @@ Case 'ColorizationColor'
 	IniWrite($ColorInc, "Variables", "ColorDecimal", $ColorizationRgb)
 	IniWrite($ColorInc, "Variables", "Alpha", $Alpha)
 
-	; SendBang(!Refresh *)
+	SendBang("!Refresh *")
 
 
 ; VLC radio
