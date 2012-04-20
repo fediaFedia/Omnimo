@@ -200,15 +200,15 @@ Case 'ColorizationColor'
 	$ColorizationColor = RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM", "ColorizationColor")
 	If @error Then _OmnimoError("Error", "Unable to read Aero blur color from the registry.")
 
-	$ColorizationHex = "0x" & Hex(Int($ColorizationColor))
+	$ColorizationHex = "0x" & Hex(Int($ColorizationColor), 8)
 	$ColorizationRgb = _HexToRGB($ColorizationHex)
 	$Alpha = BitAnd(BitShift($ColorizationHex, 24), 0xFF)
 
-	Const $SkinsPath = $CmdLine[1]
+	Const $SkinsPath = $CmdLine[2]
 	Const $ColorInc = $SkinsPath & "\WP7\Common\Color\color.inc"
 
-	IniWrite($ColorInc, "Variables", "ColorDecimal", $ColorizationRgb)
-	IniWrite($ColorInc, "Variables", "Alpha", $Alpha)
+	IniWrite($ColorInc, "Variables", "Colorskin", $ColorizationRgb)
+	IniWrite($ColorInc, "Variables", "Opacity", $Alpha)
 
 	SendBang("!Refresh *")
 
