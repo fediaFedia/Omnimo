@@ -24,7 +24,13 @@ Const $Config = $CmdLine[2]
 Const $SettingsPath = $CmdLine[3]
 Const $SkinsPath = IniRead($SettingsPath & "Rainmeter.ini", "Rainmeter", "SkinPath", @UserProfileDir & "\Documents\Rainmeter\Skins\")
 
-$XPosition = IniRead($SettingsPath & "Rainmeter.ini", $Config, "WindowX", "0")
+; Resize all without GUI
+If $CmdLine[0] = 4 Then
+	_ResizeAll($CmdLine[4])
+	Exit
+EndIf
+
+$XPosition = IniRead($SettingsPath & "Rainmeter.ini", $Config, "WindowX", "0") + 4
 $YPosition = IniRead($SettingsPath & "Rainmeter.ini", $Config, "WindowY", "0")
 $Size = IniRead($SkinsPath & $Config & "\size.inc", "Variables", "Height", "150")
 
@@ -33,15 +39,12 @@ $Width = $Size
 $Height = $Size
 
 Switch $CmdLine[1]
-	Case "single"
-		$XPosition += 4
 	Case "double"
-		$XPosition += 4
 		$Width = $Size * 2 + 10 ; double the width
 	Case "doubleV"
-		$XPosition += 4
 		$Height = $Size * 2 + 10 ; double the height
 	Case "all"
+		$XPosition -= 4
 		$Width = 202
 		$Height = 291
 EndSwitch
@@ -80,8 +83,7 @@ While 1
 			IniWrite($SkinsPath & $Config & "\size.inc", "Variables", "Height", $newsize)
 
 			If $CmdLine[1] = "All" Then
-				_ResizePanels('WP7\Panels')
-				_ResizePanels('WP7\InstalledPanels')
+				_ResizeAll(GUICtrlRead($input))
 				SendBang("!Refresh *") ; refresh Rainmeter
 			Else
 				SendBang("!Refresh " & $Config) ; refresh panel
@@ -95,11 +97,16 @@ While 1
 	EndSwitch
 WEnd
 
-Func _ResizePanels($path)
+Func _ResizeAll($size)
+	_ResizePanels('WP7\Panels', $size)
+	_ResizePanels('WP7\InstalledPanels', $size)
+EndFunc
+
+Func _ResizePanels($path, $size)
 	$files = RecursiveFileSearch($SkinsPath & $path)
 	If Not $files[0] Then Return
 	For $i = 1 To $files[0]
-		IniWrite($files[$i] & "\size.inc", "Variables", "Height", GUICtrlRead($input))
+		IniWrite($files[$i] & "\size.inc", "Variables", "Height", $size)
 	Next
 EndFunc
 
