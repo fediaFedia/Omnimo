@@ -2,6 +2,10 @@
 DisableVersionCheck=0
 Logging=0
 TrayExecuteM=!execute [!ToggleConfig "WP7\Gallery" "gallery.ini"]
+[WP7\TextItems\Extra\AltGalleryButtons]
+Active=3
+WindowX=607
+WindowY=52
 
 [WP7\Gallery\Color]
 Active=0

@@ -1,6 +1,12 @@
 [Rainmeter]
 TrayExecuteM=!execute [!ToggleConfig "WP7\Gallery" "gallery.ini"]
 
+[WP7\TextItems\Extra\AltGalleryButtons]
+Active=3
+WindowX=824
+WindowY=116
+
+
 [WP7\Gallery\Color]
 Active=0
 WindowX=(#ScreenAreaWidth#/2-327)
@@ -201,8 +207,8 @@ AutoSelectScreen=0
 AlwaysOnTop=0
 [WP7]
 Active=1
-WindowX=770
-WindowY=114
+WindowX=744
+WindowY=116
 AlphaValue=255
 FadeDuration=250
 ClickThrough=0
