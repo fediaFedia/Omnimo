@@ -12,6 +12,7 @@ WP7\Panels\Natgeo
 WP7\Panels\Shortcuts
 WP7\Panels\9Gag
 WP7\Panels\Stocks
+WP7\Panels\XboxLive
 WP7\InstalledPanels\ClientsFromHell
 WP7\InstalledPanels\Kuler
 WP7\InstalledPanels\SunClock
