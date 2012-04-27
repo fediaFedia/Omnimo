@@ -9,6 +9,7 @@
 #AutoIt3Wrapper_AU3Check_Parameters=-w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
+#include <IE.au3>
 #include <File.au3>
 #include <WinAPI.au3>
 #include <GDIPlus.au3>
@@ -351,6 +352,33 @@ Case 'Select'
         IniWrite($CmdLine[7] & "\UserVariables.inc", "Variables", $CmdLine[5], $icon)
 		SendBang("!Refresh " & $CmdLine[8])
     EndIf
+
+
+; Information hub
+; Command line arguments:
+; [2] URL
+Case 'Browser'
+	$GUI = GUICreate("Omnimo Information Hub", 515, 460, -1, -1, BitOR($GUI_SS_DEFAULT_GUI, $WS_MAXIMIZEBOX, $WS_SIZEBOX))
+	GUISetBkColor(0x7A7A7A)
+
+	_IEErrorHandlerRegister()
+	$oIE = _IECreateEmbedded()
+	$obj = GUICtrlCreateObj($oIE, 0, 25, 515, 435)
+	GUICtrlSetResizing(-1, $GUI_DOCKBORDERS)
+	$back = GUICtrlCreateButton("Back", 5, 5, 50, 20, 0)
+
+	_IENavigate($oIE, $CmdLine[2])
+	GUISetState()
+
+	While 1
+		$msg = GUIGetMsg()
+		Switch $msg
+			Case $back
+				_IEAction($oIE, "back")
+			Case $GUI_EVENT_CLOSE
+				Exit
+		EndSwitch
+	WEnd
 
 
 ; Panel Combos config tool
