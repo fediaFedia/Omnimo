@@ -33,8 +33,6 @@ KeepOnScreen=1
 AutoSelectScreen=0
 AlwaysOnTop=0
 
-
-
 [WP7\TextItems\Extra\AltGalleryButtons]
 Active=3
 WindowX=473
@@ -49,7 +47,6 @@ SnapEdges=1
 KeepOnScreen=1
 AutoSelectScreen=0
 AlwaysOnTop=0
-
 
 [WP7]
 Active=1
@@ -68,10 +65,6 @@ AlwaysOnTop=0
 [Illustro]
 Version=0.9.3
 
-
-
-
-
 [WP7\TextItems\Extra\GroupTitles\Custom5]
 Active=1
 WindowX=88
@@ -88,9 +81,6 @@ AutoSelectScreen=0
 AlwaysOnTop=0
 LoadOrder=0
 
-
-
-
 [WP7\InstalledPanels\#Windows8\Calendar]
 Active=1
 WindowX=240
@@ -105,9 +95,6 @@ SnapEdges=1
 KeepOnScreen=1
 AutoSelectScreen=0
 AlwaysOnTop=0
-
-
-
 
 [WP7\InstalledPanels\#Windows8\Control]
 Active=1
