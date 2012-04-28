@@ -1,11 +1,12 @@
 #NoTrayIcon
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_outfile=..\WP7\Common\OmnimoApp.exe
+#AutoIt3Wrapper_Outfile=..\WP7\Common\OmnimoApp.exe
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Fileversion=1.0.0.0
 #AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2012
+#AutoIt3Wrapper_Res_requestedExecutionLevel=asInvoker
 #AutoIt3Wrapper_AU3Check_Parameters=-w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
@@ -358,14 +359,14 @@ Case 'Select'
 ; Command line arguments:
 ; [2] URL
 Case 'Browser'
-	$GUI = GUICreate("Omnimo Information Hub", 515, 460, -1, -1, BitOR($GUI_SS_DEFAULT_GUI, $WS_MAXIMIZEBOX, $WS_SIZEBOX))
+	$GUI = GUICreate("Omnimo Information Hub", 535, 470, -1, -1, BitOR($GUI_SS_DEFAULT_GUI, $WS_MAXIMIZEBOX, $WS_SIZEBOX))
 	GUISetBkColor(0x7A7A7A)
 
 	_IEErrorHandlerRegister()
 	$oIE = _IECreateEmbedded()
-	$obj = GUICtrlCreateObj($oIE, 0, 25, 515, 435)
+	$obj = GUICtrlCreateObj($oIE, 0, 25, 535, 445)
 	GUICtrlSetResizing(-1, $GUI_DOCKBORDERS)
-	$back = GUICtrlCreateButton("Back", 5, 5, 50, 20, 0)
+	$back = GUICtrlCreateButton("< Back", 3, 3, 60, 20, 0)
 
 	_IENavigate($oIE, $CmdLine[2])
 	GUISetState()
