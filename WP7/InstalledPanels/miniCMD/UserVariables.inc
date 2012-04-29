@@ -6,7 +6,6 @@ Font=Arial
 Name=Command Shell
 FontSize=7
 
-
 ;[Variables]
 TextColor=0x1ba1e2
 BackgroundColor=0x000000

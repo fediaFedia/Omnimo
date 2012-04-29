@@ -10,7 +10,6 @@ Appname8=Ca
 Appname9=Fi
 GridOpacity=80
 
-
 App1=Photoshop.exe
 App2=uTorrent.exe
 App3=Miranda.exe

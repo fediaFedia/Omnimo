@@ -5,7 +5,7 @@ RSS2=http://feeds.ign.com/ignfeeds/all/
 RSS2Name=ign
 RSS3=http://kotaku.com/tag/top/index.xml
 RSS3Name=kotaku
-RSS4=http://www.1up.com/rss?x=1
+RSS4=http://www.1up.com/rss?X=1
 RSS4Name=1up
 width=450
 FontSize=12

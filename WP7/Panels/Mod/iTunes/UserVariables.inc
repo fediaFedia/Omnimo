@@ -1,4 +1,4 @@
 [Variables]
 Title=iTunes
 Action=iTunes.exe
-IconLocation=#currentpath#\icon.png
+IconLocation=#CURRENTPATH#\icon.png

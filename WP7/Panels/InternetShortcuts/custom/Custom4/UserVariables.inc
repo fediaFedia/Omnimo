@@ -1,4 +1,4 @@
 [Variables]
-Icon=#currentpath#\icon.png
+Icon=#CURRENTPATH#\icon.png
 Title=Custom4
 URL=http://fediafedia.deviantart.com/

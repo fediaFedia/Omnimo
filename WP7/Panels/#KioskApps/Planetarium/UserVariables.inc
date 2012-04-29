@@ -1,5 +1,5 @@
 [Variables]
 Title=Planetarium
-Icon=#currentpath#\icon.png
+Icon=#CURRENTPATH#\icon.png
 HideText=1
 site=http://neave.com/planetarium/app/

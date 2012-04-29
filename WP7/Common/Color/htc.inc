@@ -2,7 +2,7 @@
 
 [Variables]
 arrowcolor=255,255,255
-DefaultFontSize=(#height#/12-1)
+DefaultFontSize=(#Height#/12-1)
 yposition=1.2
 globalblurenable=1
 blurtype=1

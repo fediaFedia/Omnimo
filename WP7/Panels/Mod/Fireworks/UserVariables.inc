@@ -1,4 +1,4 @@
 [Variables]
 Title=Adobe Fireworks
 Action=fireworks.exe
-IconLocation=#currentpath#\icon.png
+IconLocation=#CURRENTPATH#\icon.png

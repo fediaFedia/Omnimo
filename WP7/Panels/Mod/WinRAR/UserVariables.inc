@@ -1,4 +1,4 @@
 [Variables]
 Title=WinRAR
 Action=winrar.exe
-IconLocation=#currentpath#\icon.png
+IconLocation=#CURRENTPATH#\icon.png

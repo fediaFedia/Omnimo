@@ -1,4 +1,4 @@
 [Variables]
 Title=Steam Platform
 Action=Steam.exe
-IconLocation=#currentpath#\icon.png
+IconLocation=#CURRENTPATH#\icon.png

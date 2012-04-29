@@ -1,4 +1,4 @@
 [Variables]
 Title=Microsoft Skype
 Action=skype.exe
-IconLocation=#currentpath#\icon.png
+IconLocation=#CURRENTPATH#\icon.png

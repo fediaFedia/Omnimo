@@ -7,4 +7,4 @@ ChromeLaunch=--new-tab about:home
 FirefoxLaunch=
 privatebrowsingicons=1
 OpenMethodChrome=#NewTabChrome#
-OpenMethodFirefox=#NewTabFirefox#
+OpenMethodFirefoX=#NewTabFirefox#

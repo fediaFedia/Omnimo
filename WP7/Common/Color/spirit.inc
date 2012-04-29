@@ -2,13 +2,13 @@
 
 [Variables]
 arrowcolor=255,255,255
-DefaultFontSize=(#height#/12-1)
+DefaultFontSize=(#Height#/12-1)
 yposition=1.2
 globalblurenable=1
 blurtype=1
 blurcornerradius=0
 Padding=0
-Imagedir=#skinspath#\WP7\Common\Panel\Default
+Imagedir=#SKINSPATH#\WP7\Common\Panel\Default
 ColorSkin=27,161,226
 ColorSkin2=255,255,255
 ColorSkinHover=255,0,255

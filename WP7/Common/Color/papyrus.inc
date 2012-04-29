@@ -3,7 +3,7 @@
 [Variables]
 arrowcolor=255,255,255
 Padding=0
-Imagedir=#skinspath#\WP7\Common\Panel\Papyrus
+Imagedir=#SKINSPATH#\WP7\Common\Panel\Papyrus
 ColorSkin=236,188,107
 ColorSkin2=143,191,38
 ColorSkinHover=255,0,255

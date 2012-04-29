@@ -1,16 +1,16 @@
 [Variables]
 Location1=Photoshop.exe
-Icon1=#currentpath#\Seperate\photoshop\icon.png
+Icon1=#CURRENTPATH#\Seperate\photoshop\icon.png
 Location2=flashpro.exe
-Icon2=#currentpath#\Seperate\flashpro\icon.png
+Icon2=#CURRENTPATH#\Seperate\flashpro\icon.png
 Location3=illustrator.exe
-Icon3=#currentpath#\Seperate\illustrator\icon.png
+Icon3=#CURRENTPATH#\Seperate\illustrator\icon.png
 Location4=fireworks.exe
-Icon4=#currentpath#\Seperate\fireworks\icon.png
+Icon4=#CURRENTPATH#\Seperate\fireworks\icon.png
 Location5=dreamweaver.exe
-Icon5=#currentpath#\Seperate\dreamweaver\icon.png
+Icon5=#CURRENTPATH#\Seperate\dreamweaver\icon.png
 Location6=premierepro.exe
-Icon6=#currentpath#\Seperate\premierepro\icon.png
+Icon6=#CURRENTPATH#\Seperate\premierepro\icon.png
 
 ;[Variables]
 ;Location1=Photoshop.exe
