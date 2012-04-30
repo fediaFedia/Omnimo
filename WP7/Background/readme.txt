@@ -14,3 +14,7 @@ type a number from 0 (completelly transparent) to 255 (completelly opaque). Dont
 If you want to control the angle of the gradient, in the settings under GradientAngle type something like 45 or 90 or 180 degrees.
 
 It's recommended to make this skin click through after you have finished configuring it. You can later access its menu from the Rainmeter tray icon.
+
+--
+
+NOTICE: If you want another background for your 2nd monitor, right click any skin and select WP7 > Background > AnotherBG > bg.ini
