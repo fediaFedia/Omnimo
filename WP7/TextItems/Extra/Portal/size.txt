@@ -1,0 +1,9 @@
+[Variables]
+height=400
+Color=255,255,255
+Portal1Color=0,180,240
+Portal2Color=222,147,23
+
+
+
+;Change the height from here, after that - right click and refresh both of the portal sides.
