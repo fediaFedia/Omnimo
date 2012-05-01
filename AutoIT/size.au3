@@ -82,7 +82,7 @@ While 1
 			If $newsize = $Size Then Exit
 			IniWrite($SkinsPath & $Config & "\size.inc", "Variables", "Height", $newsize)
 
-			If $CmdLine[1] = "All" Then
+			If $CmdLine[1] = "all" Then
 				_ResizeAll(GUICtrlRead($input))
 				SendBang("!Refresh *") ; refresh Rainmeter
 			Else
@@ -98,13 +98,13 @@ While 1
 WEnd
 
 Func _ResizeAll($size)
-	_ResizePanels('WP7\Panels', $size)
-	_ResizePanels('WP7\InstalledPanels', $size)
+	_ResizePanels('WP7\Panels\', $size)
+	_ResizePanels('WP7\InstalledPanels\', $size)
 EndFunc
 
 Func _ResizePanels($path, $size)
 	$files = RecursiveFileSearch($SkinsPath & $path)
-	If Not $files[0] Then Return
+	If Not $files Or Not $files[0] Then Return
 	For $i = 1 To $files[0]
 		IniWrite($files[$i] & "\size.inc", "Variables", "Height", $size)
 	Next
