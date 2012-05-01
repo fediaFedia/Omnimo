@@ -1,5 +1,5 @@
 [Variables]
 Title=Adobe Kuler
-Icon=#CURRENTPATH#\icon.png
+Icon=icon.png
 HideText=0
 site=http://kuler.adobe.com/

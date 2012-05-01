@@ -1,4 +1,4 @@
 [Variables]
 Title=7-Zip File Manager
 Action=C:\Program Files\7-Zip\7zFM.exe
-IconLocation=#CURRENTPATH#\icon.png
+IconLocation=icon.png

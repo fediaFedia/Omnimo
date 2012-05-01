@@ -8,6 +8,6 @@ Action3="%SystemRoot%\explorer.exe" /E,::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"
 Name4=CMD
 Action4="cmd.exe"
 Name5=Lock PC
-Action5=#CURRENTPATH#\Lock.lnk
+Action5=Lock.lnk
 FontFace=Segoe WP Light
 iconvisibility=180

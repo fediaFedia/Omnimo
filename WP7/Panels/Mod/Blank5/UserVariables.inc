@@ -1,4 +1,4 @@
 [Variables]
 Title=<title here>
 Action=C:\
-IconLocation=#CURRENTPATH#\icon.png
+IconLocation=icon.png

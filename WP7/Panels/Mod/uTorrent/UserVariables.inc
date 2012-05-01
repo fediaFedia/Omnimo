@@ -1,4 +1,4 @@
 [Variables]
 Title=µTorrent
 Action=utorrent.exe
-IconLocation=#CURRENTPATH#\icon.png
+IconLocation=icon.png

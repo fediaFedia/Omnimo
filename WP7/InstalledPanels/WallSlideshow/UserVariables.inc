@@ -1,4 +1,4 @@
 [Variables]
-PicturesFolder=#CURRENTPATH#\sample
+PicturesFolder=sample
 SlideshowSpeed=20
 Subfolders=1

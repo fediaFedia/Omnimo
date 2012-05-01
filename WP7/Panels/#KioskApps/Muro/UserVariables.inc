@@ -1,5 +1,5 @@
 [Variables]
 Title=Muro
-Icon=#CURRENTPATH#\icon.png
+Icon=icon.png
 HideText=1
 site=http://muro.deviantart.com/

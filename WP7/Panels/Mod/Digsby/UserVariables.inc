@@ -1,4 +1,4 @@
 [Variables]
 Title=Digsby Messenger
 Action=digsby.exe
-IconLocation=#CURRENTPATH#\icon.png
+IconLocation=icon.png

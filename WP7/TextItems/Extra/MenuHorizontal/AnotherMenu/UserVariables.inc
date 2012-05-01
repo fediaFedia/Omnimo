@@ -14,7 +14,7 @@ Name6=notepad
 Action6=notepad.exe
 
 Name7=computer
-Action7=#CURRENTPATH#\computer.lnk
+Action7=computer.lnk
 
 FontFace=Segoe WP Light
 spacing=20

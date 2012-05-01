@@ -1,4 +1,4 @@
 [Variables]
 Title=Recuva 
 Action=recuva.exe
-IconLocation=#CURRENTPATH#\icon.png
+IconLocation=icon.png

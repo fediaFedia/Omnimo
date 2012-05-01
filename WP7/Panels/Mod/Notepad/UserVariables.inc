@@ -1,4 +1,4 @@
 [Variables]
 Title=Notepad
 Action=notepad.exe
-IconLocation=#CURRENTPATH#\icon.png
+IconLocation=icon.png

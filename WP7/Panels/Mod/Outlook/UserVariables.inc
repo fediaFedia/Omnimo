@@ -1,4 +1,4 @@
 [Variables]
 Title=Microsoft Outlook
 Action=C:\Program Files (x86)\Microsoft Office\Office14\Outlook.exe
-IconLocation=#CURRENTPATH#\icon.png
+IconLocation=icon.png
