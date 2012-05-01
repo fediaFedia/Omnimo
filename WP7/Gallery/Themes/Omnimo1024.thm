@@ -20,7 +20,7 @@ SavePosition=1
 SnapEdges=0
 KeepOnScreen=1
 AutoSelectScreen=0
-AlwaysOnTop=0
+AlwaysOnTop=1
 [WP7\Gallery]
 Active=0
 WindowWindowX=(#ScreenAreaWidth#/2-291)
@@ -34,7 +34,7 @@ SavePosition=1
 SnapEdges=0
 KeepOnScreen=1
 AutoSelectScreen=0
-AlwaysOnTop=0
+AlwaysOnTop=1
 [WP7\Background]
 Active=1
 LoadOrder=-1

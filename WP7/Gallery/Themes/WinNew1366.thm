@@ -3,6 +3,36 @@ DisableVersionCheck=0
 Logging=0
 TrayExecuteM=!execute [!ToggleConfig "WP7\Gallery" "gallery.ini"]
 
+[WP7\Gallery\Color]
+Active=0
+WindowX=(#ScreenAreaWidth#/2-327)
+WindowY=(#ScreenAreaHeight#/2-148)
+AlphaValue=255
+FadeDuration=250
+ClickThrough=0
+Draggable=1
+HideOnMouseOver=0
+SavePosition=1
+SnapEdges=0
+KeepOnScreen=1
+AutoSelectScreen=0
+AlwaysOnTop=1
+
+[WP7\Gallery]
+Active=0
+WindowX=(#ScreenAreaWidth#/2-332)
+WindowY=(#ScreenAreaHeight#/2-155)
+AlphaValue=255
+FadeDuration=250
+ClickThrough=0
+Draggable=1
+HideOnMouseOver=0
+SavePosition=1
+SnapEdges=0
+KeepOnScreen=1
+AutoSelectScreen=0
+AlwaysOnTop=1
+
 [WP7\TextItems\#Win8Sidebar\Toggle]
 Active=1
 WindowX=1351
