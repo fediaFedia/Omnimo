@@ -359,7 +359,7 @@ Case 'Select'
 ; Command line arguments:
 ; [2] URL
 Case 'Browser'
-	$GUI = GUICreate("Omnimo Information Hub", 535, 470, -1, -1, BitOR($GUI_SS_DEFAULT_GUI, $WS_MAXIMIZEBOX, $WS_SIZEBOX))
+	$GUI = GUICreate("Omnimo Information Hub", 535, 470, -1, -1, BitOR($GUI_SS_DEFAULT_GUI, $WS_MAXIMIZEBOX, $WS_SIZEBOX, $WS_CLIPCHILDREN))
 	GUISetBkColor(0x7A7A7A)
 
 	_IEErrorHandlerRegister()
