@@ -1,3 +1,2 @@
 [Variables]
-GamerTag=Rainmeter
-UpdateRate=6000
+action=http://games.live.com
