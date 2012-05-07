@@ -86,7 +86,7 @@ AlwaysOnTop=0
 
 
 [WP7\Panels\Internet]
-Active=2
+Active=12
 WindowX=523
 WindowY=615
 AlphaValue=255
