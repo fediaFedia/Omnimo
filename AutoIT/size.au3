@@ -104,7 +104,7 @@ EndFunc
 
 Func _ResizePanels($path, $size)
 	$files = RecursiveFileSearch($SkinsPath & $path)
-	If Not $files Or Not $files[0] Then Return
+	If $files = -1 Or Not $files[0] Then Return
 	For $i = 1 To $files[0]
 		IniWrite($files[$i] & "\size.inc", "Variables", "Height", $size)
 	Next
@@ -122,7 +122,7 @@ Func RecursiveFileSearch($RFSstartDir, $RFSdepth = 0)
 	EndIf
 
 	$RFSsearch = FileFindFirstFile($RFSstartDir & "*.*")
-	If @error Then Return
+	If @error Then Return -1
 
 	;Search through all files and folders in directory
 	While 1
