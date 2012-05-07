@@ -5,17 +5,21 @@ MouseActionCursor=0
 MouseOverAction=!Execute [!ShowMeter btn1][!ShowMeter MeterClose][!ShowMeter size][!Redraw]
 MouseLeaveAction=!Execute [!HideMeter btn1][!HideMeter MeterClose][!HideMeter size][!Redraw]
 MiddleMouseUpAction=!DeactivateConfig
+Blur=#globalblurenable#
+BlurRegion=#blurtype#,5,5,(#Height#+5),(#Height#+5),#blurcornerradius#
 
 [Variables]
 @include=#ROOTCONFIGPATH#Common\Variables\UserVariables.inc
 @include2=#ROOTCONFIGPATH#Common\color\color.inc
 @include3=size.inc
+@include4=UserVariables.inc
 Name=Name
 Image=
 Action=Action
 FixedIconSize=1
 
 [shadow]
+ScaleMargins=10,10,10,10
 Meter=Image
 ImageName=#ROOTCONFIGPATH#Common\Borders\#shadow#.png
 X=0

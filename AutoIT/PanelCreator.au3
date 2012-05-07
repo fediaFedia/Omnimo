@@ -57,7 +57,7 @@ Const $fonttype = IniRead($ColorInc, "Variables", "FontType", "Segoe UI Semibold
 Const $fonttypewp = IniRead($ColorInc, "Variables", "FontTypeWP", "Segoe WP")
 Const $fontfaceui = IniRead($ColorInc, "Variables", "FontFaceUI", "Segoe UI")
 Const $fontfacel = IniRead($ColorInc, "Variables", "FontFaceLight", "Segoe UI Light")
-Const $deffsize = Int(Execute(StringReplace(IniRead($ColorInc, "Variables", "DefaultFontSize", "12"), "#height#", "150", 0, 2)))
+Const $deffsize = Int(Execute(StringReplace(IniRead($ColorInc, "Variables", "DefaultFontSize", "12"), "#Height#", "150", 0, 2)))
 
 ; Read templates into an array
 Global $templates[3]
@@ -143,7 +143,7 @@ Global $fixeds, $split, $textx, $texty, $font, $fsize, $iconx, $icony, $iconw, $
 $oldname = ""
 
 ; Load first template
-_LoadTemplate("Templates\" & $templates[1] & ".ini")
+_LoadTemplate("Templates\" & $templates[1] & ".inc")
 _DrawPanelImage("Resources\droptext.jpg")
 
 While 1
@@ -246,17 +246,17 @@ While 1
 
 		Case $template1
 			GUICtrlSetPos($highlight, 396, 80)
-			_LoadTemplate("Templates\" & $templates[1] & '.ini')
+			_LoadTemplate("Templates\" & $templates[1] & '.inc')
 			_DrawPanelImage($oldimg)
 
 		Case $template2
 			GUICtrlSetPos($highlight, 396, 135)
-			_LoadTemplate("Templates\" & $templates[2] & '.ini')
+			_LoadTemplate("Templates\" & $templates[2] & '.inc')
 			_DrawPanelImage($oldimg)
 
 		Case $template3
 			GUICtrlSetPos($highlight, 396, 189)
-			_LoadTemplate("Templates\" & $templates[3] & '.ini')
+			_LoadTemplate("Templates\" & $templates[3] & '.inc')
 			_DrawPanelImage($oldimg)
 
 		Case $create
@@ -423,11 +423,12 @@ Func _CreatePanel()
 	IniDelete($inipath, 'Variables', 'StringSplit')
 
 	; Create size.inc
-	IniWrite($folderpath & '\' & 'size.inc', 'Variables', 'Height', '150')
+	IniWrite($folderpath & '\' & 'size.inc', 'Variables', 'Height', IniRead($SkinPath & 'WP7\Gallery\Color\size.inc', 'Variables', 'Height', '150'))
 
 	; Write panel info to panels.inc
 	For $i = 1 To 40
-		If IniRead($PanelsInc, "Variables", "Name" & $i, "-1") = "-1" Then ExitLoop
+		$iname = IniRead($PanelsInc, "Variables", "Name" & $i, "NULL")
+		If $iname = "NULL" Or $iname = $title Then ExitLoop
 	Next
 
 	If $i = 41 Then
