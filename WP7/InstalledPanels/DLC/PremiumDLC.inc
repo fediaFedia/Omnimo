@@ -1,6 +1,5 @@
 [Variables]
-panel12=RottenTomatoes
-panel15=QuickMeme
+panel51=MailChecker
 panel16=Maps
 panel21=Notes++
 panel26=PremiumWeather
