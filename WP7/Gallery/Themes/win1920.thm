@@ -176,8 +176,8 @@ KeepOnScreen=1
 AutoSelectScreen=0
 AlwaysOnTop=0
 
-[WP7\Panels\Live]
-Active=5
+[WP7\Panels\XboxLive]
+Active=1
 WindowX=1550
 WindowY=431
 AlphaValue=255

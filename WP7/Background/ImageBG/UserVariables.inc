@@ -1,8 +1,7 @@
 [Variables]
-Color1=0,0,0,100
-Color2=0,0,0,20
+BackgroundImage=#currentpath#\circles.jpg
+Color1=60,60,60,255
+Color2=30,30,30,255
 gradientangle=90
-enableblur=0
-;The gradient angle is given in degrees, you can edit the colors too. Careful now. Don't forget to save
-Width=#WorkAreaWidth#
-Height=#workareaheight#
+width=#workareawidth#
+height=#workareaheight#

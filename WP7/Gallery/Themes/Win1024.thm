@@ -83,7 +83,7 @@ KeepOnScreen=1
 AutoSelectScreen=0
 AlwaysOnTop=0
 [WP7\Panels\Internet]
-Active=8
+Active=11
 WindowX=62
 WindowY=302
 AlphaValue=255

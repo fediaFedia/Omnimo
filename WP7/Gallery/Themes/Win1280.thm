@@ -78,7 +78,7 @@ KeepOnScreen=1
 AutoSelectScreen=0
 AlwaysOnTop=0
 [WP7\Panels\Internet]
-Active=8
+Active=11
 WindowX=38
 WindowY=302
 AlphaValue=255
@@ -236,8 +236,8 @@ KeepOnScreen=1
 AutoSelectScreen=0
 AlwaysOnTop=0
 
-[WP7\Panels\Live]
-Active=5
+[WP7\Panels\XboxLive]
+Active=1
 WindowX=1084
 WindowY=302
 AlphaValue=255
