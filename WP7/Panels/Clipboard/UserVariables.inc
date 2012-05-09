@@ -1,0 +1,2 @@
+[Variables]
+FontFaceNotes=Segoe WP
