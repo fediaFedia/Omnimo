@@ -1,4 +1,5 @@
 [Variables]
-PrivateXMLfeed=http://www.google.com/calendar/feeds/omnimotest%40gmail.com/private-4dcef559fd54977140cc784213a778f1/basic
+PrivateXMLfeed=https://www.google.com/calendar/feeds/omnimotest2%40gmail.com/private-727dd8e5a3f4810e5357d3a826376099/basic
 PanelTitle=Google Calendar
-UpdateRate=5
+UpdateRate=120
+HideTitle=0
