@@ -1,9 +1,7 @@
 [Rainmeter]
 DisableVersionCheck=0
 Logging=0
-TrayExecuteL=!execute ["#skinspath#\WP7\Common\OmnimoApp.exe" ToggleIcons][!ToggleFade *]
 TrayExecuteM=!execute [!ToggleConfig "WP7\Gallery" "gallery.ini"]
-
 
 [WP7]
 Active=1

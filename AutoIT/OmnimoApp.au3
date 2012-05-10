@@ -158,6 +158,7 @@ Case 'Monitor'
 ; Command line arguments:
 ; [2] Show / Hide (optional)
 Case 'ToggleIcons'
+	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
     $hParent = WinGetHandle("Program Manager")
     $hListView = ControlGetHandle($hParent, "", "SysListView321")
 
@@ -262,7 +263,6 @@ Case 'Power'
 			SendBang("!DeactivateConfig WP7\TextItems\Extra\PowerButtons\Dialogue")
 			Run('rundll32.exe PowrProf.dll,SetSuspendState', "", @SW_HIDE)
 	EndSwitch
-
 
 ; Windows Update
 Case 'Update'
