@@ -269,7 +269,8 @@ Case 'Update'
 	; Check for updates
 	$wupdate = ObjCreate("Microsoft.Update.Session")
 	$searcher = $wupdate.CreateUpdateSearcher()
-	$result = $searcher.Search("IsInstalled=0")
+	$result = $searcher.Search("IsInstalled=0 and IsHidden=0")
+	If @error Then Exit
 
     ; Refresh panel
 	SendBang("!SetVariable Updates " & $result.Updates.Count & " WP7\InstalledPanels\WindowsUpdate")
