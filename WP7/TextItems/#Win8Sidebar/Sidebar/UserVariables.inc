@@ -17,11 +17,11 @@ hub3name=#Mail#
 FolderName1=User Folder
 FolderAction1=%USERPROFILE%
 FolderName2=Desktop
-FolderAction2=%USERPROFILE%
+FolderAction2=%USERPROFILE%\Desktop
 FolderName3=Pictures
-FolderAction3=%USERPROFILE%
+FolderAction3=%USERPROFILE%\Pictures
 FolderName4=Documents
-FolderAction4=%USERPROFILE%
+FolderAction4=%USERPROFILE%\Documents
 FolderName5=Program Files
 FolderAction5=%PROGRAMFILES%
 
