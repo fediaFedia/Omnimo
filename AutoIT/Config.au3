@@ -44,6 +44,7 @@ Global $VarCount = 0
 Global $ChangeInput = 0
 Global $VariableInput
 Global $CurrentVarName
+Global $CurrentVarDescription
 Global $Comments = ""
 Global $CommentLimit = 5
 
@@ -176,6 +177,7 @@ While 1
 			For $ListCount = 1 To $VarCount
 				If $VarName[$ListCount] = $CurrentVarName Then
 					$CurrentVarDescription = $VarDescription[$ListCount]
+					ExitLoop
 				EndIf
 			Next
 
