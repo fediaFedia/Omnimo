@@ -32,8 +32,7 @@ ElseIf FileFindFirstFile($SystemDrive & "\Program Files\Rainmeter\Rainmeter.ini"
 ElseIf FileFindFirstFile("..\..\..\..\Rainmeter.ini") <> -1 Then
 	$DataFolder = "..\..\..\..\"
 Else
-	MsgBox(16, "Error", "Could not locate Rainmeter.ini")
-	Exit
+	_OmnimoError("Panel Creator", "Unable to locate Rainmeter.ini")
 EndIf
 
 Const $SkinPath = IniRead($DataFolder & "Rainmeter.ini", "Rainmeter", "SkinPath", @UserProfileDir & '\Documents\Rainmeter\Skins\')
@@ -63,10 +62,7 @@ Const $deffsize = Int(Execute(StringReplace(IniRead($ColorInc, "Variables", "Def
 Global $templates[3]
 _FileReadToArray("templates.txt", $templates)
 
-If $templates[0] <> 3 Then
-	MsgBox(16, "Error", "Invalid templates file")
-	Exit
-EndIf
+If $templates[0] <> 3 Then _OmnimoError("Panel Creator", "Invalid templates file")
 
 ; Create GUI
 $Gui = GUICreate("Panel Creator", 470, 285, -1, -1, BitOR($WS_BORDER, $WS_POPUP), BitOR($WS_EX_ACCEPTFILES, $WS_EX_TOOLWINDOW))
@@ -241,7 +237,7 @@ While 1
 			GUICtrlSetData($action, $file)
 
 		Case $select
-			$folder = FileSelectFolder("Choose a folder", @UserProfileDir, 1 + 2 + 4)
+			$folder = FileSelectFolder("Choose a folder", "", 1 + 2 + 4, @UserProfileDir)
 			GUICtrlSetData($action, $folder)
 
 		Case $template1
@@ -385,6 +381,7 @@ Func _CreatePanel()
 	; Create panel directory
 	If DirCreate($folderpath) = 0 Then
 		MsgBox(16, "Unable to create panel", "The program was unable to create a panel with the selected name.")
+		Return
 	EndIf
 
 	Local $drive, $dir, $fname, $ext
