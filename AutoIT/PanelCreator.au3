@@ -409,15 +409,15 @@ Func _CreatePanel()
 
 	; Calculate resizable widths for the icon if FixedIconSize is not set
 	If Not $fixeds Then
-		IniWrite($inipath, 'icon', 'x', '(#height#/(150/' & $imagex & ')+5)')
-		IniWrite($inipath, 'icon', 'y', '(#height#/(150/' & $imagey & ')+5)')
-		IniWrite($inipath, 'icon', 'w', '(#height#/(150/' & $imagew & '))')
-		IniWrite($inipath, 'icon', 'h', '(#height#/(150/' & $imageh & '))')
+		IniWrite($inipath, 'icon', 'X', '(#Height#/(150/' & $imagex & ')+5)')
+		IniWrite($inipath, 'icon', 'Y', '(#Height#/(150/' & $imagey & ')+5)')
+		IniWrite($inipath, 'icon', 'W', '(#Height#/(150/' & $imagew & '))')
+		IniWrite($inipath, 'icon', 'H', '(#Height#/(150/' & $imageh & '))')
 	EndIf
 
 	; Delete useless variables
 	IniDelete($inipath, 'Variables', 'FixedIconSize')
-	IniDelete($inipath, 'Variables', 'StringSplit')
+	IniDelete($inipath, 'Variables', 'SplitString')
 
 	; Create size.inc
 	IniWrite($folderpath & '\' & 'size.inc', 'Variables', 'Height', IniRead($SkinPath & 'WP7\Gallery\Color\size.inc', 'Variables', 'Height', '150'))
