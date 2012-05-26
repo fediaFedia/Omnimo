@@ -20,6 +20,7 @@
 
 #include "Includes\Common.au3"
 
+
 Switch $CmdLine[1]
 
 ; Open Start Menu
@@ -264,10 +265,15 @@ Case 'Power'
 			Run('rundll32.exe PowrProf.dll,SetSuspendState', "", @SW_HIDE)
 	EndSwitch
 
+
 ; Windows Update
 Case 'Update'
+	; Exit gracefully when not connected
+	$oWU_ErrorHandler = ObjEvent("AutoIt.Error", "_WU_ErrorHandler")
+
 	; Check for updates
 	$wupdate = ObjCreate("Microsoft.Update.Session")
+	If @error Then Exit
 	$searcher = $wupdate.CreateUpdateSearcher()
 	$result = $searcher.Search("IsInstalled=0 and IsHidden=0")
 	If @error Then Exit
@@ -728,3 +734,8 @@ Func _HexToRGB($Color)
 	$Red = BitAND(BitShift($Color, 16), 0xFF)
 	Return $Red & ',' & $Green & ',' & $Blue
 EndFunc
+
+Func _WU_ErrorHandler()
+	; Do something more clever here?
+	Exit
+EndFunc ;==>_WU_ErrorHandler
