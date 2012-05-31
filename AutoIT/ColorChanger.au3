@@ -1,11 +1,13 @@
 #NoTrayIcon
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_outfile=..\WP7\Common\ColorChanger.exe
+#AutoIt3Wrapper_Icon=..\..\..\..\..\Desktop\Project2.ico
+#AutoIt3Wrapper_Outfile=..\WP7\Common\ColorChanger.exe
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Made for Omnimo UI
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.0
+#AutoIt3Wrapper_Res_Fileversion=1.0.0.2
 #AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2012
+#AutoIt3Wrapper_Res_requestedExecutionLevel=asInvoker
 #AutoIt3Wrapper_AU3Check_Parameters=-w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
@@ -13,13 +15,35 @@
 
 #include "Includes\ColorChooser.au3"
 #include "Includes\Common.au3"
+#include "Includes\MouseOnEvent.au3"
+
+Const $SettingsPath = $CmdLine[1]
+Const $SkinPath = IniRead($SettingsPath & 'Rainmeter.ini', 'Rainmeter', 'SkinPath', @UserProfileDir & '\Documents\Rainmeter\Skins\')
+Const $Opacity = IniRead($SkinPath & '\WP7\Common\Color\color.inc', 'Variables', 'Opacity', '255')
+Global $Color = IniRead($SkinPath & '\WP7\Common\Color\color.inc', 'Variables', 'ColorSkin', '27,161,226,' & $Opacity) & ',' & $Opacity
+Global $Custom = $Color
+Const $font = "Segoe UI"
+Const $Variables = $SkinPath & "WP7\Common\Variables\"
+
+
+$BgColor = IniRead($Variables & "UserVariables.inc", "Variables", "ConfigBackgroundColor", "0xe1e1e1")
+$BgColor2 = IniRead($Variables & "UserVariables.inc", "Variables", "ConfigBackgroundColor2", "0xd2d2d2")
+$TextColor = IniRead($Variables & "UserVariables.inc", "Variables", "ConfigTextColor", "0x323232")
+$GuiOptions = BitOR($WS_VISIBLE, $WS_SYSMENU, $WS_BORDER)
+$opts = BitOR($ES_AUTOVSCROLL, $ES_AUTOHSCROLL, $WS_HSCROLL, $WS_VSCROLL)
 
 ; Create GUI
-$Form1 = GUICreate("Change panel color", 369, 258, 336, 287)
-$List1 = GUICtrlCreateList("", 8, 32, 177, 214)
-$Label1 = GUICtrlCreateLabel("Active panels", 8, 8, 68, 17)
+$Form1 = GUICreate("Change panel color", 379, 288, 356, 317, $GuiOptions)
+GUISetBkColor($BgColor)
+_MouseSetOnEvent($MOUSE_WHEELUP_EVENT , "_WheelDown", "", "", $Form1, -1)
+$List1 = GUICtrlCreateList("", 8, 32, 177, 214, $opts, 0)
+GUICtrlSetBkColor(-1, $BgColor)
+GUICtrlSetColor(-1, $TextColor)
+GUICtrlSetColor(-1, $TextColor)
 $Button1 = GUICtrlCreateButton("Default color", 198, 216, 78, 25)
 $Button2 = GUICtrlCreateButton("Apply color", 278, 216, 78, 25)
+$Button3 = GUICtrlCreateLabel("[Refresh active panels]", 8, 10, 120, 17)
+GUICtrlSetColor(-1, $TextColor)
 
 GUISetState(@SW_SHOW)
 
@@ -59,7 +83,7 @@ $c15 = GUICtrlCreateGraphic(320, 112, $width, $heigth)
 $c15b = GUICtrlCreateGraphic(319, 111, $width+2, $heigth+2)
 $c16 = GUICtrlCreateGraphic(320, 152, $width, $heigth)
 $c16b = GUICtrlCreateGraphic(319, 151, $width+2, $heigth+2)
-$plus = GUICtrlCreatePic("plus.jpg", 320, 152, 33, 33)
+$plus = GUICtrlCreatePic("plus.bmp", 320, 152, 33, 33)
 
 Global $elems[19] = [$c1, $c2, $c3, $c4, $c5, $c6, $c7, $c8, $c9, $c10, $c11, $c12, $c13, $c14, $c15, $c16, $plus, $Button1, $Button2]
 Global $elemsb[16] = [$c1b, $c2b, $c3b, $c4b, $c5b, $c6b, $c7b, $c8b, $c9b, $c10b, $c11b, $c12b, $c13b, $c14b, $c15b, $c16b]
@@ -90,11 +114,8 @@ Next
 
 If $CmdLine[0] < 1 Then _OmnimoError("Individual Panel Color", "Too few command line arguments specified.")
 
-Const $SettingsPath = $CmdLine[1]
-Const $SkinPath = IniRead($SettingsPath & 'Rainmeter.ini', 'Rainmeter', 'SkinPath', @UserProfileDir & '\Documents\Rainmeter\Skins\')
-Const $Opacity = IniRead($SkinPath & '\WP7\Common\Color\color.inc', 'Variables', 'Opacity', '255')
-Global $Color = IniRead($SkinPath & '\WP7\Common\Color\color.inc', 'Variables', 'ColorSkin', '27,161,226,' & $Opacity) & ',' & $Opacity
-Global $Custom = $Color
+
+
 
 $file = FileOpen($SettingsPath & '\Rainmeter.ini', 0)
 If $file = -1 Then _OmnimoError("Individual Panel Color", "Unable to open Rainmeter.ini for reading.")
@@ -187,6 +208,34 @@ While 1
 			Next
 			; Refresh panel
 			SendBang("!Refresh WP7\" & GUICtrlRead($list1))
+
+		Case $Button3
+
+
+$file = FileOpen($SettingsPath & '\Rainmeter.ini', 0)
+If $file = -1 Then _OmnimoError("Individual Panel Color", "Unable to open Rainmeter.ini for reading.")
+
+; Read active skins from Rainmeter.ini again
+While 1
+    $line = FileReadLine($file)
+    If @error = -1 Then ExitLoop
+	If StringInStr($line, '[WP7\Panels') OR StringInStr($line, '[WP7\InstalledPanels') OR StringInStr($line, '[WP7\DonatorPanels') Then
+		If FileReadLine($file) <> 'Active=0' Then
+			$mark = False
+			For $j = 1 To $blacklist[0]
+				If StringInStr(StringRegExpReplace($line, "[\[\]]", ""), $blacklist[$j]) Then
+					$mark = True ; Panel was on blacklist!
+				EndIf
+			Next
+			If Not $mark Then
+				GUICtrlSetData($List1, StringReplace(StringRegExpReplace($line, "[\[\]]", ""), "WP7\", ""))
+			EndIf
+		EndIf
+	EndIf
+Wend
+
+FileClose($file)
+
 	EndSwitch
 WEnd
 
@@ -218,4 +267,8 @@ Func _HideOthers($el)
 			GUICtrlSetState($elemsb[$i], $GUI_HIDE)
 		EndIf
 	Next
+EndFunc
+
+Func _WheelDown()
+	Exit
 EndFunc
