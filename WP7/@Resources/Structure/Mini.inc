@@ -13,7 +13,7 @@ Y=5
 W=#Height#
 H=#Height#
 ImageTint=#colorskin#,#opacity#
-BackgroundMargins=10,10,10,10
+ScaleMargins=10,10,10,10
 
 [btnstyle]
 ImageName=#Imagedir#\btn3.png
@@ -22,22 +22,16 @@ Y=5
 W=#Height#
 H=#Height#
 ImageTint=#colorskin2#,#opacity2#
-BackgroundMargins=10,10,10,10
-
-[ShadowStyle]
-solidcolor=0,0,0,1
-X=0
-Y=0
-W=(#Height#+10)
-H=(#Height#+10)
+ScaleMargins=10,10,10,10
 
 
 [overlaystyle]
-ImageName=#@#Common\Overlay\#overlay#.png
-W=(#Height#)
-H=(#Height#)
-x=5
-y=5
+ImageName=#@#Common\OverlayBorder\#overlay#.png
+W=(#Height#+10)
+H=(#Height#+10)
+x=0
+y=0
+ScaleMargins=10,10,10,10
 
 [TextStyle]
 X=(5+(#Height#/#xposition#))
@@ -53,7 +47,6 @@ X=(#Height#/5.8+5)
 Y=(#Height#/6.3+#yposition#+5)
 W=(#Height#/1.5)
 H=(#Height#/1.5)
-ImageTint=#TextColor2#
 AntiAlias=1
 
 
