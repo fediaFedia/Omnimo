@@ -14,4 +14,4 @@ Width=250
 Height=209
 Show9thItem=0
 Show10thItem=0
-Showbackground=0
+Showbackground=1
