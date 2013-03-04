@@ -11,3 +11,4 @@ Name5=Log off
 Action5=logoff.lnk
 FontFace=Segoe WP Light
 Iconvisibility=180
+Padding=-2
