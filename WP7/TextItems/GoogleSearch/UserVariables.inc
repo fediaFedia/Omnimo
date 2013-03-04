@@ -1,6 +1,6 @@
 [Variables]
-SearchWidth=730
+SearchWidth=512
+SearchOpacity=180
 SearchEngineT=Google
-SearchEngine=http://www.google.#languagedomain#/search?q=
-DisableRoundedEdges=1
+SearchEngine=http://www.google.com/search?q=
 HideFavicon=0
