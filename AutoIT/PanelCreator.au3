@@ -1,13 +1,13 @@
 #NoTrayIcon
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_icon=PanelCreator.ico
-#AutoIt3Wrapper_outfile=..\WP7\Common\PanelCreator\PanelCreator.exe
+#AutoIt3Wrapper_Icon=PanelCreator.ico
+#AutoIt3Wrapper_Outfile=..\WP7\@Resources\Common\PanelCreator\PanelCreator.exe
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Omnimo Panel Creator
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.0
-#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2012
-#AutoIt3Wrapper_AU3Check_Parameters=-w 1 -w 2 -w 4 -w 6 -w 7
+#AutoIt3Wrapper_Res_Fileversion=6.0
+#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2013
+#AutoIt3Wrapper_AU3Check_Parameters=-q -w 1 -w 2 -w 4 -w 6 -w 7
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <GDIPlus.au3>
@@ -18,8 +18,8 @@
 #include <String.au3>
 #include <File.au3>
 
-#include "Includes\IconImage.au3"
 #include "Includes\Common.au3"
+#include "Includes\IconImage.au3"
 
 $AppDataDir = EnvGet("APPDATA")
 $SystemDrive = EnvGet("SYSTEMDRIVE")
@@ -32,7 +32,7 @@ ElseIf FileFindFirstFile($SystemDrive & "\Program Files\Rainmeter\Rainmeter.ini"
 ElseIf FileFindFirstFile("..\..\..\..\Rainmeter.ini") <> -1 Then
 	$DataFolder = "..\..\..\..\"
 Else
-	_OmnimoError("Panel Creator", "Unable to locate Rainmeter.ini")
+	OmnimoError("Panel Creator", "Unable to locate Rainmeter.ini")
 EndIf
 
 Const $SkinPath = IniRead($DataFolder & "Rainmeter.ini", "Rainmeter", "SkinPath", @UserProfileDir & '\Documents\Rainmeter\Skins\')
@@ -62,7 +62,7 @@ Const $deffsize = Int(Execute(StringReplace(IniRead($ColorInc, "Variables", "Def
 Global $templates[3]
 _FileReadToArray("templates.txt", $templates)
 
-If $templates[0] <> 3 Then _OmnimoError("Panel Creator", "Invalid templates file")
+If $templates[0] <> 3 Then OmnimoError("Panel Creator", "Invalid template file")
 
 ; Create GUI
 $Gui = GUICreate("Panel Creator", 470, 285, -1, -1, BitOR($WS_BORDER, $WS_POPUP), BitOR($WS_EX_ACCEPTFILES, $WS_EX_TOOLWINDOW))
@@ -165,7 +165,7 @@ While 1
 			ShellExecute("http://browse.deviantart.com/customization/icons/dock/?order=9")
 
 		Case $copyright
-			ShellExecute("http://www.xyrfo.com")
+			ShellExecute("http://xyrfo.deviantart.com")
 
 		Case $GUI_EVENT_DROPPED
 			$filen = @GUI_DragFile
@@ -374,7 +374,7 @@ Func _CreatePanel()
 	Local $exists = 0
 	If FileExists($folderpath) Then
 		$exists = 1
-		Local $answer = MsgBox(52, "PanelCreator", "Panel with the selected name already exists. Overwrite?")
+		Local $answer = MsgBox(52, "PanelCreator", "A panel with the selected name already exists. Overwrite?")
 		If $answer = 7 Then Return
 	EndIf
 

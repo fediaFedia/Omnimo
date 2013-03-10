@@ -1,17 +1,18 @@
 #NoTrayIcon
-#region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_outfile=..\WP7\Background\Config.exe
+#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#AutoIt3Wrapper_Outfile=..\WP7\Background\Config.exe
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Made for Omnimo UI
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.0
-#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2012
-#AutoIt3Wrapper_AU3Check_Parameters=-w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
-#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#AutoIt3Wrapper_Res_Fileversion=6.0
+#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2013
+#AutoIt3Wrapper_AU3Check_Parameters=-q -w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
+#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <GUIConstantsEx.au3>
 #include <SliderConstants.au3>
 #include <WindowsConstants.au3>
+#include <Misc.au3>
 
 #include "Includes\Common.au3"
 
@@ -21,31 +22,19 @@ $Appearance = GUICtrlCreateGroup("Appearance", 8, 8, 329, 145)
 
 $AeroGlassValue = IniRead("size.inc", "Variables", "EnableAero", "0")
 $Enable = GUICtrlCreateCheckbox("Enable Aero Glass", 16, 96, 113, 25)
-
-If $AeroGlassValue = 1 Then
-	GUICtrlSetState(-1, $GUI_CHECKED)
-EndIf
+If $AeroGlassValue = 1 Then GUICtrlSetState(-1, $GUI_CHECKED)
 
 $RoundedEdgesValue = IniRead("size.inc", "Variables", "RoundedEdges", "")
 $Checkbox2 = GUICtrlCreateCheckbox("This option does nothing", 170, 96, 145, 25)
-
-If $RoundedEdgesValue = 1 Then
-	GUICtrlSetState(-1, $GUI_CHECKED)
-EndIf
+If $RoundedEdgesValue = 1 Then GUICtrlSetState(-1, $GUI_CHECKED)
 
 $showbordertopbottomValue = IniRead("size.inc", "Variables", "showbordertopbottom", "")
 $Show = GUICtrlCreateCheckbox("Show top and bottom borders", 170, 120, 160, 25)
-
-If $showbordertopbottomValue = 0 Then
-	GUICtrlSetState(-1, $GUI_CHECKED)
-EndIf
+If $showbordertopbottomValue = 0 Then GUICtrlSetState(-1, $GUI_CHECKED)
 
 $showborderleftrightValue = IniRead("size.inc", "Variables", "showborderleftright", "")
 $Checkbox1 = GUICtrlCreateCheckbox("Show left and right borders", 16, 120, 153, 25)
-
-If $showborderleftrightValue = 0 Then
-	GUICtrlSetState(-1, $GUI_CHECKED)
-EndIf
+If $showborderleftrightValue = 0 Then GUICtrlSetState(-1, $GUI_CHECKED)
 
 ; Background width slider and label
 $Width = GUICtrlCreateLabel("Width", 16, 35, 32, 17)
@@ -143,37 +132,15 @@ WEnd
 
 Func _ApplySettings()
 	IniWrite("size.inc", "Variables", "Width", GUICtrlRead($Slider1))
-	IniWrite("size.inc", "Variables", "Height", GUICtrlRead($Slider2))
-
-	If GUICtrlRead($Enable) = $GUI_CHECKED Then
-		IniWrite("size.inc", "Variables", "EnableAero", "1")
-	Else
-		IniWrite("size.inc", "Variables", "EnableAero", "0")
-	EndIf
-
-	If GUICtrlRead($Checkbox2) = $GUI_CHECKED Then
-		IniWrite("size.inc", "Variables", "RoundedEdges", "1")
-	Else
-		IniWrite("size.inc", "Variables", "RoundedEdges", "0")
-	EndIf
-
-	If GUICtrlRead($Checkbox1) = $GUI_CHECKED Then
-		IniWrite("size.inc", "Variables", "showborderleftright", "0")
-	Else
-		IniWrite("size.inc", "Variables", "showborderleftright", "1")
-	EndIf
-
-	If GUICtrlRead($Show) = $GUI_CHECKED Then
-		IniWrite("size.inc", "Variables", "showbordertopbottom", "0")
-	Else
-		IniWrite("size.inc", "Variables", "showbordertopbottom", "1")
-	EndIf
-
+	IniWrite("size.inc", "Variables", "Height",	GUICtrlRead($Slider2))
+	IniWrite("size.inc", "Variables", "EnableAero", _Iif(GUICtrlRead($Enable) = $GUI_CHECKED, "1", "0"))
+	IniWrite("size.inc", "Variables", "RoundedEdges", _Iif(GUICtrlRead($Checkbox1) = $GUI_CHECKED, "1", "0"))
+	IniWrite("size.inc", "Variables", "showborderleftright", _Iif(GUICtrlRead($Checkbox2) = $GUI_CHECKED, "0", "1"))
+	IniWrite("size.inc", "Variables", "showbordertopbottom", _Iif(GUICtrlRead($Show) = $GUI_CHECKED, "0", "1"))
 	IniWrite("size.inc", "Variables", "Color1", GUICtrlRead($Color1))
 	IniWrite("size.inc", "Variables", "Color2", GUICtrlRead($Color2))
 	IniWrite("size.inc", "Variables", "gradientangle", GUICtrlRead($Input3))
 	IniWrite("size.inc", "Variables", "ColorBorder", GUICtrlRead($Input4))
 	IniWrite("size.inc", "Variables", "borderwidth", GUICtrlRead($Border))
-
 	SendBang("!Refresh WP7\Background") ; refresh background
 EndFunc   ;==>_ApplySettings

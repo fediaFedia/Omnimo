@@ -106,7 +106,7 @@ Global Const $CC_WM_NCRBUTTONDOWN = 0x00A4
 Global Const $CC_WM_SETCURSOR = 0x0020
 Global Const $CC_WM_SYSCOMMAND = 0x0112
 
-Dim $ccData[29] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, Default, Default, 0, 0]
+Global $ccData[29] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, Default, Default, 0, 0]
 
 #cs
 
@@ -144,7 +144,7 @@ $ccData[0 ] - Handle to the "Color Chooser" window
 
 #ce
 
-Dim $ccPalette[21][3] = [[0, 1, 0]]
+Global $ccPalette[21][3] = [[0, 1, 0]]
 
 For $i = 1 To UBound($ccPalette) - 1
 	$ccPalette[$i][0] = -1
@@ -266,7 +266,7 @@ Func _ColorChooserDialog($iColor = 0, $hParent = 0, $iRefType = 0, $iReturnType 
 
 	$ccData[8 ] = _Image_Arrow()
 
-	Local $hPopup = 0, $Msg, $Xp, $Yp, $Pos, $Cursor, $Index, $H1 = 0, $H2 = 0, $Pressed = False, $Return = False
+	Local $hPopup = 0, $Msg, $Xp, $Yp, $Pos, $Cursor, $Index, $Pressed = False, $Return = False
 	Local $H1 = 69 * (BitAND($iFlags, $CC_FLAG_SOLIDCOLOR) = $CC_FLAG_SOLIDCOLOR)
 	LocaL $H2 = 56 * (BitAND($iFlags, $CC_FLAG_USERCOLOR) = $CC_FLAG_USERCOLOR)
 	Local $GUIOnEventMode = Opt('GUIOnEventMode', 0)

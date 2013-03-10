@@ -1,14 +1,13 @@
 #NoTrayIcon
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Outfile=..\WP7\Common\ColorChanger.exe
 #AutoIt3Wrapper_Icon=ColorChooser.ico
+#AutoIt3Wrapper_Outfile=..\WP7\@Resources\Common\ColorChanger.exe
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Made for Omnimo UI
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.3
-#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2012
-#AutoIt3Wrapper_Res_requestedExecutionLevel=asInvoker
-#AutoIt3Wrapper_AU3Check_Parameters=-w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
+#AutoIt3Wrapper_Res_Fileversion=6.0.0.0
+#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2013
+#AutoIt3Wrapper_AU3Check_Parameters=-q -w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <File.au3>
@@ -17,7 +16,7 @@
 #include "Includes\ColorChooser.au3"
 #include "Includes\MouseOnEvent.au3"
 
-If $CmdLine[0] < 1 Then _OmnimoError("Individual Panel Color", "Too few command line arguments specified.")
+If $CmdLine[0] < 1 Then OmnimoError("Individual Panel Color", "Too few command line arguments specified.")
 
 ; Setup variables
 Const $SettingsPath = $CmdLine[1]
@@ -55,12 +54,12 @@ GUISetState(@SW_SHOW)
 ; Read colors into an array
 Global $colors[17]
 _FileReadToArray('colors.txt', $colors)
-If @error Then _OmnimoError("Individual Panel Color", "Unable to read colors from colors.txt.")
+If @error Then OmnimoError("Individual Panel Color", "Unable to read colors from colors.txt.")
 
 ; Read blacklist into an array
 Global $blacklist[100]
 _FileReadToArray('blacklist.txt', $blacklist)
-If @error Then _OmnimoError("Individual Panel Color", "Unable to read blacklist from blacklist.txt.")
+If @error Then OmnimoError("Individual Panel Color", "Unable to read blacklist from blacklist.txt.")
 
 Global $Color = IniRead($SkinPath & '\WP7\Common\Color\color.inc', 'Variables', 'ColorSkin', '27,161,226,' & $Opacity) & ',' & $Opacity
 Global $Custom = $Color
@@ -134,7 +133,7 @@ While 1
 
 		Case $plus, $ColorButtons[15]
 			; Show a color chooser dialog for custom color
-			$Data = _ColorChooserDialog(_RGBToHex($Custom), $hGUI)
+			$Data = _ColorChooserDialog(RGBToHex($Custom), $hGUI)
 			If $Data = -1 Then ContinueCase
 			GUICtrlSetBkColor($ColorButtons[15], $Data)
 			GUICtrlSetState($plus, $GUI_HIDE)
@@ -152,24 +151,10 @@ While 1
 	EndSwitch
 WEnd
 
-; Convert Hex to RGB
-Func _HexToRGB($Color)
-	$Blue = BitAND($Color, 0xFF)
-	$Green = BitAND(BitShift($Color, 8), 0xFF)
-	$Red = BitAND(BitShift($Color, 16), 0xFF)
-	Return $Red & ',' & $Green & ',' & $Blue & ',' & $Opacity
-EndFunc
-
-; Convert RGB to Hex
-Func _RGBToHex($Color)
-	$split = StringSplit($Color, ',')
-	Return '0x' & Hex($split[1], 2) & Hex($split[2], 2) & Hex($split[3], 2)
-EndFunc
-
 ; Read active skins from Rainmeter.ini
 Func _ReadActiveSkins()
 	$file = FileOpen($SettingsPath & '\Rainmeter.ini')
-	If $file = -1 Then _OmnimoError("Individual Panel Color", "Unable to open Rainmeter.ini for reading.")
+	If $file = -1 Then OmnimoError("Individual Panel Color", "Unable to open Rainmeter.ini for reading.")
 
 	GUICtrlSetData($PanelList, "")
 	While 1
@@ -198,7 +183,7 @@ Func _ColorChoose($n, $hex)
 	GUICtrlSetState($ColorButtonsb[$prev], $GUI_HIDE)
 	GUICtrlSetState($ColorButtonsb[$n], $GUI_SHOW)
 	$prev = $n
-	Return _HexToRGB($hex)
+	Return HexToRGB($hex) & ',' & $Opacity
 EndFunc
 
 Func _WheelDown()

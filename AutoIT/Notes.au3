@@ -1,22 +1,22 @@
 #NoTrayIcon
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_outfile=..\WP7\Panels\miniNotes\notes.exe
+#AutoIt3Wrapper_Outfile=..\WP7\Panels\miniNotes\notes.exe
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Made for Omnimo UI
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.0
-#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2012
-#AutoIt3Wrapper_AU3Check_Parameters=-w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
+#AutoIt3Wrapper_Res_Fileversion=6.0
+#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2013
+#AutoIt3Wrapper_AU3Check_Parameters=-q -w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
 #include <EditConstants.au3>
 
-#include "Includes\MouseOnEvent.au3"
 #include "Includes\Common.au3"
+#include "Includes\MouseOnEvent.au3"
 
-If $CmdLine[0] < 1 Then _OmnimoError("miniNotes", "Too few command line arguments specified.")
+If $CmdLine[0] < 1 Then OmnimoError("miniNotes", "Too few command line arguments specified.")
 Const $DataFolder = $CmdLine[1]
 
 ; Set up variables

@@ -4,9 +4,8 @@
 #AutoIt3Wrapper_Res_Comment=Modified for Omnimo UI
 #AutoIt3Wrapper_Res_Description=miniShell
 #AutoIt3Wrapper_UseUpx=n
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.0
-#AutoIt3Wrapper_Res_requestedExecutionLevel=asInvoker
-#AutoIt3Wrapper_AU3Check_Parameters=-w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
+#AutoIt3Wrapper_Res_Fileversion=6.0
+#AutoIt3Wrapper_AU3Check_Parameters=-q -w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <EditConstants.au3>
@@ -14,8 +13,8 @@
 #include <WindowsConstants.au3>
 #include <Constants.au3>
 
-#include "Includes\MouseOnEvent.au3"
 #include "Includes\Common.au3"
+#include "Includes\MouseOnEvent.au3"
 
 ; Set up variables
 Const $font = "Segoe UI"

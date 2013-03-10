@@ -1,12 +1,12 @@
 #NoTrayIcon
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_outfile=..\WP7\Common\Size\size.exe
+#AutoIt3Wrapper_Outfile=..\WP7\@Resources\Common\Size\size.exe
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Omnimo Panel Resizer
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.0
-#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2012
-#AutoIt3Wrapper_AU3Check_Parameters=-w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
+#AutoIt3Wrapper_Res_Fileversion=6.0
+#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2013
+#AutoIt3Wrapper_AU3Check_Parameters=-q -w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <File.au3>
@@ -17,22 +17,23 @@
 #include "Includes\Common.au3"
 
 ; Check arguments
-If $CmdLine[0] < 3 Then _OmnimoError("Omnimo Panel Resizer", "Too few command line arguments specified.")
+If $CmdLine[0] < 4 Then OmnimoError("Omnimo Panel Resizer", "Too few command line arguments specified.")
 
 ; Set up variables
 Const $Config = $CmdLine[2]
-Const $SettingsPath = $CmdLine[3]
+Const $File = $CmdLine[3]
+Const $SettingsPath = $CmdLine[4]
 Const $SkinsPath = IniRead($SettingsPath & "Rainmeter.ini", "Rainmeter", "SkinPath", @UserProfileDir & "\Documents\Rainmeter\Skins\")
 
 ; Resize all without GUI
-If $CmdLine[0] = 4 Then
+If $CmdLine[0] = 5 Then
 	_ResizeAll($CmdLine[4])
 	Exit
 EndIf
 
-$XPosition = IniRead($SettingsPath & "Rainmeter.ini", $Config, "WindowX", "0") + 4
-$YPosition = IniRead($SettingsPath & "Rainmeter.ini", $Config, "WindowY", "0")
-$Size = IniRead($SkinsPath & $Config & "\size.inc", "Variables", "Height", "150")
+Const $Size = IniRead($SkinsPath & $Config & "\" & $File, "Variables", "Height", "150")
+$XPosition  = IniRead($SettingsPath & "Rainmeter.ini", $Config, "WindowX", "0") + 4
+$YPosition  = IniRead($SettingsPath & "Rainmeter.ini", $Config, "WindowY", "0")
 
 ; Set up GUI measurements
 $Width = $Size
@@ -50,15 +51,15 @@ Switch $CmdLine[1]
 EndSwitch
 
 ; Create GUI
-$Gui = GUICreate("", $Width + 16, 26, $XPosition, $YPosition + $Height + 5, BitOR($WS_BORDER, $WS_POPUP), $WS_EX_TOOLWINDOW)
-$slider = GUICtrlCreateSlider(0, 1, $Width - 43, 25, $TBS_NOTICKS)
-$input = GUICtrlCreateInput($Size, $Width - 43, 3, 40, 20)
-$updown = GUICtrlCreateUpdown(-1)
-$closed = GUICtrlCreatePic("close.jpg", $Width, 0, 16, 26)
+$Gui      = GUICreate("", $Width + 16, 26, $XPosition, $YPosition + $Height + 5, BitOR($WS_BORDER, $WS_POPUP), $WS_EX_TOOLWINDOW)
+$slider   = GUICtrlCreateSlider(0, 1, $Width - 43, 25, $TBS_NOTICKS)
+$input    = GUICtrlCreateInput($Size, $Width - 43, 3, 40, 20)
+$updown   = GUICtrlCreateUpdown(-1)
+$closed   = GUICtrlCreatePic("close.jpg", $Width, 0, 16, 26)
 $prevsize = $Size
 
 ; Set slider range and position
-GUICtrlSetLimit($slider, 300, 100)
+GUICtrlSetLimit($slider, 300, 70)
 GUICtrlSetData($slider, $Size)
 
 GUISetState(@SW_SHOW)
@@ -80,7 +81,7 @@ While 1
 
 		Case $closed
 			If $newsize = $Size Then Exit
-			IniWrite($SkinsPath & $Config & "\size.inc", "Variables", "Height", $newsize)
+			IniWrite($SkinsPath & $Config & "\" & $File, "Variables", "Height", $newsize)
 
 			If $CmdLine[1] = "all" Then
 				_ResizeAll(GUICtrlRead($input))

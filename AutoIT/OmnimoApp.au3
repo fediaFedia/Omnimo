@@ -1,13 +1,12 @@
 #NoTrayIcon
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Outfile=..\WP7\Common\OmnimoApp.exe
+#AutoIt3Wrapper_Outfile=..\WP7\@Resources\Common\OmnimoApp.exe
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Made for Omnimo UI
-#AutoIt3Wrapper_Res_Fileversion=1.0.0.0
-#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2012
-#AutoIt3Wrapper_Res_requestedExecutionLevel=asInvoker
-#AutoIt3Wrapper_AU3Check_Parameters=-w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
+#AutoIt3Wrapper_Res_Fileversion=6.0
+#AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2013
+#AutoIt3Wrapper_AU3Check_Parameters=-q -w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <IE.au3>
@@ -19,7 +18,6 @@
 #include <WindowsConstants.au3>
 
 #include "Includes\Common.au3"
-
 
 Switch $CmdLine[1]
 
@@ -35,7 +33,7 @@ Case 'StartMenu'
 ; [4]: action
 ; [5]: hash
 Case 'uTorrent'
-	If $CmdLine[0] < 5 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	If $CmdLine[0] < 5 Then OmnimoError("Error", "Too few command line arguments specified.")
     InetRead('http://' & $CmdLine[2] & ':' & $CmdLine[3] & '@127.0.0.1:8080/gui/?action=' & $CmdLine[4] & '&hash=' & $CmdLine[5], 1 + 16)
 
 
@@ -43,7 +41,7 @@ Case 'uTorrent'
 ; Command line arguments:
 ; [2] Power mode
 Case 'PowerPlan'
-	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	If $CmdLine[0] < 2 Then OmnimoError("Error", "Too few command line arguments specified.")
 	If $CmdLine[2] == 'HighPerformance' Then
         Run('powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c', "", @SW_HIDE)
     ElseIf $CmdLine[2] == 'Balanced' Then
@@ -58,7 +56,7 @@ Case 'PowerPlan'
 ; Command line arguments:
 ; [2] Brightness level
 Case 'SetBrightness'
-	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	If $CmdLine[0] < 2 Then OmnimoError("Error", "Too few command line arguments specified.")
     $tagDISPLAY_BRIGHTNESS = "ubyte ucDisplayPolicy;ubyte ucACBrightness;ubyte ucDCBrightness"
     Global Const $IOCTL_VIDEO_QUERY_DISPLAY_BRIGHTNESS = Int(0x00230498)
     Global Const $IOCTL_VIDEO_SET_DISPLAY_BRIGHTNESS = Int(0x0023049C)
@@ -81,7 +79,7 @@ Case 'SetBrightness'
 ; [2] Skin
 ; [3] Skin path
 Case 'Skin'
-	If $CmdLine[0] < 3 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	If $CmdLine[0] < 3 Then OmnimoError("Error", "Too few command line arguments specified.")
     FileCopy($CmdLine[3] & '\WP7\Common\Color\' & $CmdLine[2] & '.inc', $CmdLine[3] & '\WP7\Common\Color\color.inc', 1)
 	SendBang("!Refresh *")
 
@@ -91,7 +89,7 @@ Case 'Skin'
 ; [2] Language
 ; [3] Skin path
 Case 'Lang'
-	If $CmdLine[0] < 3 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	If $CmdLine[0] < 3 Then OmnimoError("Error", "Too few command line arguments specified.")
     FileCopy($CmdLine[3] & '\WP7\Common\Variables\Languages\' & $CmdLine[2] & '.inc', $CmdLine[3] & '\WP7\Common\Variables\Languages\lang.inc', 1)
 
 
@@ -99,7 +97,7 @@ Case 'Lang'
 ; Command line arguments:
 ; [2] Wallpaper
 Case 'Wall'
-	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	If $CmdLine[0] < 2 Then OmnimoError("Error", "Too few command line arguments specified.")
     _SetWallpaper($CmdLine[2])
 
 
@@ -110,7 +108,7 @@ Case 'Wall'
 ; [4] Settings path
 ; [5] Skins path
 Case 'Tray'
-	If $CmdLine[0] < 5 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	If $CmdLine[0] < 5 Then OmnimoError("Error", "Too few command line arguments specified.")
 	IniWriteSection($CmdLine[4] & 'Rainmeter.ini', 'TrayMeasure', IniReadSection($CmdLine[5] & '\WP7\Gallery\Tray\' & $CmdLine[2] & '.txt', 'TrayMeasure'))
 	SendBang("!Quit")
     ProcessWaitClose("Rainmeter.exe")
@@ -124,7 +122,7 @@ Case 'Tray'
 ; [4] Settings path
 ; [5] Skins path
 Case 'Themes'
-	If $CmdLine[0] < 5 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	If $CmdLine[0] < 5 Then OmnimoError("Error", "Too few command line arguments specified.")
     ; Close Rainmeter
 	SendBang("!Quit")
     ProcessWaitClose("Rainmeter.exe")
@@ -137,14 +135,14 @@ Case 'Themes'
 ; Command line arguments:
 ; [2] Text
 Case 'Clipboard'
-	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	If $CmdLine[0] < 2 Then OmnimoError("Error", "Too few command line arguments specified.")
     ClipPut($CmdLine[2])
 
 
 ; Eject disc
 Case 'Eject'
 	$drive = DriveGetDrive("CDROM")
-	If @error Then _OmnimoError("Error", "Unable to find an optical disc drive.")
+	If @error Then OmnimoError("Error", "Unable to find an optical disc drive.")
 	For $i = 1 To $drive[0]
 		CDTray($drive[$i], "open")
 	Next
@@ -159,7 +157,7 @@ Case 'Monitor'
 ; Command line arguments:
 ; [2] Show / Hide (optional)
 Case 'ToggleIcons'
-	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	If $CmdLine[0] < 2 Then OmnimoError("Error", "Too few command line arguments specified.")
     $hParent = WinGetHandle("Program Manager")
     $hListView = ControlGetHandle($hParent, "", "SysListView321")
 
@@ -189,8 +187,8 @@ Case 'ToggleIcons'
 ; [3] Color
 ; [4] Skins path
 Case 'SetColor'
-	If $CmdLine[0] < 4 Then _OmnimoError("Error", "Too few command line arguments specified.")
-    IniWrite($CmdLine[4] & '\WP7\Common\Color\Color.inc', 'Variables', $CmdLine[2], _HexToRGB($CmdLine[3]))
+	If $CmdLine[0] < 4 Then OmnimoError("Error", "Too few command line arguments specified.")
+    IniWrite($CmdLine[4] & '\WP7\Common\Color\Color.inc', 'Variables', $CmdLine[2], HexToRGB($CmdLine[3]))
 	SendBang("!Refresh *")
 
 
@@ -199,13 +197,13 @@ Case 'SetColor'
 ; [2] Skins path
 Case 'ColorizationColor'
 	If Not (@OSVersion = "WIN_8" Or @OSVersion = "WIN_7" Or @OSVersion = "WIN_VISTA") Then Exit
-	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	If $CmdLine[0] < 2 Then OmnimoError("Error", "Too few command line arguments specified.")
 
 	$ColorizationColor = RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM", "ColorizationColor")
-	If @error Then _OmnimoError("Error", "Unable to read Aero blur color from the registry.")
+	If @error Then OmnimoError("Error", "Unable to read Aero blur color from the registry.")
 
 	$ColorizationHex = "0x" & Hex(Int($ColorizationColor), 8)
-	$ColorizationRgb = _HexToRGB($ColorizationHex)
+	$ColorizationRgb = HexToRGB($ColorizationHex)
 	$Alpha = BitAnd(BitShift($ColorizationHex, 24), 0xFF)
 
 	Const $SkinsPath = $CmdLine[2]
@@ -222,7 +220,7 @@ Case 'ColorizationColor'
 ; [2] VLC path
 ; [3] Channel
 Case 'Radio'
-	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	If $CmdLine[0] < 2 Then OmnimoError("Error", "Too few command line arguments specified.")
     ; Restart VLC with the new channel
     ProcessClose("vlc.exe")
 	ProcessWaitClose("vlc.exe")
@@ -236,33 +234,24 @@ Case 'Radio'
 ; [2] Command
 ; [3] Time to sleep
 Case 'Power'
-	If $CmdLine[0] < 3 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	If $CmdLine[0] < 3 Then OmnimoError("Error", "Too few command line arguments specified.")
+
+	Sleep(Int($CmdLine[3]) * 1000)
+	SendBang("!DeactivateConfig WP7\TextItems\Extra\PowerButtons\Dialogue")
+
 	Switch $CmdLine[2]
-		; Shutdown
 		Case 'Shutdown'
-			Sleep(Int($CmdLine[3]) * 1000)
-			SendBang("!DeactivateConfig WP7\TextItems\Extra\PowerButtons\Dialogue")
 			Run('shutdown.exe /s /t 00', "", @SW_HIDE)
-		; Restart
 		Case 'Restart'
-			Sleep(Int($CmdLine[3]) * 1000)
-			SendBang("!DeactivateConfig WP7\TextItems\Extra\PowerButtons\Dialogue")
 			Run('shutdown.exe /r /t 00', "", @SW_HIDE)
-		; Log off
 		Case 'Logoff'
-			Sleep(Int($CmdLine[3]) * 1000)
-			SendBang("!DeactivateConfig WP7\TextItems\Extra\PowerButtons\Dialogue")
 			Run('shutdown.exe /l', "", @SW_HIDE)
-		; Sleep
 		Case 'Sleep'
-			Sleep(Int($CmdLine[3]) * 1000)
-			SendBang("!DeactivateConfig WP7\TextItems\Extra\PowerButtons\Dialogue")
 			Run('rundll32.exe powrprof.dll,SetSuspendState 0,1,0', "", @SW_HIDE)
-		; Hibernate
 		Case 'Hibernate'
-			Sleep(Int($CmdLine[3]) * 1000)
-			SendBang("!DeactivateConfig WP7\TextItems\Extra\PowerButtons\Dialogue")
 			Run('rundll32.exe PowrProf.dll,SetSuspendState', "", @SW_HIDE)
+		Case 'Lock'
+			Run('rundll32.exe user32.dll,LockWorkStation', "", @SW_HIDE)
 	EndSwitch
 
 
@@ -287,7 +276,7 @@ Case 'Update'
 ; Command line arguments:
 ; [2] Skins path
 Case 'Screenshot'
-	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	If $CmdLine[0] < 2 Then OmnimoError("Error", "Too few command line arguments specified.")
     $config = $CmdLine[2] & '\WP7\Panels\Camera\UserVariables.inc'
 
     ; Read variables
@@ -393,7 +382,7 @@ Case 'Browser'
 ; Command line arguments:
 ; [2] Skins path
 Case 'PanelCombos'
-	If $CmdLine[0] < 2 Then _OmnimoError("Error", "Too few command line arguments specified.")
+	If $CmdLine[0] < 2 Then OmnimoError("Error", "Too few command line arguments specified.")
 
     ; Create GUI
     $Form1_1 = GUICreate("", 208, 316, -1, -1, BitOR($WS_VISIBLE, $WS_SYSMENU), $WS_EX_TOOLWINDOW)
@@ -561,7 +550,7 @@ Case 'PanelCombos'
                     $count = $count + 1
                     IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "Flickr")
                 EndIf
-                ShellExecute($CmdLine[3] & "Rainmeter.exe", "!RainmeterRefresh WP7\TextItems")
+				SendBang("!Refresh WP7\TextItems")
                 Exit
         EndSwitch
 
@@ -726,13 +715,6 @@ Func Monitor($io_control = "on")
         Case Else
             MsgBox(32, @ScriptName, "Command usage: on/off")
     EndSwitch
-EndFunc
-
-Func _HexToRGB($Color)
-	$Blue = BitAND($Color, 0xFF)
-	$Green = BitAND(BitShift($Color, 8), 0xFF)
-	$Red = BitAND(BitShift($Color, 16), 0xFF)
-	Return $Red & ',' & $Green & ',' & $Blue
 EndFunc
 
 Func _WU_ErrorHandler()

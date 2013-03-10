@@ -10,9 +10,9 @@ set x64=
 for /f "skip=1 delims=" %%x in ('wmic cpu get addresswidth') do if not defined AddressWidth set AddressWidth=%%x
 
 if %AddressWidth%==64 (
-	set autwrapperdir=%PROGRAMFILES(X86)%\AutoIt3\SciTE\AutoIt3Wrapper
+	set "autwrapperdir=%PROGRAMFILES(X86)%\AutoIt3\SciTE\AutoIt3Wrapper"
 ) else (
-	set autwrapperdir=%PROGRAMFILES%\AutoIt3\SciTE\AutoIt3Wrapper
+	set "autwrapperdir=%PROGRAMFILES%\AutoIt3\SciTE\AutoIt3Wrapper"
 )
 
 :: Build scripts

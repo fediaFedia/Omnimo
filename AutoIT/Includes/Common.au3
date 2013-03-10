@@ -1,7 +1,7 @@
 #include-once
 #include <SendMessage.au3>
 
-Func _OmnimoError($title, $msg)
+Func OmnimoError($title, $msg)
 	MsgBox(16, $title, $msg & @CRLF & @CRLF & 'Please send an e-mail to omnimosupport@gmail.com or' & @CRLF & 'file an issue at github with the following information:' & @CRLF & @CRLF & '- This error message' & @CRLF & '- Steps to reproduce the issue' & @CRLF & '- Your version of Rainmeter and Windows')
 	Exit
 EndFunc
@@ -24,7 +24,7 @@ Func GetSkinWindow($szConfigName)
 	EndIf
 
 	Return 0
-EndFunc   ;==>GetSkinWindow
+EndFunc
 
 Func SendBang($szBang)
 	Local Const $hWnd = WinGetHandle("[CLASS:RainmeterMeterWindow]")
@@ -42,4 +42,18 @@ Func SendBang($szBang)
 		Local Const $WM_COPYDATA = 0x004A
 		_SendMessage($hWnd, $WM_COPYDATA, 0, DllStructGetPtr($pCds))
 	EndIf
-EndFunc   ;==>SendBang
+EndFunc
+
+; Convert Hex to RGB
+Func HexToRGB($Color)
+	$Blue = BitAND($Color, 0xFF)
+	$Green = BitAND(BitShift($Color, 8), 0xFF)
+	$Red = BitAND(BitShift($Color, 16), 0xFF)
+	Return $Red & ',' & $Green & ',' & $Blue
+EndFunc
+
+; Convert RGB to Hex
+Func RGBToHex($Color)
+	$split = StringSplit($Color, ',')
+	Return '0x' & Hex($split[1], 2) & Hex($split[2], 2) & Hex($split[3], 2)
+EndFunc
