@@ -10,6 +10,7 @@
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <SliderConstants.au3>
+#include <GuiEdit.au3>
 #include <GDIPlus.au3>
 #include <Misc.au3>
 
@@ -44,21 +45,11 @@ Global $VarDescription[50]
 Global $VarType[50]
 Global $VarOpts[5]
 Global $VarCount = 0
-Global $VariableInput
-Global $VariableSlider
-Global $VariableCheckbox
-Global $VariableColorbox
-Global $VariableLabel
-Global $CreatedElement
 Global $CurrentVarName
-Global $CurrentVarDescription
-Global $CurrentVarType
 Global $Comments = ""
-Global $CommentLimit = 5
+Global $CreatedElement = -1
 Global $ColorData
 Global $BrowseData
-Global $Colorizable
-Global $ColorSkin
 
 ; Enumerated type to keep track of which element was created last
 Global Enum $INPUT, $SLIDER, $CHECKBOX, $COLOR, $BROWSE
@@ -82,13 +73,21 @@ While 1
 		$VarDescription[$VarCount] = FileReadLine($CfgFile)
 		$VarType[$VarCount] = FileReadLine($CfgFile)
 		$VarCount += 1
-		FileReadLine($CfgFile) ; Skip over empty line
+		$Empty = FileReadLine($CfgFile) ; Skip over empty line
+
+		If $Empty <> "" Then
+			OmnimoError("Unable to read RainConfigure.cfg", "An error occurred while reading RainConfigure.cfg")
+		ElseIf $Empty == "[Options]" Then
+			ExitLoop
+		EndIf
+
 	EndIf
 	If @error = -1 Then OmnimoError("Unable to read RainConfigure.cfg", "An error occurred while reading RainConfigure.cfg")
 WEnd
 $Colorizable = Int(StringRight(FileReadLine($CfgFile), 1))
 FileClose($CfgFile)
 
+; Read config size from Config.cfg based on first command line argument
 Global $SizeOptions[6]
 $SizeOptions = StringSplit(IniRead("Config.cfg", "Variables", $CmdLine[1], "1:1:0:0:0"), ":")
 Global $GuiOptions = _Iif($SizeOptions[5] == "1", Default, BitOR($WS_VISIBLE, $WS_BORDER, $WS_POPUP))
@@ -96,9 +95,9 @@ $W  = Int($SizeOptions[1])
 $H  = Int($SizeOptions[2])
 $PW = Int($SizeOptions[3])
 $PH = Int($SizeOptions[4])
-$width = $Size * $W + $PW
+$width  = $Size * $W + $PW
 $height = $Size * $H + $PH
-$listH = $height - $Size / 7.25 - 18
+$listH  = $height - $Size / 7.25 - 18
 $CommentLimit = $height / 25
 
 ; Create GUI
@@ -106,6 +105,76 @@ $Gui = GUICreate("Configure", $width, $height, $XPosition + 5, $YPosition + 5, $
 GUISetBkColor($BgColor)
 GUISetState()
 
+; An empty label to act as activation area for set button
+$SetLabel = GUICtrlCreateLabel("", $width - $Size / 5.77, $height - $Size / 6.75, $Size / 6.5, $Size / 7.5)
+GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+
+; Set up GDI resources
+_GDIPlus_Startup()
+$Set      = _GDIPlus_ImageLoadFromFile("set.png")
+$hGraphic = _GDIPlus_GraphicsCreateFromHWND($Gui)
+$hBrush   = _GDIPlus_BrushCreateSolid("0xFF" & StringTrimLeft($BgColor2, 2))
+$hBrush2  = _GDIPlus_BrushCreateSolid("0xFF" & StringTrimLeft($TextColor, 2))
+$hFormat  = _GDIPlus_StringFormatCreate()
+$hFamily  = _GDIPlus_FontFamilyCreate($Font)
+$hFont    = _GDIPlus_FontCreate($hFamily, $Size / 16.7)
+_DrawBottom()
+
+; Create an edit control for comments if needed
+$opts = BitOR($ES_AUTOVSCROLL, $ES_AUTOHSCROLL, $WS_HSCROLL, $WS_VSCROLL)
+If $Comments <> "" And $VarCount < $CommentLimit Then
+	$opts = 0
+	$listH = $listH * ($VarCount / ($CommentLimit + 1)) + $Size / 10
+	GUICtrlCreateEdit($Comments, 9, $listH, $width - 18, $height - $Size / 7.25 - 18 - $listH + $Size / 15, $ES_MULTILINE + $ES_AUTOVSCROLL, 0)
+	GUICtrlSetBkColor(-1, $BgColor)
+	GUICtrlSetColor(-1, $TextColor)
+	GUICtrlSetFont(-1, $Size / 15, 400, 0, $Font)
+	GUICtrlSetState(-1, $GUI_DISABLE)
+EndIf
+
+; Create the list of variables
+$VariableList = GUICtrlCreateList("", 10, 15, $width - 20, $listH, $opts, 0)
+GUICtrlSetBkColor(-1, $BgColor)
+GUICtrlSetColor(-1, $TextColor)
+GUICtrlSetFont(-1, $Size / 15, 400, 0, $Font)
+
+For $ListCount = 0 To $VarCount - 1
+	GUICtrlSetData($VariableList, $VarName[$ListCount] & "|")
+Next
+
+$VariableInput = GUICtrlCreateInput("", 2, $height - $Size / 7.25 - 1, $width - 32, $Size / 7.25, BitOR($ES_AUTOHSCROLL, $ES_PASSWORD), 0)
+GUICtrlSetFont(-1, $Size / 15, 400, 0, $Font)
+GUICtrlSetColor(-1, $TextColor)
+GUICtrlSetBkColor(-1, $BgColor2)
+GUICtrlSetState(-1, $GUI_HIDE)
+_GUICtrlEdit_SetPasswordChar($VariableInput, "0") ; "0" as password character means don't hide input
+
+$VariableSlider = GUICtrlCreateSlider(0, $height - $Size / 6.25, $width - $Size / 5, $Size / 6.25, BITOR($TBS_NOTICKS, $TBS_TOOLTIPS))
+GUICtrlSetState(-1, $GUI_HIDE)
+
+$VariableCheckbox = GUICtrlCreateCheckbox("", $Size / 30, $height - $Size / 6.25 + 1, $Size / 6.8, $Size / 6.8)
+GUICtrlSetBkColor(-1, $BgColor2)
+GUICtrlSetState(-1, $GUI_HIDE)
+
+$VariableColorbox = GUICtrlCreateGraphic(0,  $height - $Size / 6.25, $Size / 3, $Size / 6.25)
+GUICtrlSetState(-1, $GUI_HIDE)
+GUICtrlSetCursor(-1, 0)
+
+$BrowseLabel = GUICtrlCreateLabel("", $width / 2 - $Size / 4.15, $height - $Size / 6.25 + 3, $Size / 3, $Size / 6.25)
+GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+GUICtrlSetCursor(-1, 0)
+GUICtrlSetState(-1, $GUI_HIDE)
+
+$ColorLabel = GUICtrlCreateLabel("", $Size / 2.75, $height - $Size / 6.25 + 3, $Size / 3.75, $Size / 6.25)
+GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+GUICtrlSetCursor(-1, 0)
+GUICtrlSetState(-1, $GUI_HIDE)
+
+$CheckboxLabel = GUICtrlCreateLabel("", $Size / 7.5, $height - $Size / 6.25 + 3, $Size / 1.75, $Size / 6.25)
+GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+GUICtrlSetState(-1, $GUI_HIDE)
+
+; Register drag/drop events
 DragDropEvent_Startup()
 DragDropEvent_Register($Gui)
 
@@ -114,61 +183,24 @@ GUIRegisterMsg($WM_DRAGOVER, "OnDragDrop")
 GUIRegisterMsg($WM_DRAGLEAVE, "OnDragDrop")
 GUIRegisterMsg($WM_DROP, "OnDragDrop")
 
-$SetLabel = GUICtrlCreateLabel("", $width - $Size / 5.77, $height - $Size / 6.75, $Size / 6.5, $Size / 7.5)
-GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+; Close on middle-click
+_MouseSetOnEvent($MOUSE_WHEELUP_EVENT , "_Exit", "", "", $Gui, -1)
 
-_GDIPlus_Startup()
-$Set = _GDIPlus_ImageLoadFromFile("set.png")
-$hGraphic = _GDIPlus_GraphicsCreateFromHWND($Gui)
-$hBrush = _GDIPlus_BrushCreateSolid("0xFF" & StringTrimLeft($BgColor2, 2))
-$hBrush2 = _GDIPlus_BrushCreateSolid("0xFF" & StringTrimLeft($TextColor, 2))
-$hFormat = _GDIPlus_StringFormatCreate()
-$hFamily = _GDIPlus_FontFamilyCreate($Font)
-$hFont = _GDIPlus_FontCreate($hFamily, $Size / 16.7)
-_DrawBottom()
-
-; Create an edit control for comments if needed
-If $Comments <> "" And $VarCount < $CommentLimit Then
-	$opts = 0
-	$prevlistH = $listH
-	$listH = $listH * ($VarCount / ($CommentLimit + 1)) + $Size / 10
-	GUICtrlCreateEdit($Comments, 9, $listH, $width - 18, $prevlistH - $listH + $Size / 15, $ES_MULTILINE + $ES_AUTOVSCROLL, 0)
-	GUICtrlSetBkColor(-1, $BgColor)
-	GUICtrlSetColor(-1, $TextColor)
-	GUICtrlSetFont(-1, $Size / 15, 400, 0, $Font)
-	GUICtrlSetState(-1, $GUI_DISABLE)
-	If $CmdLine[1] == "text" Then $listH -= 15
-Else
-	$opts = BitOR($ES_AUTOVSCROLL, $ES_AUTOHSCROLL, $WS_HSCROLL, $WS_VSCROLL)
-EndIf
-
-$VariableList = GUICtrlCreateList("", 10, 15, $width - 20, $listH, $opts, 0)
-GUICtrlSetBkColor(-1, $BgColor)
-GUICtrlSetColor(-1, $TextColor)
-GUICtrlSetFont(-1, $Size / 15, 400, 0, $Font)
-GUICtrlSetState(-1, $GUI_DROPACCEPTED)
-
+; Create colorbox if panel is marked as colorizable
 If $Colorizable = 1 Then
-	Global $PanelColor = IniRead($SkinPath & $Config & "\" & $File, "Variables", "ColorSkin", "")
+	; Read current panel color
+	$PanelColor = IniRead($SkinPath & $Config & "\" & $File, "Variables", "ColorSkin", "")
 	If $PanelColor == "" Then $PanelColor = IniRead($SkinPath & "WP7\@Resources\Common\Color\color.inc", "Variables", "ColorSkin", "0,0,0")
 	$ColorData = $PanelColor
-	$ColorSkin = 1
+	$Colorizable = 1
 	_CreateColorBox($PanelColor)
 Else
 	_CreateVariableInput("")
 EndIf
 
-_MouseSetOnEvent($MOUSE_WHEELUP_EVENT , "_Exit", "", "", $Gui, -1)
-
-For $ListCount = 0 To $VarCount - 1
-	GUICtrlSetData($VariableList, $VarName[$ListCount] & "|")
-Next
-
 While 1
 	$nMsg = GUIGetMsg()
-	Switch $nMSg
-
-		Case 0
+	Switch $nMsg
 
 		Case $GUI_EVENT_CLOSE
 			_Exit()
@@ -178,6 +210,7 @@ While 1
 			$CurrentVarName = GUICtrlRead($VariableList)
 			If $CurrentVarName == "" Then ContinueCase
 
+			; Find the new variable's data
 			For $ListCount = 0 To $VarCount - 1
 				If $VarName[$ListCount] = $CurrentVarName Then
 					$CurrentVarDescription = $VarDescription[$ListCount]
@@ -189,16 +222,20 @@ While 1
 			; Show variable description as tooltip
 			ToolTip(_Iif(StringLen($CurrentVarDescription) > 1, $CurrentVarDescription, ""))
 
-			GUICtrlDelete($VariableInput)
-			GUICtrlDelete($VariableSlider)
-			GUICtrlDelete($VariableCheckbox)
-			GUICtrlDelete($VariableColorbox)
-			GUICtrlDelete($VariableLabel)
+			; Hide previous GUI controls
+			GUICtrlSetState($VariableInput, $GUI_HIDE)
+			GUICtrlSetState($VariableSlider, $GUI_HIDE)
+			GUICtrlSetState($VariableCheckbox, $GUI_HIDE)
+			GUICtrlSetState($VariableColorbox, $GUI_HIDE)
+			GUICtrlSetState($CheckboxLabel, $GUI_HIDE)
+			GUICtrlSetState($ColorLabel, $GUI_HIDE)
+			GUICtrlSetState($BrowseLabel, $GUI_HIDE)
 
-			$ColorSkin = 0
+			$Colorizable = 0
 			$VarOpts = StringSplit($CurrentVarType, ":")
 			$CurrentValue = IniRead($VarFile, "Variables", $CurrentVarName, "")
 
+			; Create the GUI control
 			Switch $VarOpts[1]
 				Case "Text"
 					_CreateVariableInput($CurrentValue)
@@ -213,49 +250,47 @@ While 1
 			EndSwitch
 
 		Case $VariableColorbox
-			If $CreatedElement <> $COLOR Then ContinueCase
 			$Chose = _ColorChooserDialog($ColorData, $Gui)
 			$ColorData = _Iif($Chose <> -1, $Chose, $ColorData)
 			GUICtrlSetBkColor($VariableColorbox, $ColorData)
 
-		Case $VariableLabel
-			Switch $CreatedElement
-				Case $CHECKBOX
-					GUICtrlSetState($VariableCheckbox, _Iif(GUICtrlRead($VariableCheckbox) = 1, $GUI_UNCHECKED, $GUI_CHECKED))
+		Case $CheckboxLabel
+			GUICtrlSetState($VariableCheckbox, _Iif(GUICtrlRead($VariableCheckbox) = 1, $GUI_UNCHECKED, $GUI_CHECKED))
 
-				Case $COLOR
-					If $ColorSkin = 1 Then
-						$value = IniRead($SkinPath & "WP7\@Resources\Common\Color\color.inc", "Variables", "ColorSkin", "0,0,0")
-					Else
-						$value = $VarOpts[2]
-					EndIf
+		Case $ColorLabel
+			If $Colorizable = 1 Then
+				$value = IniRead($SkinPath & "WP7\@Resources\Common\Color\color.inc", "Variables", "ColorSkin", "0,0,0")
+			Else
+				$value = $VarOpts[2]
+			EndIf
 
-					If StringLEft($value, 2) == "0x" Then
-						$DefaultColor = $value
-					Else
-						$DefaultColor = RGBToHex($value)
-					EndIf
-					GUICtrlSetBkColor($VariableColorbox, $DefaultColor)
-					$ColorData = $DefaultColor
+			If StringLeft($value, 2) == "0x" Then
+				$DefaultColor = $value
+			Else
+				$DefaultColor = RGBToHex($value)
+			EndIf
 
-				Case $BROWSE
-					If $VarOpts[2] == "File" Then
-						$BrowseData = FileOpenDialog("Select file", $SkinPath & $Config, "All (*.*)")
-					ElseIf $VarOpts[2] == "Folder" Then
-						$BrowseData = FileSelectFolder("Select folder", "", 1 + 2 + 4, $SkinPath & $Config)
-					EndIf
+			GUICtrlSetBkColor($VariableColorbox, $DefaultColor)
+			$ColorData = $DefaultColor
+
+		Case $BrowseLabel
+			Switch $VarOpts[2]
+				Case "File"
+					$BrowseData = FileOpenDialog("Select file", $SkinPath & $Config, "All (*.*)")
+				Case "Folder"
+					$BrowseData = FileSelectFolder("Select folder", "", 1 + 2 + 4, $SkinPath & $Config)
 			EndSwitch
 
 		Case $SetLabel
 			_WriteOption()
 			SendBang("!Refresh " & $CmdLine[2]) ; refresh config
-			Exit
+			_Exit()
 
 	EndSwitch
 WEnd
 
 Func _WriteOption()
-	If $ColorSkin = 0 And $CurrentVarName == "" Then Return
+	If $Colorizable = 0 And $CurrentVarName == "" Then Return
 
 	Switch $CreatedElement
 		Case $INPUT
@@ -268,11 +303,9 @@ Func _WriteOption()
 			$value = HexToRGB($ColorData)
 		Case $BROWSE
 			$value = $BrowseData
-		Case Else
-			Return
 	EndSwitch
 
-	If $ColorSkin = 1 Then
+	If $Colorizable = 1 Then
 		IniWrite($SkinPath & $Config & "\" & $File, "Variables", "ColorSkin", $value)
 	Else
 		IniWrite($VarFile, "Variables", $CurrentVarName, $value)
@@ -280,67 +313,51 @@ Func _WriteOption()
 EndFunc
 
 Func _CreateVariableInput($value)
-	; Set input field to hide variables with 'password' in them
 	_DrawBottom()
-	$opts = _Iif(StringInStr($CurrentVarName, "Password", 2), BitOR($ES_AUTOHSCROLL, $ES_PASSWORD), -1)
-	$VariableInput = GUICtrlCreateInput($value, 2, $height - $Size / 7.25 - 1, $width - 32, $Size / 7.25, $opts, 0)
-	GUICtrlSetFont(-1, $Size / 15, 400, 0, $Font)
-	GUICtrlSetColor(-1, $TextColor)
-	GUICtrlSetBkColor(-1, $BgColor2)
+	; Set input field to hide variables with 'password' in them
+	_GUICtrlEdit_SetPasswordChar($VariableInput, _Iif(StringInStr($CurrentVarName, "Password", 2), "*", "0"))
+	GUICtrlSetData($VariableInput, $value)
+	GUICtrlSetState($VariableInput, $GUI_SHOW)
 	$CreatedElement = $INPUT
 EndFunc
 
 Func _CreateVariableSlider($value, $min, $max)
-	_DrawBottom()
-	$VariableSlider = GUICtrlCreateSlider(0, $height - $Size / 6.25, $width - $Size / 5, $Size / 6.25, BITOR($TBS_NOTICKS, $TBS_TOOLTIPS))
-	GUICtrlSetLimit(-1, $max, $min)
-	GUICtrlSetData(-1, $value)
+	GUICtrlSetState($VariableSlider, $GUI_SHOW)
+	GUICtrlSetLimit($VariableSlider, $max, $min)
+	GUICtrlSetData($VariableSlider, $value)
 	$CreatedElement = $SLIDER
 EndFunc
 
 Func _CreateCheckBox($value, $desc)
-	$VariableLabel = GUICtrlCreateLabel("", $Size / 7.5, $height - $Size / 6.25 + 3, $Size / 1.75, $Size / 6.25)
-	GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+	GUICtrlSetState($CheckboxLabel, $GUI_SHOW)
 	_DrawBottom()
 
-	$VariableCheckbox = GUICtrlCreateCheckbox("", $Size / 30, $height - $Size / 6.25 + 1, $Size / 6.8, $Size / 6.8)
-    $tLayout = _GDIPlus_RectFCreate($Size / 6.25, $height - $Size / 6.25 + 3)
-    $aInfo = _GDIPlus_GraphicsMeasureString($hGraphic, $desc, $hFont, $tLayout, $hFormat)
-    _GDIPlus_GraphicsDrawStringEx($hGraphic, $desc, $hFont, $aInfo[0], $hFormat, $hBrush2)
+	GUICtrlSetState($VariableCheckbox, $GUI_SHOW)
+	GUICtrlSetState($VariableCheckbox, _Iif($value == $VarOpts[3], $GUI_CHECKED, $GUI_UNCHECKED))
 
-	GUICtrlSetBkColor($VariableCheckbox, $BgColor2)
-	If $value == $VarOpts[3] Then GUICtrlSetState($VariableCheckbox, $GUI_CHECKED)
+	_DrawText($desc, $Size / 6.25)
 	$CreatedElement = $CHECKBOX
 EndFunc
 
 Func _CreateColorBox($value)
-	$VariableLabel = GUICtrlCreateLabel("", $Size / 2.75, $height - $Size / 6.25 + 3, $Size / 3.75, $Size / 6.25)
-	GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
-	GUICtrlSetCursor(-1, 0)
+	GUICtrlSetState($ColorLabel, $GUI_SHOW)
 	_DrawBottom()
 
-	$VariableColorbox = GUICtrlCreateGraphic(0,  $height - $Size / 6.25, $Size / 3, $Size / 6.25)
 	If $value == "" Then $value = "0x000000"
 	If StringLeft($value, 2) <> "0x" Then $value = RGBToHex($value)
+	GUICtrlSetBkColor($VariableColorbox, $value)
+	GUICtrlSetState($VariableColorbox, $GUI_SHOW)
 
-	GUICtrlSetBkColor(-1, $value)
-	GUICtrlSetCursor(-1, 0)
-	$tLayout = _GDIPlus_RectFCreate($Size / 2.75, $height - $Size / 6.25 + 3)
-    $aInfo = _GDIPlus_GraphicsMeasureString($hGraphic, "[RESET]", $hFont, $tLayout, $hFormat)
-	_GDIPlus_GraphicsDrawStringEx($hGraphic, "[RESET]", $hFont, $aInfo[0], $hFormat, $hBrush2)
-
+	_DrawText("[RESET]", $Size / 2.75)
 	$ColorData = $value
 	$CreatedElement = $COLOR
 EndFunc
 
 Func _CreateBrowseButton($value)
-	$VariableLabel = GUICtrlCreateLabel("", $width / 2.75, $height - $Size / 6.25 + 3, $Size / 3, $Size / 6.25)
-	GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
-	GUICtrlSetCursor(-1, 0)
+	GUICtrlSetState($BrowseLabel, $GUI_SHOW)
+
 	_DrawBottom()
-	$tLayout = _GDIPlus_RectFCreate($width / 2 - $Size / 4.15, $height - $Size / 6.25 + 3)
-    $aInfo = _GDIPlus_GraphicsMeasureString($hGraphic, "[Browse]", $hFont, $tLayout, $hFormat)
-	_GDIPlus_GraphicsDrawStringEx($hGraphic, "[Browse]", $hFont, $aInfo[0], $hFormat, $hBrush2)
+	_DrawText("[Browse]", $width / 2 - $Size / 4.15)
 
 	$BrowseData = $value
 	$CreatedElement = $BROWSE
@@ -349,6 +366,12 @@ EndFunc
 Func _DrawBottom()
 	_GDIPlus_GraphicsFillRect($hGraphic, 0, $height - $Size / 6.25, $width, $Size / 6.25, $hBrush)
 	_GDIPlus_GraphicsDrawImageRect($hGraphic, $Set, $width - $Size / 5.77, $height - $Size / 6.75, $Size / 6.5, $Size / 7.5)
+EndFunc
+
+Func _DrawText($desc, $x)
+	$tLayout = _GDIPlus_RectFCreate($x, $height - $Size / 6.25 + 3)
+    $aInfo = _GDIPlus_GraphicsMeasureString($hGraphic, $desc, $hFont, $tLayout, $hFormat)
+    _GDIPlus_GraphicsDrawStringEx($hGraphic, $desc, $hFont, $aInfo[0], $hFormat, $hBrush2)
 EndFunc
 
 Func OnDragDrop($hWnd, $Msg, $wParam, $lParam)

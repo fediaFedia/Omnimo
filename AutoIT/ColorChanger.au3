@@ -5,7 +5,7 @@
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Made for Omnimo UI
-#AutoIt3Wrapper_Res_Fileversion=6.0.0.0
+#AutoIt3Wrapper_Res_Fileversion=6.0
 #AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2013
 #AutoIt3Wrapper_AU3Check_Parameters=-q -w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
