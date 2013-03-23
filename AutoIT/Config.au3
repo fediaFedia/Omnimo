@@ -4,7 +4,7 @@
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Omnimo Config Tool
-#AutoIt3Wrapper_Res_Fileversion=6.0
+#AutoIt3Wrapper_Res_Fileversion=6.0.0.0
 #AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2013
 #AutoIt3Wrapper_AU3Check_Parameters=-q -w 1 -w 2 -w 3 -w 4 -w 6 -w 7 -w 8
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
@@ -43,13 +43,17 @@ Const $TextColor  = IniRead($Variables & "UserVariables.inc", "Variables", "Conf
 Global $VarName[50]
 Global $VarDescription[50]
 Global $VarType[50]
+Global $VarSection[50]
 Global $VarOpts[5]
 Global $VarCount = 0
 Global $CurrentVarName
+Global $CurrentVarSection
 Global $Comments = ""
 Global $CreatedElement = -1
 Global $ColorData
 Global $BrowseData
+Global $CurrentSection = ""
+Global $ColorSkinReset
 
 ; Enumerated type to keep track of which element was created last
 Global Enum $INPUT, $SLIDER, $CHECKBOX, $COLOR, $BROWSE
@@ -58,30 +62,31 @@ Global Enum $INPUT, $SLIDER, $CHECKBOX, $COLOR, $BROWSE
 $CfgFile = FileOpen($SkinPath & $CmdLine[2] & "\RainConfigure.cfg", 0)
 If $CfgFile = -1 Then OmnimoError("Unable to open RainConfigure.cfg", "The configuration tool was unable to open RainConfigure.cfg.")
 
-FileReadLine($CfgFile) ; skip over section name
-
 ; Read variables and their descriptions into arrays
 While 1
 	$name = FileReadLine($CfgFile)
-	If $name == "[Options]" Then ExitLoop
-	If StringLeft($name, 1) == "#" Then
-		$Comments &= (StringTrimLeft($name, 1) & @CRLF)
-	ElseIf $name == "" Then
-		$Comments &= @CRLF
-	Else
-		$VarName[$VarCount] = $name
-		$VarDescription[$VarCount] = FileReadLine($CfgFile)
-		$VarType[$VarCount] = FileReadLine($CfgFile)
-		$VarCount += 1
-		$Empty = FileReadLine($CfgFile) ; Skip over empty line
+	Switch StringLeft($name, 1)
+		Case "["
+			If $name == "[Options]" Then ExitLoop
+			$CurrentSection = StringTrimLeft(StringTrimRight($name, 1), 1)
+		Case "#"
+			$Comments &= (StringTrimLeft($name, 1) & @CRLF)
+		Case ""
+			$Comments &= @CRLF
+		Case Else
+			$VarName[$VarCount] = $name
+			$VarDescription[$VarCount] = FileReadLine($CfgFile)
+			$VarType[$VarCount] = FileReadLine($CfgFile)
+			$VarSection[$VarCount] = $CurrentSection
+			$VarCount += 1
+			$Empty = FileReadLine($CfgFile) ; Skip over empty line
 
-		If $Empty <> "" Then
-			OmnimoError("Unable to read RainConfigure.cfg", "An error occurred while reading RainConfigure.cfg")
-		ElseIf $Empty == "[Options]" Then
-			ExitLoop
-		EndIf
-
-	EndIf
+			If $Empty == "[Options]" Then
+				ExitLoop
+			ElseIf $Empty <> "" Then
+				OmnimoError("Unable to read RainConfigure.cfg", "An error occurred while reading RainConfigure.cfg")
+			EndIf
+	EndSwitch
 	If @error = -1 Then OmnimoError("Unable to read RainConfigure.cfg", "An error occurred while reading RainConfigure.cfg")
 WEnd
 $Colorizable = Int(StringRight(FileReadLine($CfgFile), 1))
@@ -100,8 +105,13 @@ $height = $Size * $H + $PH
 $listH  = $height - $Size / 7.25 - 18
 $CommentLimit = $height / 25
 
+; Read label variables from Config.cfg
+$ResetText = IniRead("Config.cfg", "Variables", "Reset", "[RESET]")
+$BrowseText = IniRead("Config.cfg", "Variables", "Browse", "[Browse]")
+$ColorText = IniRead("Config.cfg", "Variables", "Color", "Color")
+
 ; Create GUI
-$Gui = GUICreate("Configure", $width, $height, $XPosition + 5, $YPosition + 5, $GuiOptions, $WS_EX_TOOLWINDOW)
+$Gui = GUICreate("Configure", $width - 2, $height - 2, $XPosition + 5, $YPosition + 5, $GuiOptions, $WS_EX_TOOLWINDOW)
 GUISetBkColor($BgColor)
 GUISetState()
 
@@ -122,7 +132,7 @@ _DrawBottom()
 
 ; Create an edit control for comments if needed
 $opts = BitOR($ES_AUTOVSCROLL, $ES_AUTOHSCROLL, $WS_HSCROLL, $WS_VSCROLL)
-If $Comments <> "" And $VarCount < $CommentLimit Then
+If $Comments <> "" And $VarCount > 0 And $VarCount < $CommentLimit Then
 	$opts = 0
 	$listH = $listH * ($VarCount / ($CommentLimit + 1)) + $Size / 10
 	GUICtrlCreateEdit($Comments, 9, $listH, $width - 18, $height - $Size / 7.25 - 18 - $listH + $Size / 15, $ES_MULTILINE + $ES_AUTOVSCROLL, 0)
@@ -138,9 +148,14 @@ GUICtrlSetBkColor(-1, $BgColor)
 GUICtrlSetColor(-1, $TextColor)
 GUICtrlSetFont(-1, $Size / 15, 400, 0, $Font)
 
-For $ListCount = 0 To $VarCount - 1
-	GUICtrlSetData($VariableList, $VarName[$ListCount] & "|")
-Next
+If $VarCount = 0 Then
+	GUICtrlSetData($VariableList, $ColorText)
+	GUICtrlSetState($VariableList, $GUI_DISABLE)
+Else
+	For $ListCount = 0 To $VarCount - 1
+		GUICtrlSetData($VariableList, $VarName[$ListCount] & "|")
+	Next
+EndIf
 
 $VariableInput = GUICtrlCreateInput("", 2, $height - $Size / 7.25 - 1, $width - 32, $Size / 7.25, BitOR($ES_AUTOHSCROLL, $ES_PASSWORD), 0)
 GUICtrlSetFont(-1, $Size / 15, 400, 0, $Font)
@@ -215,6 +230,7 @@ While 1
 				If $VarName[$ListCount] = $CurrentVarName Then
 					$CurrentVarDescription = $VarDescription[$ListCount]
 					$CurrentVarType = $VarType[$ListCount]
+					$CurrentVarSection = $VarSection[$ListCount]
 					ExitLoop
 				EndIf
 			Next
@@ -233,7 +249,7 @@ While 1
 
 			$Colorizable = 0
 			$VarOpts = StringSplit($CurrentVarType, ":")
-			$CurrentValue = IniRead($VarFile, "Variables", $CurrentVarName, "")
+			$CurrentValue = IniRead($VarFile, $CurrentVarSection, $CurrentVarName, "")
 
 			; Create the GUI control
 			Switch $VarOpts[1]
@@ -250,7 +266,7 @@ While 1
 			EndSwitch
 
 		Case $VariableColorbox
-			$Chose = _ColorChooserDialog($ColorData, $Gui)
+			$Chose = _ColorChooserDialog(_ToColor($ColorData), $Gui)
 			$ColorData = _Iif($Chose <> -1, $Chose, $ColorData)
 			GUICtrlSetBkColor($VariableColorbox, $ColorData)
 
@@ -260,18 +276,13 @@ While 1
 		Case $ColorLabel
 			If $Colorizable = 1 Then
 				$value = IniRead($SkinPath & "WP7\@Resources\Common\Color\color.inc", "Variables", "ColorSkin", "0,0,0")
+				$ColorSkinReset = True
 			Else
 				$value = $VarOpts[2]
 			EndIf
 
-			If StringLeft($value, 2) == "0x" Then
-				$DefaultColor = $value
-			Else
-				$DefaultColor = RGBToHex($value)
-			EndIf
-
-			GUICtrlSetBkColor($VariableColorbox, $DefaultColor)
-			$ColorData = $DefaultColor
+			GUICtrlSetBkColor($VariableColorbox, _ToColor($value))
+			$ColorData = $value
 
 		Case $BrowseLabel
 			Switch $VarOpts[2]
@@ -300,15 +311,23 @@ Func _WriteOption()
 		Case $CHECKBOX
 			$value = _Iif(GUICtrlRead($VariableCheckbox) = 1, $VarOpts[3], $VarOpts[2])
 		Case $COLOR
-			$value = HexToRGB($ColorData)
+			If StringRegExp($ColorData, "^\d+$") Or StringLeft($ColorData, 2) == "0x" Then
+				$value = HexToRGB($ColorData)
+			Else
+				$value = $ColorData
+			EndIf
 		Case $BROWSE
 			$value = $BrowseData
 	EndSwitch
 
 	If $Colorizable = 1 Then
-		IniWrite($SkinPath & $Config & "\" & $File, "Variables", "ColorSkin", $value)
+		If $ColorSkinReset = True Then
+			IniDelete($SkinPath & $Config & "\" & $File, "Variables", "ColorSkin")
+		Else
+			IniWrite($SkinPath & $Config & "\" & $File, "Variables", "ColorSkin", $value)
+		EndIf
 	Else
-		IniWrite($VarFile, "Variables", $CurrentVarName, $value)
+		IniWrite($VarFile, $CurrentVarSection, $CurrentVarName, $value)
 	Endif
 EndFunc
 
@@ -343,21 +362,20 @@ Func _CreateColorBox($value)
 	GUICtrlSetState($ColorLabel, $GUI_SHOW)
 	_DrawBottom()
 
-	If $value == "" Then $value = "0x000000"
-	If StringLeft($value, 2) <> "0x" Then $value = RGBToHex($value)
-	GUICtrlSetBkColor($VariableColorbox, $value)
+	GUICtrlSetBkColor($VariableColorbox, _ToColor($value))
 	GUICtrlSetState($VariableColorbox, $GUI_SHOW)
 
-	_DrawText("[RESET]", $Size / 2.75)
+	_DrawText($ResetText, $Size / 2.75)
 	$ColorData = $value
 	$CreatedElement = $COLOR
+	$ColorSkinReset = False
 EndFunc
 
 Func _CreateBrowseButton($value)
 	GUICtrlSetState($BrowseLabel, $GUI_SHOW)
 
 	_DrawBottom()
-	_DrawText("[Browse]", $width / 2 - $Size / 4.15)
+	_DrawText($BrowseText, $width / 2 - $Size / 4.15)
 
 	$BrowseData = $value
 	$CreatedElement = $BROWSE
@@ -374,7 +392,14 @@ Func _DrawText($desc, $x)
     _GDIPlus_GraphicsDrawStringEx($hGraphic, $desc, $hFont, $aInfo[0], $hFormat, $hBrush2)
 EndFunc
 
+Func _ToColor($str)
+	If StringLeft($str, 2) == "0x" Then Return $str
+	If StringRegExp($str, "\d+\,\s?\d+\,\s?\d+") Then Return RGBToHex($str)
+	Return "0xFFFFFF"
+EndFunc
+
 Func OnDragDrop($hWnd, $Msg, $wParam, $lParam)
+	#forceref $hWnd, $lParam
     Static $DropAccept
 
 	If $CreatedElement <> $INPUT Then Return
@@ -405,7 +430,7 @@ Func OnDragDrop($hWnd, $Msg, $wParam, $lParam)
             Return $DropAccept
 
         Case $WM_DRAGLEAVE
-			GUICtrlSetData($VariableInput, IniRead($VarFile, "Variables", $CurrentVarName, ""))
+			GUICtrlSetData($VariableInput, IniRead($VarFile, $CurrentVarSection, $CurrentVarName, ""))
 
     EndSwitch
 EndFunc
