@@ -1,0 +1,4 @@
+<version>6.0</version>
+<updates>No updates</updates>
+<link>http://omnimo.info/</link>
+<description>You are using the latest version</description>
