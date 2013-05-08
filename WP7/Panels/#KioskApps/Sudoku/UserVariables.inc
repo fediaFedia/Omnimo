@@ -1,5 +1,5 @@
 [Variables]
 Title=Sudoku
-Icon=icon.jpg
+Icon=#@#Graphics\Panels\#KioskApps\Sudoku\icon.jpg
 HideText=0
 site=http://ie.microsoft.com/testdrive/Performance/Sudoku/Default.html

@@ -1,5 +1,5 @@
 [Variables]
 Title=Cut the Rope
-Icon=icon.jpg
+Icon=#@#Graphics\Panels\#KioskApps\CutTheRope\icon.jpg
 HideText=1
 site=http://www.cuttherope.ie/
