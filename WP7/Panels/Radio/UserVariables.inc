@@ -1,5 +1,6 @@
 [variables]
-PathToVLC="C:\Program Files (x86)\VideoLAN\VLC\vlc.exe"
+NowPlaying=listen.pls
+PathToVLC="G:\Program Files\VideoLAN\VLC\vlc.exe"
 Station1Link=977Hits.pls
 Station1Title=".977 - All Hits"
 Station2Link=SkyFMHits.pls
@@ -16,6 +17,7 @@ Station7Link=181ClassicRock.pls
 Station7Title="181 - Classic Rock"
 Station8Link=RadioParadise.pls
 Station8Title="Paradise Radio"
+RadioScreenColor=
 
 ;change pathtoVLC to your path if it doesnt work
 ;click the help button for more info on this

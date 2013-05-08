@@ -1,3 +1,3 @@
 [Variables]
-UserName=%1
+UserName=#customusername#
 PanelAction=none.exe

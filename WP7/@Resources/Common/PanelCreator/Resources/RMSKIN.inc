@@ -1,0 +1,9 @@
+[rmskin]
+Name=
+Author=
+Version=1.0
+LoadType=Skin
+Load=
+MergeSkins=1
+MinimumRainmeter=3.0.0.1871
+MinimumWindows=5.1

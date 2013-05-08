@@ -1,6 +1,6 @@
 [MeterBackground0]
 Meter=Image
-SolidColor=#tttextcolor#,100
+SolidColor=#ttbgcolor#,150
 W=#WorkAreaWidth#
 H=#WorkAreaHeight#
 X=0

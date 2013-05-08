@@ -28,7 +28,7 @@ ScaleMargins=10,10,10,10
 
 [overlay]
 Meter=Image
-ImageName=#@#Common\OverlayBorder\#overlay#.png
+ImageName=#@#Common\OverlayBorder\#overlay##padding#.png
 W=(#Height#*2+20)
 H=(#Height#/2+5)
 x=0
@@ -36,15 +36,17 @@ y=0
 ScaleMargins=10,10,10,10
 
 [TextStyle]
-X=(#Height#/10+5+(#Height#/3))
+X=(#Height#+(#Height#/12+5))
 Y=(#Height#/10+5)
-StringAlign=#align#
+StringAlign=CENTER
 FontFace=#fonttype#
 FontColor=#textcolor2#,#PanelTitleOpacity#
 FontSize=(#height#/7)
 StringEffect=#Shadow#
 FontEffectColor=#ItemShadowColor#
 AntiAlias=1
+LeftMouseUpAction=!execute ["#PanelAction#"]
+solidcolor=0,0,0,1
 
 [FullTextStyle]
 X=(#Height#/30+5)

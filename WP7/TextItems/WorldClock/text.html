@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<!--
+
+
+   _    _____         _
+   \`,""   ,'7"r-..__/ \
+  ,'\ `, ,',','    _/   \
+ /   \  7 / /     (   \ |
+J     \/ j  L______\  / |
+L   __JF"""/""\"\_,    /
+L,-"| O|  f O |  L_  _/
+F   \_ /  \__/   `-  j|
+    .-'    `"""    ,' |          _..====.._
+    \__/         r"_  A        ,' _..---.._`,
+     `-.______,,-L// / \  ___,' ,'_..:::.. `,`,
+              j   / / / 7"    `-<""=:'  '':. \ \
+             /   <,' /  F  . i , \   `,    :L L L
+             |    \,'  /    >X<  |     \   :| | J
+             |     `._/    ' ! ` |      L  :| |  L
+              \           \     /       |  :F F  |
+             __>-.__   __,-\   |        |  J J   |
+            /     /|   | \  \  \_       | 'F F   |
+           /   __/ |   |  L  L   \      F./ /    F
+          /   |    |   4  I  I    |    J./ /   ,'
+         J    \    I    L F  I    |    F/ / _,'
+_________|     |   F    |J   F    |   //_/-'
+\   __   |    /   J     |/  J     |  J="
+\\  \_\  \__,' \  F     |   F     |
+\\\_____________\/      F__/      F
+ \\|  HTML for  |_____/  (______/
+  \/__Dummies___/
+
+  
+  
+  If you have any suggestions or complaints, leave a comment here:
+  
+  
+  -->
+
+
+<html>
+<head>
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script src="do.js" type="text/javascript" /></script>
+<script src="http://code.jquery.com/jquery-latest.js"></script>  
+
+
+<SCRIPT TYPE="text/javascript"> 
+
+var message="Sorry, right-click has been disabled"; 
+function clickIE() {if (document.all) {(message);return false;}} 
+function clickNS(e) {if 
+(document.layers||(document.getElementById&&!document.all)) { 
+if (e.which==2||e.which==3) {(message);return false;}}} 
+if (document.layers) 
+{document.captureEvents(Event.MOUSEDOWN);document.onmousedown=clickNS;} 
+else{document.onmouseup=clickNS;document.oncontextmenu=clickIE;} 
+document.oncontextmenu=new Function("return false") 
+// --> 
+</SCRIPT> 
+
+
+<script type="text/javascript" src="https://raw.github.com/snaptortoise/konami-js/master/konami.js"></script>
+<script type="text/javascript">
+	var success = function() {
+				open('bsod.html','_self')
+	}
+	
+	var konami = new Konami(success);
+	
+</script>
+
+<script>  
+$(document).ready(function(){  
+setTimeout(function() {  
+$('.messageBox').fadeOut('fast');  
+}, 2000); // <-- time in milliseconds  
+});  
+</script>  
+
+
+<script>  
+
+
+var count=0;
+var stage=1;
+var stage2=3;
+var counter=setInterval(timer, 4830); //1000 will  run it every 1 second
+var ref="Configuring updates";
+
+function timer()
+{
+  count=count+1;
+  if (count <= 0)
+  {
+     clearInterval(counter);
+     return;
+  }
+
+ document.getElementById("timer").innerHTML=count +'%';
+ 
+ 
+ 
+   if (count > 99)
+  {
+     stage=stage+1;
+	  document.getElementById("stage").innerHTML=stage +'';
+	 count=0;
+	  return;
+  }
+  
+     if (stage > 3)
+  {
+     stage2=68;
+     ref="Installing the Matrix";
+	  document.getElementById("ref").innerHTML=ref +'';
+	  document.getElementById("stage2").innerHTML=stage2 +'';
+	  return;
+  }
+  
+}
+
+
+
+
+</script>  
+<style>
+
+body {
+
+	background: url('http://i.imgur.com/bGNCoDi.jpg') no-repeat center center fixed; 
+
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+vertical-align:middle; 
+text-align:center;
+z-index: -1;
+cursor: url(http://i.imgur.com/LbQgvPK.png), auto;
+margin:0;
+padding:0;
+
+}
+
+.CT {
+
+vertical-align:middle;
+position: absolute;
+top: 50%;
+height: 70px;
+margin-left:auto;
+margin-right:auto;
+display:block;
+width:550px;
+margin-top: -5%;
+font-family:Segoe UI, Arial;
+font-size:23px;
+color:#fff;
+font-weight:normal;
+text-align:center;
+text-shadow: 0px 1px 5px rgba(0,0,0, 0.4);
+
+}
+
+.image_block {
+
+
+position: absolute;
+bottom: 17px;
+left: 50%;
+width: 50%;
+margin: -5% 0 0 -25%;
+		
+
+}
+p {
+
+display:block;
+float:middle;
+text-align:center;
+width:100%;
+
+
+}
+
+.centeragain {
+
+width:550px;
+margin:0px auto;
+text-align:left;
+
+
+}
+.messageBox {  
+display:block;
+color:<?php $d=$_GET["os"]; if ($d=="vista") echo "ACC968"; elseif ($d=="8") echo "#67A2E6"; else echo "#67A2E6";?>;
+font-family:Segoe UI, Arial;
+font-size:20px;
+margin-left:auto;
+margin-right:auto;
+text-align:center;
+z-index:999;  }  
+
+
+</style>
+
+</head>
+<body>
+
+
+
+
+
+<div style="display:block;position:absolute;min-width:100%; min-height:100%;margin:0;padding:0;">.
+<div class="messageBox">Press F11 for fullscreen</div>  
+
+<div class="centeragain">
+<div class="CT">
+<div class="FONT">
+<img src="http://i.imgur.com/eZQzDJL.gif" style="vertical-align:middle;padding-top:25px;float:left;">
+<a id="ref">Welcome
+</div>
+</div>
+</div>
+<div class="image_block">
+<img src="<?php $d=$_GET["os"]; if ($d=="vista") echo "http://i.imgur.com/PI73wHG.png"; elseif ($d=="8") echo "http://i.imgur.com/pPh1EW8.png"; else echo "http://i.imgur.com/dhaSKKq.png";?>">
+</div>
+</div>
+</div>
+</body>
+</html>

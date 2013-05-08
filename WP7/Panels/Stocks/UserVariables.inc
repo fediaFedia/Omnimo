@@ -1,9 +1,9 @@
 [Variables]
 panelname=My Investments %
-Quote1=http://www.google.com/finance?q=INDEXBOM:AAPL
+Quote1=https://www.google.com/finance?q=MSFT
 Quote2=http://www.google.com/finance?q=INDEXDJX:.DJI
 Quote3=http://www.google.com/finance?q=INDEXNASDAQ%3A.IXIC
-Quote4=http://www.google.com/finance?q=NASDAQ%3AMSFT
+Quote4=https://www.google.com/finance?q=MSFT
 Quote5=http://www.google.com/finance?q=NASDAQ%3AHANS
 Quote6=http://www.google.com/finance?q=NYSE%3AHYC
 Quote7=http://www.google.com/finance?q=NYSE%3ATHI

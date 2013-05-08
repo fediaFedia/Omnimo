@@ -1,0 +1,12 @@
+[Variables]
+WeatherCode=UKXX0085
+Unit=c
+ShowYahooIcon=no
+tempfontsize=50
+hidewhitetone=1
+Unit5=m
+UseFahrenheit=m
+OpenWebsite=0
+IconType=Simple
+HighlightCurrentDay=0
+HighlightCurrentDay

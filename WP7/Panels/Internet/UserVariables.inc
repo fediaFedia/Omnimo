@@ -8,3 +8,6 @@ FirefoxLaunch=
 privatebrowsingicons=1
 OpenMethodChrome=#NewTabChrome#
 OpenMethodFirefoX=#NewTabFirefox#
+NewTabChrome=--new-tab about:home
+NewWindowChrome=--new-tab-page-1 about:blank
+styletype=Color

@@ -1,2 +1,0 @@
-[Variables]
-Updates=80

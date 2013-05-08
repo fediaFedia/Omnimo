@@ -1,0 +1,2 @@
+[Variables]
+PanelAction=GFWLClient.exe

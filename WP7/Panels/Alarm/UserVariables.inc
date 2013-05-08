@@ -1,5 +1,7 @@
 [Variables]
 ALARM=0002
-ALARMHOUR=09
-ALARMMINUTE=30
-AlarmSound=%windir%\Media\tada.wav
+ALARMHOUR=21
+ALARMMINUTE=14
+AlarmSound=alarmclock1.wav
+AlarmSettingDisabled=off
+AlarmSEttingEnabled=on1

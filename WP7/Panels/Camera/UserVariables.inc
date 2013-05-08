@@ -1,6 +1,6 @@
 [Variables]
 Delay=1
 FileFormat=jpg
-CaptureCursor=False
-OpenImageAfter=True
+CaptureCursor=false
+OpenImageAfter=false
 SaveTo=%userprofile%\Pictures\

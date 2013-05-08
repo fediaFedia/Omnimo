@@ -28,7 +28,7 @@ Meter=Button
 ButtonImage=#@#Common\Panel\settings.png
 X=(#Height#-10) 
 Y=20
-ButtonCommand=!Execute ["#@#Common\Config\config.exe" #PanelType# "#CURRENTCONFIG#" "#SETTINGSPATH#"]
+ButtonCommand=!Execute ["#@#Common\Config\config.exe" single "#CURRENTCONFIG#" "#CURRENTFILE#" "#SETTINGSPATH#" "#SKINSPATH#"]
 Hidden=1
 
 

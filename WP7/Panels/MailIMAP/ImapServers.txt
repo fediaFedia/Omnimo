@@ -1,0 +1,14 @@
+Provider        Server			Port
+
+AOL Mail   	imap.aim.com		993
+Gmail 		imap.gmail.com		993
+GMX Mail	imap.gmx.com		993
+iCloud Mail 	imap.mail.me.com	993
+Mail.com	imap.mail.com		993
+Mail.ru		imap.mail.ru		993
+Ovi Mail 	imap.mail.ovi.com	993
+Pobox		mail.pobox.com		993
+Sify Mail	imap.sify.com		993
+Yahoo! Mail 	imap.mail.yahoo.com	993
+Yandex Mail 	imap.yandex.com		993
+Zoho Mail 	imap.zoho.com		993

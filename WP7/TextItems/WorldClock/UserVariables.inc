@@ -1,9 +1,9 @@
 [Variables]
 hidealltext=0
-customtext1=LOCAL TIME: %1
+customtext1=WORLD CLOCK
 customtext2=world	
 customtext3=clock
-gridalpha=70
+gridalpha=31
 hidegrid=1
 CityName1=London
 CityZone1=+0.0
@@ -15,3 +15,6 @@ CityZone3=-5.0
 12Hour=%I:%M %p
 ClockName=#24Hour#
 DayLightSavings=1
+ChangeWithDay=0
+WorldAlpha=200
+ItemSize=700

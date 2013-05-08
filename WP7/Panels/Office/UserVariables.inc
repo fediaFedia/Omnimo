@@ -1,0 +1,2 @@
+[Variables]
+ShowTitle=1

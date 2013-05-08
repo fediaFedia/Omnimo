@@ -1,2 +1,4 @@
 [Variables]
-PanelAction=%PROGRAMFILES%\Boxee\boxee.exe
+PanelName=BOXEE
+IconLocation=#@#\Graphics\Icons\Web\boxeeW.png
+PanelAction=http://boxee.com/

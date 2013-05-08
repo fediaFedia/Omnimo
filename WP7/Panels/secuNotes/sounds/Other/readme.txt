@@ -1,1 +1,0 @@
-Welcome to SecuNotes. Replace this text with yours. Also you can't change the password, sorry.

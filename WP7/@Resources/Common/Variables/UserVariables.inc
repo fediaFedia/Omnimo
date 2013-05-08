@@ -18,6 +18,6 @@ ttgallerystyle=Dark
 CodePage=65001
 HideHeaders=0
 HideCloseButton=1
-ConfigBackgroundColor=0x1e1e1e
+ConfigBackgroundColor=0x1E1E1E
 ConfigBackgroundColor2=0x323232
 ConfigTextColor=0xE6E6E6

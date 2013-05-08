@@ -1,2 +1,2 @@
 [Variables]
-height=150
+height=D:\Users\User\AppData\Roaming\Rainmeter\

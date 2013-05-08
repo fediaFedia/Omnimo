@@ -1,2 +1,2 @@
 [Variables]
-action=http://games.live.com
+PanelAction=http://games.live.com

@@ -28,7 +28,7 @@ ScaleMargins=10,10,10,10
 
 [overlay]
 Meter=Image
-ImageName=#@#Common\OverlayBorder\#overlay#.png
+ImageName=#@#Common\OverlayBorder\#overlay##padding#.png
 W=(#Height#*2+20)
 H=(#Height#+10)
 x=0

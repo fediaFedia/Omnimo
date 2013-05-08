@@ -1,0 +1,14 @@
+[Variables]
+GuiBG=0xF0F0F0
+PanelBG=0x3780C0
+BrowseBG=0x454545
+CreateBG=0x91C630
+FooterBG=0x3680BF
+FieldsBG=0xFFFFFF
+FontColor=0xFFFFFF
+Color1=0x2E962D
+Color2=0xCE4E27
+Color3=0x86C11E
+Color4=0x22A6A3
+Color5=0x454545
+Color6=0xAD0F45

@@ -1,4 +1,0 @@
-<title>Notes</title>
-<notes>Double click to edit the notes. Make a notes app</notes>
-
-DO NOT DELETE THE TAGS

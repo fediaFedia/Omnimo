@@ -1,3 +1,3 @@
 [Variables]
 Query=Microsoft
-width=730
+width=750
