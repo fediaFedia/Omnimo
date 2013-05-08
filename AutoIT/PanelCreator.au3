@@ -1,146 +1,139 @@
 #NoTrayIcon
-#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=PanelCreator.ico
 #AutoIt3Wrapper_Outfile=..\WP7\@Resources\Common\PanelCreator\PanelCreator.exe
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Omnimo Panel Creator
-#AutoIt3Wrapper_Res_Fileversion=6.0
+#AutoIt3Wrapper_Res_Fileversion=6.0.0.0
 #AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2013
 #AutoIt3Wrapper_AU3Check_Parameters=-q -w 1 -w 2 -w 4 -w 6 -w 7
-#EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#AutoIt3Wrapper_Run_Tidy=y
+#endregion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
+#include <File.au3>
 #include <GDIPlus.au3>
 #include <GUIConstantsEx.au3>
-#include <WindowsConstants.au3>
-#include <GuiEdit.au3>
-#include <SendMessage.au3>
-#include <String.au3>
-#include <File.au3>
+#include <WinAPI.au3>
 
 #include "Includes\Common.au3"
 #include "Includes\IconImage.au3"
+#include "Includes\_Zip.au3"
 
-$AppDataDir = EnvGet("APPDATA")
-$SystemDrive = EnvGet("SYSTEMDRIVE")
+Opt("ExpandEnvStrings", 1)
 
-; Locate Rainmeter.ini
-If FileFindFirstFile($AppDataDir & "\Rainmeter\Rainmeter.ini") <> -1 Then
-	$DataFolder = $AppDataDir & "\Rainmeter\"
-ElseIf FileFindFirstFile($SystemDrive & "\Program Files\Rainmeter\Rainmeter.ini") <> -1 Then
-	$DataFolder = $SystemDrive & "\Program Files\Rainmeter\"
-ElseIf FileFindFirstFile("..\..\..\..\Rainmeter.ini") <> -1 Then
-	$DataFolder = "..\..\..\..\"
-Else
-	OmnimoError("Panel Creator", "Unable to locate Rainmeter.ini")
-EndIf
-
-Const $SkinPath = IniRead($DataFolder & "Rainmeter.ini", "Rainmeter", "SkinPath", @UserProfileDir & '\Documents\Rainmeter\Skins\')
-Const $ColorInc = $SkinPath & "WP7\Common\color\color.inc"
+Const $SkinPath = $CmdLine[1]
 Const $PanelsInc = $SkinPath & "WP7\Gallery\MyPanels\panels.inc"
+Const $GDIFont = "Segoe UI"
 
-If $CmdLine[0] > 1 And $CmdLine[1] = "Delete" Then
-	$path = IniRead($PanelsInc, "Variables", "Path" & $CmdLine[2], "Name")
+; Remove a created panel
+If $CmdLine[0] > 2 And $CmdLine[2] == "Delete" Then
+	$index = $CmdLine[3]
+	$path = IniRead($PanelsInc, "Variables", "Path" & $index, "")
+	If $path == "" Then Exit
 	DirRemove($SkinPath & "WP7\Panels\" & $path, 1)
-	IniDelete($PanelsInc, "Variables", "Name" & $CmdLine[2])
-	IniDelete($PanelsInc, "Variables", "Path" & $CmdLine[2])
-	IniDelete($PanelsInc, "Variables", "Icon" & $CmdLine[2])
+	IniDelete($PanelsInc, "Variables", "Name" & $index)
+	IniDelete($PanelsInc, "Variables", "Path" & $index)
+	IniDelete($PanelsInc, "Variables", "Icon" & $index)
 	SendBang("!DeactivateConfig WP7\Panels\" & $path)
 	SendBang("!Refresh WP7\Gallery\MyPanels")
 	Exit
 EndIf
 
-; Load variables from color.inc
-Const $yposition = IniRead($ColorInc, "Variables", "yposition", "1.2")
-Const $fonttype = IniRead($ColorInc, "Variables", "FontType", "Segoe UI Semibold")
-Const $fonttypewp = IniRead($ColorInc, "Variables", "FontTypeWP", "Segoe WP")
-Const $fontfaceui = IniRead($ColorInc, "Variables", "FontFaceUI", "Segoe UI")
-Const $fontfacel = IniRead($ColorInc, "Variables", "FontFaceLight", "Segoe UI Light")
-Const $deffsize = Int(Execute(StringReplace(IniRead($ColorInc, "Variables", "DefaultFontSize", "12"), "#Height#", "150", 0, 2)))
+; Read GUI colors from Colors.inc
+Const $ColorVariables = IniReadSection("Resources\Colors.inc", "Variables")
+Const $GuiBG = $ColorVariables[1][1]
+Global $PanelBG = AddAlpha($ColorVariables[2][1])
+Const $BrowseBG = $ColorVariables[3][1]
+Const $CreateBG = $ColorVariables[4][1]
+Const $FooterBG = AddAlpha($ColorVariables[5][1])
+Const $FieldsBG = AddAlpha($ColorVariables[6][1])
+Const $FontColor = AddAlpha($ColorVariables[7][1])
 
-; Read templates into an array
-Global $templates[3]
-_FileReadToArray("templates.txt", $templates)
+Const $Color1 = $ColorVariables[8][1]
+Const $Color2 = $ColorVariables[9][1]
+Const $Color3 = $ColorVariables[10][1]
+Const $Color4 = $ColorVariables[11][1]
+Const $Color5 = $ColorVariables[12][1]
+Const $Color6 = $ColorVariables[13][1]
 
-If $templates[0] <> 3 Then OmnimoError("Panel Creator", "Invalid template file")
-
-; Create GUI
-$Gui = GUICreate("Panel Creator", 470, 285, -1, -1, BitOR($WS_BORDER, $WS_POPUP), BitOR($WS_EX_ACCEPTFILES, $WS_EX_TOOLWINDOW))
-
-; Moar noise
-$bg = GUICtrlCreatePic("Resources\bg.jpg", 0, 0)
-GUICtrlSetState(-1, $GUI_DISABLE)
-
-; Panel background
-$drop = GUICtrlCreateGraphic(25, 82, 150, 150)
-GUICtrlSetBkColor(-1, 0xFF1BA0E1)
-GUICtrlSetState(-1, $GUI_DROPACCEPTED)
-
-; Footer
-$footer = GUICtrlCreateGraphic(0, 258, 470, 27)
-GUICtrlSetBkColor(-1, 0x787878)
-GUICtrlSetState(-1, $GUI_DISABLE)
-
-; Title, help and close images
-$title = GUICtrlCreatePic("Resources\title.jpg", 18, 19, 350, 45, Default, $GUI_WS_EX_PARENTDRAG)
-$help = GUICtrlCreatePic("Resources\help.jpg", 400, 17, 15, 20)
-$close = GUICtrlCreatePic("Resources\close.jpg", 437, 17, 20, 20)
-
-; Name and action input fields
-GUICtrlCreatePic("Resources\fields.jpg", 196, 84, 171, 68)
-GUICtrlSetState(-1, $GUI_DISABLE)
-$name = GUICtrlCreateInput("Name", 206, 91, 150, 15, -1, $WS_EX_WINDOWEDGE)
-$action = GUICtrlCreateInput("Action", 206, 130, 150, 15, -1, $WS_EX_WINDOWEDGE)
-
-; Browse, select and create panel buttons
-$browse = GUICtrlCreatePic("Resources\browse.jpg", 196, 156, 84, 24)
-$select = GUICtrlCreatePic("Resources\select.jpg", 283, 156, 84, 24)
-$create = GUICtrlCreatePic("Resources\create.jpg", 196, 188, 172, 44)
-
-; Highlight current template
-$highlight = GUICtrlCreatePic("Resources\highlight.jpg", 396, 80, 44, 44)
-GUICtrlSetState(-1, $GUI_DISABLE)
-
-; Template buttons
-$template1 = GUICtrlCreatePic("Templates\" & $templates[1] & '.jpg', 402, 86, 32, 32)
-$template2 = GUICtrlCreatePic("Templates\" & $templates[2] & '.jpg', 402, 141, 32, 32)
-$template3 = GUICtrlCreatePic("Templates\" & $templates[3] & '.jpg', 402, 195, 32, 32)
-
-; Get more icons link
-$moaricons = GUICtrlCreateLabel("Get more icons", 25, 265, 100, 20)
-GUICtrlSetColor(-1, 0xdddddd)
-GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
-
-; Author information
-$copyright = GUICtrlCreateLabel("Created by Xyrfo Systems Incorporated", 274, 265)
-GUICtrlSetColor(-1, 0xdddddd)
-GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
-
-; Separator between help and close
-$separator = GUICtrlCreateGraphic(427, 0, 1, 45)
-GUICtrlSetBkColor(-1, 0xe2e2e2)
-GUICtrlSetState(-1, $GUI_DISABLE)
-
-GUISetBkColor(0xf0f0f0)
-GUISetState()
-
+; Initializes the IconImage library and GDI
 _IconImage_Startup()
 
+; Create GUI
+$Gui = GUICreate("Panel Creator", 390, 255, -1, -1, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), $WS_EX_ACCEPTFILES)
+GUISetBkColor($GuiBG)
+
+; Panel background
+Const $drop = GUICtrlCreateGraphic(25, 25, 150, 150)
+GUICtrlSetBkColor(-1, $PanelBG)
+GUICtrlSetState(-1, $GUI_DROPACCEPTED)
+
+; Browse, select, create and save buttons
+Const $browse = GUICtrlCreateGraphic(196, 99, 84, 24)
+GUICtrlSetBkColor(-1, $BrowseBG)
+Const $select = GUICtrlCreateGraphic(283, 99, 85, 24)
+GUICtrlSetBkColor(-1, $BrowseBG)
+Const $create = GUICtrlCreateGraphic(197, 132, 146, 43)
+GUICtrlSetBkColor(-1, $CreateBG)
+Const $save = GUICtrlCreateGraphic(343, 131, 25, 45)
+GUICtrlSetBkColor(-1, Darken($CreateBG, 0.66))
+
+; The graphics object needs to be created before the GUI is shown,
+; otherwise measurements are way off for some strange reason
+Const $hGUIGraphic = _GDIPlus_GraphicsCreateFromHWND($Gui)
+GUISetState()
+
+Const $hSaveImage = _GDIPlus_ImageLoadFromFile("Resources\save.png")
+_GDIPlus_GraphicsDrawImage($hGUIGraphic, $hSaveImage, 350, 147)
+
+; Draw footer
+Const $hGUIBrush = _GDIPlus_BrushCreateSolid($FooterBG)
+_GDIPlus_GraphicsFillRect($hGUIGraphic, 0, 200, 390, 55, $hGUIBrush)
+
+; Draw the input field backgrounds
+Const $hGUIPen = _GDIPlus_PenCreate(0xFF747474)
+_GDIPlus_BrushSetSolidColor($hGUIBrush, $FieldsBG)
+_GDIPlus_GraphicsFillRect($hGUIGraphic, 197, 26, 169, 27, $hGUIBrush)
+_GDIPlus_GraphicsFillRect($hGUIGraphic, 197, 62, 169, 27, $hGUIBrush)
+_GDIPlus_GraphicsDrawRect($hGUIGraphic, 196, 25, 171, 29, $hGUIPen)
+_GDIPlus_GraphicsDrawRect($hGUIGraphic, 196, 61, 171, 29, $hGUIPen)
+_GDIPlus_GraphicsDrawRect($hGUIGraphic, 196, 131, 172, 44, $hGUIPen)
+
+; Create edgeless input fields
+Const $name = GUICtrlCreateInput("Name", 206, 34, 150, 15, -1, $WS_EX_WINDOWEDGE)
+Const $action = GUICtrlCreateInput("Action", 206, 70, 150, 15, -1, $WS_EX_WINDOWEDGE)
+
 ; Create a double buffer to avoid flickering
-Global $hGraphic = _GDIPlus_GraphicsCreateFromHWND(ControlGetHandle($Gui, "", $drop))
-Global $hBitmap = _GDIPlus_BitmapCreateFromGraphics(150, 150, $hGraphic)
-Global $hBackbuffer = _GDIPlus_ImageGetGraphicsContext($hBitmap)
+Const $hGraphic = _GDIPlus_GraphicsCreateFromHWND(ControlGetHandle($Gui, "", $drop))
+Const $hBitmap = _GDIPlus_BitmapCreateFromGraphics(150, 150, $hGraphic)
+Const $hBackbuffer = _GDIPlus_ImageGetGraphicsContext($hBitmap)
 _GDIPlus_GraphicsSetSmoothingMode($hBackbuffer, 2)
 
 ; Declare a few variables
-Global $oldname, $tmpname, $template, $hImage, $oldimg, $imagex, $imagey, $imagew, $imageh
-Global $hBrush, $hFormat, $hFamily, $hFont, $tLayout, $aInfo
-Global $fixeds, $split, $textx, $texty, $font, $fsize, $iconx, $icony, $iconw, $iconh
-$oldname = ""
+Global $oldname = "", $tmpname, $hImage, $oldimg, $imagew, $imageh
 
-; Load first template
-_LoadTemplate("Templates\" & $templates[1] & ".inc")
-_DrawPanelImage("Resources\droptext.jpg")
+Const $hBrush = _GDIPlus_BrushCreateSolid($FontColor)
+Const $hFamily = _GDIPlus_FontFamilyCreate($GDIFont)
+Const $hFont = _GDIPlus_FontCreate($hFamily, 9)
+Const $tLayout = _GDIPlus_RectFCreate(10, 125)
+Const $hFormat = _GDIPlus_StringFormatCreate()
+Const $BrowseFont = _GDIPlus_FontCreate($hFamily, 8)
+
+; Draw button strings
+_GDIPlus_GraphicsDrawStringEx($hGUIGraphic, "Browse for file", $BrowseFont, _GDIPlus_RectFCreate(200, 103), $hFormat, $hBrush)
+_GDIPlus_GraphicsDrawStringEx($hGUIGraphic, "Select folder", $BrowseFont, _GDIPlus_RectFCreate(290, 103), $hFormat, $hBrush)
+_GDIPlus_GraphicsDrawStringEx($hGUIGraphic, "Create panel", _GDIPlus_FontCreate($hFamily, 14), _GDIPlus_RectFCreate(208, 141), $hFormat, $hBrush)
+
+; Draw color selection rectangles
+$CG1 = DrawColorBox($Color1, 27, 217)
+$CG2 = DrawColorBox($Color2, 52, 217)
+$CG3 = DrawColorBox($Color3, 77, 217)
+$CG4 = DrawColorBox($Color4, 102, 217)
+$CG5 = DrawColorBox($Color5, 127, 217)
+$CG6 = DrawColorBox($Color6, 152, 217)
+
+DrawPanelImage("Resources\droptext.png")
 
 While 1
 	Sleep(50)
@@ -148,177 +141,198 @@ While 1
 	; Draw panel title only if it has been changed
 	$tmpname = GUICtrlRead($name)
 	If $tmpname <> $oldname Then
-		_DrawPanelImage($oldimg)
+		DrawPanelImage($oldimg)
 		$oldname = $tmpname
 	EndIf
 
 	$nMsg = GUIGetMsg()
 	Switch $nMsg
 
-		Case $GUI_EVENT_CLOSE, $close
+		Case $GUI_EVENT_CLOSE
 			_Exit()
-
-		Case $help
-			ShellExecute("http://omnimo.info/CustomizationGuide/PanelCreator.html")
-
-		Case $moaricons
-			ShellExecute("http://browse.deviantart.com/customization/icons/dock/?order=9")
-
-		Case $copyright
-			ShellExecute("http://xyrfo.deviantart.com")
 
 		Case $GUI_EVENT_DROPPED
 			$filen = @GUI_DragFile
 
 			Global $szDrive, $szDir, $szFName, $szExt
 			$path = _PathSplit($filen, $szDrive, $szDir, $szFName, $szExt)
-			$ext = $path[4] ; Dragged file's extension
+			$ext = StringLower($path[4]) ; Dragged file's extension
+			$IcoToFile = True
 
 			Switch $ext
 
 				Case '.lnk'
-					$aDetails = FileGetShortcut($filen) ; Load shortcut info
+					$aDetails = FileGetShortcut($filen)
 
 					If @error = 1 Then
 						MsgBox(16, "Error", "Unable to load shortcut.")
 						ContinueCase
 					EndIf
 
+					$target = $aDetails[0]
+					If FileExists($target) = 0 Then $target = StringReplace($target, "Program Files (x86)", "Program Files")
+
 					GUICtrlSetData($name, $szFName)
-					GUICtrlSetData($action, $aDetails[0])
-					$IconImage = _IconImage_FromPath($aDetails[0], 256) ; Get icon from target
-					$filen = _TempFile(Default, Default, ".panelc") ; Create a temp file
-					_IconImage_ToImageFile($IconImage, $filen, "PNG") ; Convert ico to png
-					_GDIPlus_ImageDispose($hImage) ; Dispose of previous image
+					GUICtrlSetData($action, $target)
+
+					If $aDetails[4] <> "" And StringRight($aDetails[4], 3) <> "dll" Then
+						; if icon filename is specified and it's not a dll file, use it as an icon
+						$icon = $aDetails[4]
+					Else
+						; otherwise use the target path, correcting the path for some shortcuts on x64 systems
+						$icon = $aDetails[0]
+						If FileExists($icon) = 0 Then $icon = StringReplace($icon, "Program Files (x86)", "Program Files")
+					EndIf
+
+					$IconImage = _IconImage_FromPath($icon, 256)
 
 				Case '.ico'
-					$IconImage = _IconImage_FromIcoFile($filen, 256) ; Get icon from ico file
-					$filen = _TempFile(Default, Default, ".panelc") ; Create temp file
-					_IconImage_ToImageFile($IconImage, $filen, "PNG") ; Convert ico to png
-					_GDIPlus_ImageDispose($hImage) ; Dispose of previous image
+					$IconImage = _IconImage_FromIcoFile($filen, 256)
 
 				Case '.exe'
 					GUICtrlSetData($name, $szFName)
 					GUICtrlSetData($action, $filen)
-					$IconImage = _IconImage_FromPEEx($filen, 256) ; Get icon from exe file
-					$filen = _TempFile(Default, Default, ".panelc") ; Create temp file
-					_IconImage_ToImageFile($IconImage, $filen, "PNG") ; Convert ico to png
-					_GDIPlus_ImageDispose($hImage) ; Dispose of previous image
+					$IconImage = _IconImage_FromPEEx($filen, 256)
 
-				Case '.contact'
-					$infile = FileOpen($filen)
-					If $infile = -1 Then
-						MsgBox(16, "Error", "Unable to open contact file.")
-						ContinueCase
-					EndIf
-
-					; Read file's contents into a string
-					$string = FileRead($infile)
-					FileClose($infile)
-
-					$contactimg = _StringBetween($string, '<c:Url>', '</c:Url>') ; Get image path
-					$fullname = _StringBetween($string, '<c:FormattedName>', '</c:FormattedName>') ; Get full name
-
-					If $contactimg = 0 Or $fullname = 0 Then
-						MsgBox(16, "Error", "Invalid contact file")
-						ContinueCase
-					EndIf
-
-					GUICtrlSetData($name, $fullname[0])
-					GUICtrlSetData($action, $filen)
-					$filen = $contactimg[0]
+				Case Else
+					$IcoToFile = False
 
 			EndSwitch
 
-			_DrawPanelImage($filen)
+			If $IcoToFile Then
+				$filen = _TempFile(Default, Default, ".panelc")
+				_IconImage_ToImageFile($IconImage, $filen, "PNG")
+				_GDIPlus_ImageDispose($hImage)
+			EndIf
+
+			DrawPanelImage($filen)
 
 		Case $browse
 			$file = FileOpenDialog("Choose a file", @UserProfileDir, "All (*.*)", 1)
-			GUICtrlSetData($action, $file)
+			If Not @error Then GUICtrlSetData($action, $file)
+			FileChangeDir(@ScriptDir)
 
 		Case $select
 			$folder = FileSelectFolder("Choose a folder", "", 1 + 2 + 4, @UserProfileDir)
-			GUICtrlSetData($action, $folder)
-
-		Case $template1
-			GUICtrlSetPos($highlight, 396, 80)
-			_LoadTemplate("Templates\" & $templates[1] & '.inc')
-			_DrawPanelImage($oldimg)
-
-		Case $template2
-			GUICtrlSetPos($highlight, 396, 135)
-			_LoadTemplate("Templates\" & $templates[2] & '.inc')
-			_DrawPanelImage($oldimg)
-
-		Case $template3
-			GUICtrlSetPos($highlight, 396, 189)
-			_LoadTemplate("Templates\" & $templates[3] & '.inc')
-			_DrawPanelImage($oldimg)
+			If Not @error Then GUICtrlSetData($action, $folder)
+			FileChangeDir(@ScriptDir)
 
 		Case $create
-			_CreatePanel()
+			$title = GUICtrlRead($name)
+			$foldername = StringRegExpReplace($title, '[\s\\/\*\?\:<>|\"]', "")
+
+			CreatePanel($title, $foldername, $SkinPath & 'WP7\Panels\' & $foldername)
+
+			; Write panel info to panels.inc
+			For $i = 1 To 40
+				$iname = IniRead($PanelsInc, "Variables", "Name" & $i, "")
+				If $iname = "" Or $iname = $title Then ExitLoop
+			Next
+
+			If $i = 41 Then
+				$answer = MsgBox(52, "Omnimo Panel Creator", "The My Panels gallery is full. Would you like to overwrite the last panel?")
+				If $answer = 6 Then $i -= 1
+			EndIf
+
+			IniWrite($PanelsInc, "Variables", "Name" & $i, $title)
+			IniWrite($PanelsInc, "Variables", "Path" & $i, $foldername)
+			IniWrite($PanelsInc, "Variables", "Icon" & $i, $foldername & '.png')
+
+			; Activate panel
+			SendBang("!RefreshApp")
+			SendBang("!ActivateConfig WP7\Panels\" & $foldername & " default.ini")
+
+		Case $save
+			Do
+				$title = GUICtrlRead($name)
+				$foldername = StringRegExpReplace($title, '[\s\\/\*\?\:<>|\"]', "")
+
+				$dest = FileSaveDialog("Destination", @DesktopDir, "Rmskin files (*.rmskin)", 16, $foldername & ".rmskin")
+				If @error Then ExitLoop
+				FileChangeDir(@ScriptDir)
+
+				$author = InputBox("Author", "Author name displayed in rmskin", @UserName, Default, 120, 125)
+				If @error Then ExitLoop
+
+				If DirCreate("RmskinTemp") = 0 Then OmnimoError("Error", "Unable to create temporary .rmskin directory")
+				FileCopy("Resources\RMSKIN.inc", "RmskinTemp\RMSKIN.ini", 1)
+				IniWrite("RmskinTemp\RMSKIN.ini", "rmskin", "Name", $title & " Panel")
+				IniWrite("RmskinTemp\RMSKIN.ini", "rmskin", "Author", $author)
+				IniWrite("RmskinTemp\RMSKIN.ini", "rmskin", "Load", "WP7\Panels\" & $foldername & "\default.ini")
+
+				CreatePanel($title, $foldername, @ScriptDir & "\RmskinTemp\Skins\WP7\Panels\" & $foldername)
+
+				; Rmskins are just zip files, so create one
+				_Zip_Create("RmskinTemp\Temp.zip", 1) ; Filename needs to end in .zip for some reason
+				_Zip_AddItem(@ScriptDir & "\RmskinTemp\Temp.zip", @ScriptDir & "\RmskinTemp\RMSKIN.ini")
+				_Zip_AddItem(@ScriptDir & "\RmskinTemp\Temp.zip", @ScriptDir & "\RmskinTemp\Skins")
+				If @error Then OmnimoError("Error", "Unable to create a temporary zip file")
+
+				If FileMove("RmskinTemp\Temp.zip", $dest, 1) = 0 Then OmnimoError("Error", "Unable to create .rmskin")
+				If DirRemove("RmskinTemp", 1) = 0 Then OmnimoError("Error", "Unable to remove temporary directory")
+
+				; Rmskin files end with the following 16-byte struct
+				; struct PackageFooter
+				; {
+				; 	  __int64 size;
+				; 	  BYTE flags;
+				; 	  char key[7];
+				; };
+
+				$struct = DllStructCreate("int64 size;byte flags;char key[7]")
+				DllStructSetData($struct, "size", FileGetSize($dest))
+				DllStructSetData($struct, "flags", 0)
+				DllStructSetData($struct, "key", "RMSKIN")
+
+				Global $nBytes
+				$hFile = _WinAPI_CreateFile($dest, 2) ; Open the rmskin for reading
+				_WinAPI_SetFilePointer($hFile, 0, 2) ; Skip to the end of the file
+				_WinAPI_WriteFile($hFile, DllStructGetPtr($struct), 16, $nBytes) ; Write the struct
+				_WinAPI_CloseHandle($hFile)
+
+				; Save preview to a file
+				$preview = StringReplace($dest, ".rmskin", "") & "_preview.png"
+				_GDIPlus_ImageSaveToFile($hBitmap, $preview)
+
+				MsgBox(64, "Success", "Successfully created " & $dest & @CRLF & "Preview generated in " & $preview)
+				ExitLoop
+			Until 1
+
+		Case $CG1
+			$PanelBG = AddAlpha($Color1)
+			DrawPanelImage($oldimg)
+
+		Case $CG2
+			$PanelBG = AddAlpha($Color2)
+			DrawPanelImage($oldimg)
+
+		Case $CG3
+			$PanelBG = AddAlpha($Color3)
+			DrawPanelImage($oldimg)
+
+		Case $CG4
+			$PanelBG = AddAlpha($Color4)
+			DrawPanelImage($oldimg)
+
+		Case $CG5
+			$PanelBG = AddAlpha($Color5)
+			DrawPanelImage($oldimg)
+
+		Case $CG6
+			$PanelBG = AddAlpha($Color6)
+			DrawPanelImage($oldimg)
 
 	EndSwitch
 WEnd
 
 Func _Exit()
-	; Clean up resources
-	_GDIPlus_GraphicsDispose($hGraphic)
-	_GDIPlus_ImageDispose($hImage)
-	_IconImage_Shutdown()
-
-	; Clean up temporary files
 	FileDelete(@TempDir & '\*.panelc')
-	Sleep(100)
-
-	; That's all folks
 	Exit
 EndFunc   ;==>_Exit
 
-Func _LoadTemplate($filen)
-	If $oldimg = "Resources\droptext.jpg" Then _DrawPanelImage("")
-
-	; Read Panel Creator options from template
-	$fixeds = Int(IniRead($filen, "Variables", "FixedIconSize", "0"))
-	$split = Int(IniRead($filen, "Variables", "SplitString", "0"))
-
-	; Read title position from template
-	$textx = StringReplace(IniRead($filen, "text", "X", "0"), "#Height#", "150", 0, 2)
-	$textx = Int(Execute(StringReplace($textx, "#xposition#", 15, 0, 2)))
-	$texty = StringReplace(IniRead($filen, "text", "Y", "0"), "#Height#", "150", 0, 2)
-	$texty = Int(Execute(StringReplace($texty, "#yposition#", $yposition, 0, 2)))
-
-	; Read font from template
-	$font = IniRead($filen, "text", "FontFace", "Segoe UI")
-	$font = StringReplace($font, "#fonttype#", $fonttype, 0, 2)
-	$font = StringReplace($font, "#fonttypewp#", $fonttypewp, 0, 2)
-	$font = StringReplace($font, "#fontfaceui#", $fontfaceui, 0, 2)
-	$font = StringReplace($font, "#fontfacelight#", $fontfacel, 0, 2)
-
-	; Read font size from template
-	$fsize = IniRead($filen, "text", "FontSize", "12")
-	$fsize = StringReplace($fsize, "#Height#", "150", 0, 2)
-	$fsize = Int(Execute(StringReplace($fsize, "#defaultfontsize#", $deffsize, 0, 2)))
-
-	; Read icon dimensions from template
-	$iconx = Int(Execute(StringReplace(IniRead($filen, "icon", "X", "0"), "#Height#", "150", 0, 2)))
-	$icony = Int(Execute(StringReplace(IniRead($filen, "icon", "Y", "0"), "#Height#", "150", 0, 2)))
-	$iconw = Int(Execute(StringReplace(IniRead($filen, "icon", "W", "0"), "#Height#", "150", 0, 2)))
-	$iconh = Int(Execute(StringReplace(IniRead($filen, "icon", "H", "0"), "#Height#", "150", 0, 2)))
-
-	; Create font
-	$hBrush = _GDIPlus_BrushCreateSolid(0xFFFFFFFF)
-	$hFamily = _GDIPlus_FontFamilyCreate($font)
-	$hFont = _GDIPlus_FontCreate($hFamily, $fsize)
-	$tLayout = _GDIPlus_RectFCreate($textx - 5, $texty - 5)
-	$hFormat = _GDIPlus_StringFormatCreate()
-
-	$template = $filen
-EndFunc   ;==>_LoadTemplate
-
-Func _DrawPanelImage($img)
+Func DrawPanelImage($img)
 	; Clear back buffer
-	_GDIPlus_GraphicsClear($hBackbuffer, 0xFF1BA0E1)
+	_GDIPlus_GraphicsClear($hBackbuffer, $PanelBG)
 
 	; Load image only if needed
 	If $img <> $oldimg Then
@@ -328,125 +342,70 @@ Func _DrawPanelImage($img)
 		$imageh = _GDIPlus_ImageGetHeight($hImage)
 	EndIf
 
-	; Don't calculate image dimensions if FixedIconSize is set
-	If $fixeds = 1 Then
-		_GDIPlus_GraphicsDrawImageRect($hBackbuffer, $hImage, $iconx - 5, $icony - 5, $iconw, $iconh)
+	If $imagew > $imageh Then
+		$imageh = 100 * $imageh / $imagew
+		$imagew = 100
 	Else
-		$ratio = $imagew / $imageh
-
-		; Science, bitches!
-		If $imagew > 106 Or $imageh > 106 Then
-			If $imagew >= $imageh Then
-				$imagew = 106
-				$imageh = 106 / $ratio
-			Else
-				$imageh = 106
-				$imagew = 106 * $ratio
-			EndIf
-		EndIf
-
-		$imagex = 74 - ($imagew / 2)
-		$imagey = 71 - ($imageh / 2)
-
-		_GDIPlus_GraphicsDrawImageRect($hBackbuffer, $hImage, $imagex, $imagey, $imagew, $imageh)
+		$imagew = 100 * $imagew / $imageh
+		$imageh = 100
 	EndIf
 
-	; Replace first space with line break if SplitString is set
-	If $split Then
-		$tmpname = StringReplace($tmpname, " ", @CRLF, 1)
-	EndIf
+	$imagex = 74 - ($imagew / 2)
+	$imagey = 71 - ($imageh / 2)
+
+	_GDIPlus_GraphicsDrawImageRect($hBackbuffer, $hImage, $imagex, $imagey, $imagew, $imageh)
 
 	; Draw title string and panel image
 	_GDIPlus_GraphicsDrawStringEx($hBackbuffer, $tmpname, $hFont, $tLayout, $hFormat, $hBrush)
 	_GDIPlus_GraphicsDrawImageRect($hGraphic, $hBitmap, 0, 0, 150, 150)
-EndFunc   ;==>_DrawPanelImage
+EndFunc   ;==>DrawPanelImage
 
-Func _CreatePanel()
-	$title = GUICtrlRead($name)
-	$execute = GUICtrlRead($action)
-
-	; Remove illegal characters from panel name
-	$foldername = StringRegExpReplace($title, '[\s\\/\*\?\:<>|\"]', "")
-	$folderpath = $SkinPath & 'WP7\Panels\' & $foldername
-	$inipath = $folderpath & '\' & $foldername & '.ini'
+Func CreatePanel($title, $foldername, $folderpath)
+	Local $execute = GUICtrlRead($action)
 
 	; Check if panel already exists
-	Local $exists = 0
 	If FileExists($folderpath) Then
-		$exists = 1
 		Local $answer = MsgBox(52, "PanelCreator", "A panel with the selected name already exists. Overwrite?")
 		If $answer = 7 Then Return
 	EndIf
 
 	; Create panel directory
-	If DirCreate($folderpath) = 0 Then
+	If DirCopy("Templates", $folderpath, 1) = 0 Then
 		MsgBox(16, "Unable to create panel", "The program was unable to create a panel with the selected name.")
 		Return
 	EndIf
 
-	Local $drive, $dir, $fname, $ext
-	Local $imgPath = _PathSplit($oldimg, $drive, $dir, $fname, $ext)
-
-	; Copy template to panel directory
-	FileCopy(@ScriptDir & '\' & $template, $inipath, 1 + 8)
-
 	; Copy image to panel directory
-	If $ext = '.panelc' Then
-		$imgfilen = $foldername & '.png'
-	Else
-		$imgfilen = $fname & $ext
-	EndIf
-	FileCopy($oldimg, $folderpath & '\' & $imgfilen, 1 + 8)
-	IniWrite($inipath, 'Variables', 'Image', $imgfilen)
+	FileCopy($oldimg, $folderpath & '\' & $foldername & '.png', 1 + 8)
 
-	; Write name and action to the panel
-	If $split Then
-		IniWrite($inipath, 'Variables', 'Name', StringReplace($title, " ", "#CRLF#", 1))
-	Else
-		IniWrite($inipath, 'Variables', 'Name', $title)
-	EndIf
-	IniWrite($inipath, 'Variables', 'Action', $execute)
+	IniWrite($folderpath & '\UserVariables.inc', 'Variables', 'PanelName', $title)
+	IniWrite($folderpath & '\UserVariables.inc', 'Variables', 'PanelAction', $execute)
+	IniWrite($folderpath & '\UserVariables.inc', 'Variables', 'IconLocation', $foldername & '.png')
 
-	; Calculate resizable widths for the icon if FixedIconSize is not set
-	If Not $fixeds Then
-		IniWrite($inipath, 'icon', 'X', '(#Height#/(150/' & $imagex & ')+5)')
-		IniWrite($inipath, 'icon', 'Y', '(#Height#/(150/' & $imagey & ')+5)')
-		IniWrite($inipath, 'icon', 'W', '(#Height#/(150/' & $imagew & '))')
-		IniWrite($inipath, 'icon', 'H', '(#Height#/(150/' & $imageh & '))')
-	EndIf
-
-	; Delete useless variables
-	IniDelete($inipath, 'Variables', 'FixedIconSize')
-	IniDelete($inipath, 'Variables', 'SplitString')
-
-	; Create size.inc
-	IniWrite($folderpath & '\' & 'size.inc', 'Variables', 'Height', IniRead($SkinPath & 'WP7\Gallery\Color\size.inc', 'Variables', 'Height', '150'))
-
-	; Write panel info to panels.inc
-	For $i = 1 To 40
-		$iname = IniRead($PanelsInc, "Variables", "Name" & $i, "NULL")
-		If $iname = "NULL" Or $iname = $title Then ExitLoop
+	; Write panel color to all inis
+	Local $FileList = _FileListToArray($folderpath, "*.ini")
+	Local $ColorSkin = HexToRGB(BitAND($PanelBG, 0x00FFFFFF))
+	For $i = 1 To $FileList[0]
+		IniWrite($folderpath & '\' & $FileList[$i], 'Variables', 'ColorSkin', $ColorSkin)
 	Next
+EndFunc   ;==>CreatePanel
 
-	If $i = 41 Then
-		Local $answer = MsgBox(52, "Omnimo Panel Creator", "The My Panels gallery is full. Would you like to overwrite the last panel?")
-		If $answer = 6 Then $i -= 1
-	EndIf
+Func Darken($Color, $factor)
+	$Blue = Int(BitAND($Color, 0xFF) * $factor)
+	$Green = Int(BitAND(BitShift($Color, 8), 0xFF) * $factor)
+	$Red = Int(BitAND(BitShift($Color, 16), 0xFF) * $factor)
+	Return RGBToHex($Red & ',' & $Green & ',' & $Blue)
+EndFunc   ;==>Darken
 
-	IniWrite($PanelsInc, "Variables", "Name" & $i, $title)
-	IniWrite($PanelsInc, "Variables", "Path" & $i, $foldername)
-	IniWrite($PanelsInc, "Variables", "Icon" & $i, $imgfilen)
+Func DrawColorBox($Color, $x, $y)
+	GUICtrlCreateGraphic($x, $y, 22, 22)
+	GUICtrlSetBkColor(-1, 0xFFFFFF)
+	$C = GUICtrlCreateGraphic($x + 1, $y + 1, 20, 20)
+	GUICtrlSetBkColor(-1, $Color)
+	Return $C - 1
+EndFunc   ;==>DrawColorBox
 
-	; Activate panel
-	If Not $exists Then
-		SendBang("!RefreshApp")
-		SendBang("!ActivateConfig WP7\Panels\" & $foldername & " " & $foldername & ".ini")
-	Else
-		If GetSkinWindow("WP7\Panels\" & $foldername) Then
-			SendBang("!Refresh WP7\Panels\" & $foldername)
-		Else
-			SendBang("!ActivateConfig WP7\Panels\" & $foldername & ' ' & $foldername & '.ini')
-		EndIf
-		SendBang("!Refresh WP7\Gallery\MyPanels")
-	EndIf
-EndFunc   ;==>_CreatePanel
+Func AddAlpha($hex)
+	If StringLen($hex) <> 8 Then Return $hex
+	Return BitOR(0xFF000000, $hex)
+EndFunc   ;==>AddAlpha
