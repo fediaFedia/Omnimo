@@ -60,37 +60,39 @@ Global Enum $INPUT, $SLIDER, $CHECKBOX, $COLOR, $BROWSE
 
 ; Open configuration file for reading
 $CfgFile = FileOpen($SkinPath & $CmdLine[2] & "\RainConfigure.cfg", 0)
-If $CfgFile = -1 Then OmnimoError("Unable to open RainConfigure.cfg", "The configuration tool was unable to open RainConfigure.cfg.")
+If $CfgFile = -1 Then
+	$Colorizable = 1
+Else
+	; Read variables and their descriptions into arrays
+	While 1
+		$name = FileReadLine($CfgFile)
+		Switch StringLeft($name, 1)
+			Case "["
+				If $name == "[Options]" Then ExitLoop
+				$CurrentSection = StringTrimLeft(StringTrimRight($name, 1), 1)
+			Case "#"
+				$Comments &= (StringTrimLeft($name, 1) & @CRLF)
+			Case ""
+				$Comments &= @CRLF
+			Case Else
+				$VarName[$VarCount] = $name
+				$VarDescription[$VarCount] = FileReadLine($CfgFile)
+				$VarType[$VarCount] = FileReadLine($CfgFile)
+				$VarSection[$VarCount] = $CurrentSection
+				$VarCount += 1
+				$Empty = FileReadLine($CfgFile) ; Skip over empty line
 
-; Read variables and their descriptions into arrays
-While 1
-	$name = FileReadLine($CfgFile)
-	Switch StringLeft($name, 1)
-		Case "["
-			If $name == "[Options]" Then ExitLoop
-			$CurrentSection = StringTrimLeft(StringTrimRight($name, 1), 1)
-		Case "#"
-			$Comments &= (StringTrimLeft($name, 1) & @CRLF)
-		Case ""
-			$Comments &= @CRLF
-		Case Else
-			$VarName[$VarCount] = $name
-			$VarDescription[$VarCount] = FileReadLine($CfgFile)
-			$VarType[$VarCount] = FileReadLine($CfgFile)
-			$VarSection[$VarCount] = $CurrentSection
-			$VarCount += 1
-			$Empty = FileReadLine($CfgFile) ; Skip over empty line
-
-			If $Empty == "[Options]" Then
-				ExitLoop
-			ElseIf $Empty <> "" Then
-				OmnimoError("Unable to read RainConfigure.cfg", "An error occurred while reading RainConfigure.cfg")
-			EndIf
-	EndSwitch
-	If @error = -1 Then OmnimoError("Unable to read RainConfigure.cfg", "An error occurred while reading RainConfigure.cfg")
-WEnd
-$Colorizable = Int(StringRight(FileReadLine($CfgFile), 1))
-FileClose($CfgFile)
+				If $Empty == "[Options]" Then
+					ExitLoop
+				ElseIf $Empty <> "" Then
+					OmnimoError("Unable to read RainConfigure.cfg", "An error occurred while reading RainConfigure.cfg")
+				EndIf
+		EndSwitch
+		If @error = -1 Then OmnimoError("Unable to read RainConfigure.cfg", "An error occurred while reading RainConfigure.cfg")
+	WEnd
+	$Colorizable = Int(StringRight(FileReadLine($CfgFile), 1))
+	FileClose($CfgFile)
+EndIf
 
 ; Read config size from Config.cfg based on first command line argument
 Global $SizeOptions[6]
