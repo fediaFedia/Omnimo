@@ -1,4 +1,4 @@
 [Variables]
 Title=<title here>
 Action=C:\
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\Blank9\icon.png

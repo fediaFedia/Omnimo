@@ -1,4 +1,4 @@
 [Variables]
 Title=Adobe Premiere Pro
 Action=premiere.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\Premiere\icon.png

@@ -1,4 +1,4 @@
 [Variables]
 Title=Winamp Player
 Action=winamp.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\Winamp\icon.png

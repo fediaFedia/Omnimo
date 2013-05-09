@@ -1,4 +1,4 @@
 [Variables]
 Title=Paint
 Action=mspaint.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\MSpaint\icon.png

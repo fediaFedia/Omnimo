@@ -1,4 +1,4 @@
 [Variables]
 Title=Internet Explorer
 Action=iexplore.exe
-IconLocation=icon.png
+IconLocation=#@#\Graphics\InstalledPanels\#Windows8\InternetExplorer\icon.png

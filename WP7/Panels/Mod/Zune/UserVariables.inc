@@ -1,4 +1,4 @@
 [Variables]
 Title=Zune
 Action=zune.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\Zune\icon.png

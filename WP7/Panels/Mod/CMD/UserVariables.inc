@@ -1,4 +1,4 @@
 [Variables]
 Title=Command Prompt
 Action=cmd.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\CMD\icon.png

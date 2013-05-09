@@ -1,2 +1,2 @@
 [Variables]
-Title=Blank0
+Title=Omnimo 

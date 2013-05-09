@@ -1,4 +1,4 @@
 [Variables]
 Title=µTorrent
 Action=utorrent.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\uTorrent\icon.png

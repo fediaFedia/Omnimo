@@ -1,4 +1,4 @@
 [Variables]
 Title=Notepad++ Editor
 Action=notepad++.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\Notepad++\icon.png

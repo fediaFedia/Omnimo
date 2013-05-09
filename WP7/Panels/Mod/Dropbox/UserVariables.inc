@@ -1,4 +1,4 @@
 [Variables]
 Title=Dropbox Storage
 Action=Dropbox.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\Dropbox\icon.png

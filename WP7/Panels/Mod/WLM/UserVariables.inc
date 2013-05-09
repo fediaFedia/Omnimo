@@ -1,4 +1,4 @@
 [Variables]
 Title=Windows Live Messenger
 Action=msnmsgr.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\WLM\icon.png

@@ -1,4 +1,4 @@
 [Variables]
 Title=Windows Media Player
 Action=wmp.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\WMP\icon.png

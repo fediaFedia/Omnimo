@@ -1,4 +1,4 @@
 [Variables]
 Title=Steam Platform
 Action=Steam.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\Steam\icon.png

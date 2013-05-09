@@ -1,4 +1,4 @@
 [Variables]
 Title=Calculator
 Action=calc.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\Calculator\icon.png

@@ -1,4 +1,4 @@
 [Variables]
 Title=CCleaner
 Action=Ccleaner.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\CCleaner\icon.png

@@ -1,4 +1,4 @@
 [Variables]
 Title=Adobe Fireworks
 Action=fireworks.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\Fireworks\icon.png

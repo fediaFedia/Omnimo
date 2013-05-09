@@ -1,5 +1,5 @@
 [Variables]
-Location=E:\Users\User\AppData\Roaming\Microsoft\Windows\Themes\TranscodedWallpaper.jpg
+Location=%APPDATA%\Microsoft\Windows\Themes\TranscodedWallpaper.jpg
 SlideshowSpeed=20
 Subfolders=1
 open=!execute ["%USERPROFILE\Pictures"]

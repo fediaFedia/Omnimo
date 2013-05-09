@@ -1,4 +1,4 @@
 [Variables]
 Title=Mozilla Thunderbird
 Action=thunderbird.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\Thunderbird\icon.png

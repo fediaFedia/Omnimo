@@ -1,4 +1,4 @@
 [Variables]
 Title=iTunes
 Action=iTunes.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\iTunes\icon.png

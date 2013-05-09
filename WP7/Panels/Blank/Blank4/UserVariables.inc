@@ -1,2 +1,2 @@
 [Variables]
-Title=Stuff
+Title=Omnimo 

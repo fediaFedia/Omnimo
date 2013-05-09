@@ -1,4 +1,4 @@
 [Variables]
 Title=TeamViewer
 Action=teamviewer.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\Teamviewer\icon.png

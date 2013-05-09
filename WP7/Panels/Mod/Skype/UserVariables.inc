@@ -1,4 +1,4 @@
 [Variables]
 Title=Microsoft Skype
 Action=skype.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\Skype\icon.png

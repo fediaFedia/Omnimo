@@ -1,4 +1,4 @@
 [Variables]
 Title=Adobe Photoshop
 Action=photoshop.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\Photoshop\icon.png

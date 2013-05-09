@@ -1,4 +1,4 @@
 [Variables]
 Title=WinRAR
 Action=winrar.exe
-IconLocation=icon.png
+IconLocation=#@#Graphics\Panels\Mod\WinRAR\icon.png
