@@ -1,6 +1,6 @@
 [Variables]
 HidePlaceHolder=0
 Folder1Path=C:\
-imagePath=folder.png
+imagePath=#@#Graphics\Panels\Folders\folder.png
 HideFolderIcon=1
 FolderName=Folder
