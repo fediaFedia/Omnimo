@@ -8,11 +8,6 @@ Update=8640000
 Blur=#globalblurenable#
 BlurRegion=#blurtype#,(5-#Padding#),(5-#Padding#),(#Height#*#TypeW#+#PaddingW#+(#Padding#)),(#Height#*#TypeH#+#PaddingH#+(#Padding#)),#blurcornerradius#
 
-[Metadata]
-Version=6.0
-Information=Internet Panel
-License=Creative Commons Attribution-NonCommercial-NoDerivs 3.0
-
 [Variables]
 Height=150
 PanelType=single
@@ -20,31 +15,20 @@ PanelType=single
 @include=#@#Common\Variables\UserVariables.inc
 @include1=#@#Common\Variables\Languages\lang.inc
 @include2=#@#Common\color\color.inc
-@include3=UserVariables.inc
-@include4=#@#Structure\#PanelType#\Main.inc
+@include3=#@#Structure\#PanelType#\Main.inc
+
+[act]
+SolidColor=0,0,0,1
+X=5
+Y=5
+Meter=Image
+W=(#Height#-15)
+H=(#Height#-20)
+LeftMouseUpAction=!Execute ["#PanelAction#"]
 
 [Text]
 Meter=String
 MeterStyle=TextStyle
-Text=Chrome
+Text=#PanelName#
 
-[Icon]
-Meter=Image
-ImageName=#@#Graphics\Panels\Internet\Mini\chrome.png
-X=(#Height#/5)
-Y=(#Height#/6)
-W=(#Height#/1.5)
-H=(#Height#/1.5)
-LeftMouseUpAction=!Execute ["chrome.exe" #OpenMethodChrome#]
-DynamicVariables=1
-
-[private]
-Meter=Image
-ImageName=incognito#privatebrowsingicons#.png
-X=5
-Y=5
-ToolTipText=Open in Incognito mode
-LeftMouseUpAction=!Execute ["chrome.exe" "--incognito"]
-Hidden=1
-
-@include5=#@#Structure\#PanelType#\Top.inc
+@include4=#@#Structure\#PanelType#\Top.inc
