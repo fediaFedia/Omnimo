@@ -1,5 +1,5 @@
 [Variables]
-PicturesFolder=#SKINSPATH#WP7\Panels\Slideshow\Sample
+PicturesFolder=#@#Graphics\Panels\Slideshow\Sample
 SlideshowSpeed=20
 Subfolders=0
 open=!execute ["%USERPROFILE\Pictures"]
