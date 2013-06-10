@@ -1,3 +1,0 @@
-[Variables]
-Height=150
-

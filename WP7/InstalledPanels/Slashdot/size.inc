@@ -1,2 +1,0 @@
-[Variables]
-height=150
