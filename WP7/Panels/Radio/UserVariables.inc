@@ -1,6 +1,6 @@
 [variables]
 NowPlaying=listen.pls
-PathToVLC="G:\Program Files\VideoLAN\VLC\vlc.exe"
+PathToVLC="C:\Program Files\VideoLAN\VLC\vlc.exe"
 Station1Link=977Hits.pls
 Station1Title=".977 - All Hits"
 Station2Link=SkyFMHits.pls
