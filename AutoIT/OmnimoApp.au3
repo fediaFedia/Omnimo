@@ -109,7 +109,7 @@ Case 'Wall'
 ; [5] Skins path
 Case 'Tray'
 	If $CmdLine[0] < 5 Then OmnimoError("Error", "Too few command line arguments specified.")
-	IniWriteSection($CmdLine[4] & 'Rainmeter.ini', 'TrayMeasure', IniReadSection($CmdLine[5] & '\WP7\Gallery\Tray\' & $CmdLine[2] & '.txt', 'TrayMeasure'))
+	IniWriteSection($CmdLine[4] & 'Rainmeter.ini', 'TrayMeasure', IniReadSection($CmdLine[5] & '\WP7\@Resources\Common\Gallery\Tray\' & $CmdLine[2] & '.txt', 'TrayMeasure'))
 	SendBang("!Quit")
     ProcessWaitClose("Rainmeter.exe")
     ShellExecute($CmdLine[3] & "Rainmeter.exe")
@@ -127,7 +127,7 @@ Case 'Themes'
 	SendBang("!Quit")
     ProcessWaitClose("Rainmeter.exe")
     ; Replace Rainmeter.ini with new theme
-    FileCopy($CmdLine[5] & '\WP7\Gallery\Themes\' & $CmdLine[2] & '.thm', $CmdLine[4] & '\Rainmeter.ini', 1)
+    FileCopy($CmdLine[5] & '\WP7\@Resources\Common\Gallery\Themes\' & $CmdLine[2] & '.thm', $CmdLine[4] & '\Rainmeter.ini', 1)
     ShellExecute($CmdLine[3] & "Rainmeter.exe")
 
 

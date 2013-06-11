@@ -1,2 +1,0 @@
-[Variables]
-center=0
