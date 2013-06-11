@@ -1,4 +1,4 @@
 [TrayMeasure] 
 Measure=CALC 
 TrayMeter=BITMAP 
-TrayBitmap="WP7\Gallery\Tray\icons\rainwhite2.ico"
+TrayBitmap="#@#Graphics\Gallery\Tray\icons\rainwhite2.ico"

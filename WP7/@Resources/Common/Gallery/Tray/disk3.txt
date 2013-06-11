@@ -3,4 +3,4 @@ Measure=FreeDiskSpace
 Drive="C:\"
 InvertMeasure=1
 TrayMeter=BITMAP
-TrayBitmap=WP7\Gallery\Tray\rm\disk\%02i.ico
+TrayBitmap=#@#Graphics\Gallery\Tray\rm\disk\%02i.ico

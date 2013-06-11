@@ -1,4 +1,4 @@
 [TrayMeasure]
 Measure=CPU
 TrayMeter=BITMAP
-TrayBitmap=WP7\Gallery\Tray\rm\cpu\%02i.ico
+TrayBitmap=#@#Graphics\Gallery\Tray\rm\cpu\%02i.ico

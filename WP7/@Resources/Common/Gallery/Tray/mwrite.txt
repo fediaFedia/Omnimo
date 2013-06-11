@@ -8,4 +8,4 @@ PerfMonDifference=1
 MaxValue=1
 MinValue=0
 TrayMeter=BITMAP
-TrayBitmap=WP7\Gallery\Tray\rm\hdd_access\%02i.ico
+TrayBitmap=#@#Graphics\Gallery\Tray\rm\hdd_access\%02i.ico
