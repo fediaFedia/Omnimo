@@ -30,7 +30,7 @@ Const $DataFolder = $CmdLine[4]
 Const $SkinPath   = $CmdLine[5]
 
 Const $Variables  = $SkinPath & "WP7\@Resources\Common\Variables\"
-Const $VarFile    = $SkinPath & $Config & "\UserVariables.inc"
+Const $VarFile    = $SkinPath & "WP7\@Resources\Config" & StringTrimLeft($Config, 3) & "\UserVariables.inc"
 Const $XPosition  = IniRead($DataFolder & "Rainmeter.ini", $Config, "WindowX", "0")
 Const $YPosition  = IniRead($DataFolder & "Rainmeter.ini", $Config, "WindowY", "0")
 Global $Size      = IniRead($SkinPath & $Config & "\" & $File, "Variables", "Height", "150")
@@ -59,7 +59,7 @@ Global $ColorSkinReset
 Global Enum $INPUT, $SLIDER, $CHECKBOX, $COLOR, $BROWSE
 
 ; Open configuration file for reading
-$CfgFile = FileOpen($SkinPath & $CmdLine[2] & "\RainConfigure.cfg", 0)
+$CfgFile = FileOpen($SkinPath & "WP7\@Resources\Config" & StringTrimLeft($Config, 3) & "\RainConfigure.cfg", 0)
 If $CfgFile = -1 Then
 	$Colorizable = 1
 Else
