@@ -1,5 +1,0 @@
-[HighScores]
-Easy=0
-Normal=0
-Hard=0
-Insane=0
