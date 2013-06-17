@@ -9,10 +9,7 @@
 #AutoIt3Wrapper_AU3Check_Parameters=-q -w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
-#include <IE.au3>
 #include <File.au3>
-#include <WinAPI.au3>
-#include <GDIPlus.au3>
 #include <ScreenCapture.au3>
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
@@ -93,14 +90,6 @@ Case 'Lang'
     FileCopy($CmdLine[3] & '\WP7\Common\Variables\Languages\' & $CmdLine[2] & '.inc', $CmdLine[3] & '\WP7\Common\Variables\Languages\lang.inc', 1)
 
 
-; Change wallpaper
-; Command line arguments:
-; [2] Wallpaper
-Case 'Wall'
-	If $CmdLine[0] < 2 Then OmnimoError("Error", "Too few command line arguments specified.")
-    _SetWallpaper($CmdLine[2])
-
-
 ; Change tray icon
 ; Command line arguments:
 ; [2] Tray icon
@@ -129,14 +118,6 @@ Case 'Themes'
     ; Replace Rainmeter.ini with new theme
     FileCopy($CmdLine[5] & '\WP7\@Resources\Common\Gallery\Themes\' & $CmdLine[2] & '.thm', $CmdLine[4] & '\Rainmeter.ini', 1)
     ShellExecute($CmdLine[3] & "Rainmeter.exe")
-
-
-; Put stuff to clipboard
-; Command line arguments:
-; [2] Text
-Case 'Clipboard'
-	If $CmdLine[0] < 2 Then OmnimoError("Error", "Too few command line arguments specified.")
-    ClipPut($CmdLine[2])
 
 
 ; Eject disc
@@ -349,33 +330,6 @@ Case 'Select'
         IniWrite($CmdLine[7] & "\UserVariables.inc", "Variables", $CmdLine[5], $icon)
 		SendBang("!Refresh " & $CmdLine[8])
     EndIf
-
-
-; Information hub
-; Command line arguments:
-; [2] URL
-Case 'Browser'
-	$GUI = GUICreate("Omnimo Information Hub", 535, 470, -1, -1, BitOR($GUI_SS_DEFAULT_GUI, $WS_MAXIMIZEBOX, $WS_SIZEBOX, $WS_CLIPCHILDREN))
-	GUISetBkColor(0x7A7A7A)
-
-	_IEErrorHandlerRegister()
-	$oIE = _IECreateEmbedded()
-	$obj = GUICtrlCreateObj($oIE, 0, 25, 535, 445)
-	GUICtrlSetResizing(-1, $GUI_DOCKBORDERS)
-	$back = GUICtrlCreateButton("< Back", 3, 3, 60, 20, 0)
-
-	_IENavigate($oIE, $CmdLine[2])
-	GUISetState()
-
-	While 1
-		$msg = GUIGetMsg()
-		Switch $msg
-			Case $back
-				_IEAction($oIE, "back")
-			Case $GUI_EVENT_CLOSE
-				Exit
-		EndSwitch
-	WEnd
 
 
 ; Panel Combos config tool
@@ -671,37 +625,6 @@ Func _SetDisplayBrightness($ac = -1, $dc = -1)
             "ptr", 0)
     Return SetError(@error, 0, $ret[0])
 EndFunc   ;==>_SetDisplayBrightness
-
-Func _SetWallpaper($CurrentFile)
-    _GDIPlus_Startup()
-    $hImage = _GDIPlus_ImageLoadFromFile($CurrentFile)
-    $sCLSID = _GDIPlus_EncodersGetCLSID("BMP")
-    _GDIPlus_ImageSaveToFileEx($hImage, @TempDir & "\999.bmp", $sCLSID)
-    _GDIPlus_Shutdown()
-    $CurrentFile = @TempDir & "\999.bmp"
-    RegWrite('HKCU\Control Panel\Desktop', 'Wallpaper', 'reg_sz', $CurrentFile)
-    DllCall("user32", "int", "SystemParametersInfo", "int", 20, "int", 0, "str", $CurrentFile, "int", 0)
-EndFunc   ;==>_SetWallpaper
-
-Func _ImageResize($sInImage, $sOutImage, $iW, $iH)
-    Local $hWnd, $hDC, $hBMP, $hImage1, $hImage2, $hGraphic, $CLSID
-    $hWnd = _WinAPI_GetDesktopWindow()
-    $hDC = _WinAPI_GetDC($hWnd)
-    $hBMP = _WinAPI_CreateCompatibleBitmap($hDC, $iW, $iH)
-    _WinAPI_ReleaseDC($hWnd, $hDC)
-    _GDIPlus_Startup()
-    $hImage1 = _GDIPlus_BitmapCreateFromHBITMAP($hBMP)
-    $hImage2 = _GDIPlus_ImageLoadFromFile($sInImage)
-    $hGraphic = _GDIPlus_ImageGetGraphicsContext($hImage1)
-    _GDIPlus_GraphicsDrawImageRect($hGraphic, $hImage2, 0, 0, $iW, $iH)
-    $CLSID = _GDIPlus_EncodersGetCLSID("PNG")
-    _GDIPlus_ImageSaveToFileEx($hImage1, $sOutImage, $CLSID)
-    _GDIPlus_ImageDispose($hImage1)
-    _GDIPlus_ImageDispose($hImage2)
-    _GDIPlus_GraphicsDispose($hGraphic)
-    _WinAPI_DeleteObject($hBMP)
-    _GDIPlus_Shutdown()
-EndFunc   ;==>_ImageResize
 
 Func Monitor($io_control = "on")
     Local $WM_SYSCommand = 274
