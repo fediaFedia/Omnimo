@@ -11,3 +11,4 @@ Name5=Power off
 Action5=sleep.lnk
 FontFace=Segoe WP Light
 iconvisibility=180
+Padding=0

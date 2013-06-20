@@ -1,4 +1,4 @@
 [Variables]
 pingas=google.com
-updaterate=2
+updaterate=10
 Paneltitle=Ping
