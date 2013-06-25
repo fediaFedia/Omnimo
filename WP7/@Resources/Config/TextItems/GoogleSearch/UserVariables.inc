@@ -1,5 +1,5 @@
 [Variables]
-SearchWidth=750
+SearchWidth=150
 SearchOpacity=180
 SearchEngineT=Google Direct
 SearchEngine=http://www.google.com/search?hl=en&q=
