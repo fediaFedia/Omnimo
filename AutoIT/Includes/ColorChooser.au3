@@ -85,6 +85,8 @@
 #Include <StaticConstants.au3>
 #Include <WinAPI.au3>
 #Include <WindowsConstants.au3>
+#include <File.au3>
+
 
 #EndRegion Header
 
@@ -94,6 +96,18 @@ Global Const $CC_FLAG_SOLIDCOLOR = 0x01
 Global Const $CC_FLAG_CAPTURECOLOR = 0x02
 Global Const $CC_FLAG_USERCOLOR = 0x40
 Global Const $CC_FLAG_DEFAULT = BitOR($CC_FLAG_SOLIDCOLOR, $CC_FLAG_CAPTURECOLOR)
+
+
+
+$BgColor = "0xffffff"
+$BgColorA = "0xffffff00"
+$BgColor2 = "0xd2d2d2"
+$TextColor = "0x888888"
+
+; $BgColor = "0x272727"
+;$BgColorA = "0x64646400"
+;$BgColor2 = "0xd2d2d2"
+;$TextColor = "0xffffff"
 
 #EndRegion Global Variables and Constants
 
@@ -191,7 +205,7 @@ GUIRegisterMsg($CC_WM_SETCURSOR, 'CC_WM_SETCURSOR')
 GUIRegisterMsg($CC_WM_SYSCOMMAND, 'CC_WM_SYSCOMMAND')
 
 #EndRegion Initialization
-
+_ColorChooserDialog()
 #Region Public Functions
 
 ; #FUNCTION# ====================================================================================================================
@@ -256,7 +270,7 @@ GUIRegisterMsg($CC_WM_SYSCOMMAND, 'CC_WM_SYSCOMMAND')
 ; Example........: Yes
 ; ===============================================================================================================================
 
-Func _ColorChooserDialog($iColor = 0, $hParent = 0, $iRefType = 0, $iReturnType = 0, $iFlags = -1, $sTitle = 'Color')
+Func _ColorChooserDialog($iColor = 0, $hParent = 0, $iRefType = 0, $iReturnType = 0, $iFlags = -1, $sTitle = 'Color Picker')
 
 	_GDIPlus_Startup()
 
@@ -274,32 +288,35 @@ Func _ColorChooserDialog($iColor = 0, $hParent = 0, $iRefType = 0, $iReturnType 
 
 	GUISetState(@SW_DISABLE, $hParent)
 
-	$ccData[0 ] = GUICreate($sTitle, 315, 396 + $H1 + $H2, -1, -1, BitOR($WS_CAPTION, $WS_POPUP, $WS_SYSMENU), $WS_EX_DLGMODALFRAME, $hParent)
-
+	$ccData[0 ] = GUICreate($sTitle, 315, 422, -1, -1, BitOR($WS_CAPTION, $WS_POPUP, $WS_SYSMENU), $WS_EX_DLGMODALFRAME, $hParent)
+GUISetBkColor($BgColor)
 	CC_SetChildPos($ccData[0], $hParent, $ccData[25], $ccData[26])
+	
 
-	GUISetFont(9, 400, 0, 'Tahoma', $ccData[0])
-	$ccData[23] = GUICtrlCreateButton('OK', 115, 365 + $H1 + $H2, 85, 23)
+	
+	GUISetFont(9, 400, 0, 'Segoe UI', $ccData[0])
+	$ccData[23] = GUICtrlCreateButton('OK', 210, 316 + $H1 + $H2, 85, 23)
 	GUICtrlSetFont(-1, 8.5, 400, 0, 'MS Shell Dlg')
 	GUICtrlSetState(-1, $GUI_DEFBUTTON)
-	$ccData[1 ] = GUICtrlCreatePic('', 20 , 20 , 243, 243, BitOR($GUI_SS_DEFAULT_PIC, $SS_SUNKEN))
+	$ccData[1 ] = GUICtrlCreatePic('', 20 , 20 , 243, 243, $GUI_SS_DEFAULT_PIC)
 	If $ccData[9] Then
 		GUICtrlSetState(-1, $GUI_DISABLE)
 	EndIf
-	$ccData[2 ] = GUICtrlCreatePic('', 264, 17 , 8  , 249)
-	$ccData[3 ] = GUICtrlCreatePic('', 296, 17 , 8  , 249)
-	$ccData[4 ] = GUICtrlCreatePic('', 273, 20 , 22 , 243, BitOR($GUI_SS_DEFAULT_PIC, $SS_SUNKEN))
+	$ccData[2 ] = GUICtrlCreatePic('', 264, 20 , 8  , 220)
+
+
+	$ccData[4 ] = GUICtrlCreatePic('', 273, 20 , 22 , 243, $GUI_SS_DEFAULT_PIC)
 	If BitAND($iFlags, $CC_FLAG_SOLIDCOLOR) Then
-		GUICtrlCreatePic('', 20, 273, 243, 59, BitOR($GUI_SS_DEFAULT_PIC, $SS_SUNKEN))
-		GUICtrlSetState(-1, $GUI_DISABLE)
-		$ccData[5] = GUICtrlCreatePic('', 21 , 274, 123, 57)
-		$ccData[6] = GUICtrlCreatePic('', 144, 274, 118, 57)
+		;GUICtrlCreatePic('', 20, 273, 243, 59, BitOR($GUI_SS_DEFAULT_PIC, $SS_SUNKEN))
+		;GUICtrlSetState(-1, $GUI_DISABLE)
+		$ccData[5] = GUICtrlCreatePic('', 211, 354, 41, 24)
+		$ccData[6] = GUICtrlCreatePic('', 252, 354, 41, 24)
 	Else
 		$ccData[5] = 0
 		$ccData[6] = 0
 	EndIf
 	If BitAND($iFlags, $CC_FLAG_CAPTURECOLOR) Then
-		$ccData[7] = GUICtrlCreatePic('', 275, 273, 19 , 19)
+		$ccData[7] = GUICtrlCreatePic('', 275, 292, 19 , 19)
 	Else
 		$ccData[7] = 0
 	EndIf
@@ -318,29 +335,57 @@ Func _ColorChooserDialog($iColor = 0, $hParent = 0, $iRefType = 0, $iReturnType 
 			$ccPalette[$i][1] = 0
 		Next
 	EndIf
-	GUICtrlCreateLabel('R:', 19 , 279 + $H1 + $H2, 13, 14)
-	$ccData[10] = GUICtrlCreateInput('', 33 , 277 + $H1 + $H2, 34, 19)
-	GUICtrlCreateLabel('G:', 19 , 304 + $H1 + $H2, 13, 14)
-	$ccData[11] = GUICtrlCreateInput('', 33 , 302 + $H1 + $H2, 34, 19)
-	GUICtrlCreateLabel('B:', 19 , 329 + $H1 + $H2, 13, 14)
-	$ccData[12] = GUICtrlCreateInput('', 33 , 327 + $H1 + $H2, 34, 19)
-	GUICtrlCreateLabel('H:', 86 , 279 + $H1 + $H2, 13, 14)
-	$ccData[13] = GUICtrlCreateInput('', 100, 277 + $H1 + $H2, 34, 19)
-	GUICtrlCreateLabel('S:', 86 , 304 + $H1 + $H2, 13, 14)
-	$ccData[14] = GUICtrlCreateInput('', 100, 302 + $H1 + $H2, 34, 19)
-	GUICtrlCreateLabel('L:', 86 , 329 + $H1 + $H2, 13, 14)
-	$ccData[15] = GUICtrlCreateInput('', 100, 327 + $H1 + $H2, 34, 19)
-	GUICtrlCreateLabel('H:', 153, 279 + $H1 + $H2, 13, 14)
-	GUICtrlCreateLabel('°' , 202, 279 + $H1 + $H2, 14, 14)
-	$ccData[16] = GUICtrlCreateInput('', 167, 277 + $H1 + $H2, 34, 19)
-	GUICtrlCreateLabel('S:', 153, 304 + $H1 + $H2, 13, 14)
-	GUICtrlCreateLabel('%' , 202, 304 + $H1 + $H2, 14, 14)
-	$ccData[17] = GUICtrlCreateInput('', 167, 302 + $H1 + $H2, 34, 19)
-	GUICtrlCreateLabel('B:', 153, 329 + $H1 + $H2, 13, 14)
-	GUICtrlCreateLabel('%' , 202, 329 + $H1 + $H2, 14, 14)
-	$ccData[18] = GUICtrlCreateInput('', 167, 327 + $H1 + $H2, 34, 19)
-	GUICtrlCreateLabel('#' , 223, 279 + $H1 + $H2, 10, 14)
-	$ccData[19] = GUICtrlCreateInput('', 234, 277 + $H1 + $H2, 61, 19)
+
+	GUICtrlCreateGraphic(19,342,273,1,$SS_GRAYRECT)
+
+
+
+	GUICtrlCreateLabel('R:', 19 , 362, 13, 14)
+	GUICtrlSetColor(-1, $TextColor)
+	GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+	$ccData[10] = GUICtrlCreateInput('', 33 , 360, 34, 19)
+
+
+	GUICtrlCreateLabel('G:', 79 , 362, 13, 14)
+		GUICtrlSetColor(-1, $TextColor)
+	GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+	$ccData[11] = GUICtrlCreateInput('', 93 , 360, 34, 19)
+
+	GUICtrlCreateLabel('B:', 139 , 362, 13, 14)
+		GUICtrlSetColor(-1, $TextColor)
+	GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+	$ccData[12] = GUICtrlCreateInput('', 153 , 360, 34, 19)
+
+
+	Global $colors[17]
+	_FileReadToArray('colors.txt', $colors)
+
+	; Width and height for the color buttons
+	Const $Width = 24
+	Const $Height = 24
+
+	; Create color buttons and their borders
+	Global $ColorButtons[16]
+	Global $ColorButtonsb[16]
+	For $i = 0 To 7
+		$x = $i * 30 + 24 ; button x position
+		For $j = 0 To 1
+			$y = $j * 32 + 272 ; button y pos2ition
+			$k = $i * 2 + $j ; list index for the element
+			$ColorButtons[$k] = GUICtrlCreateGraphic($x, $y, $Width, $Height)
+			; $ColorButtonsb[$k] = GUICtrlCreateGraphic($x - 1, $y - 1, $Width + 2, $Height + 2)
+			GUICtrlSetBkColor($ColorButtons[$k], $colors[$k + 1])
+			GUICtrlSetGraphic($ColorButtonsb[$k], $GUI_GR_COLOR, 0x000000)
+			GUICtrlSetGraphic($ColorButtonsb[$k], $GUI_GR_PENSIZE, 1)
+			GUICtrlSetGraphic($ColorButtonsb[$k], $GUI_GR_RECT, 0, 0, $Width + 2, $Height + 2)
+		Next
+	Next
+
+	GUICtrlCreateLabel('#' , 20, 389, 10, 14)
+		GUICtrlSetColor(-1, $TextColor)
+	GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+
+	$ccData[19] = GUICtrlCreateInput('', 33, 389, 61, 19)
 	GUICtrlSetLimit(-1, 6)
 	$ccData[24] = GUICtrlCreateDummy()
 	$ccData[27] = GUICtrlCreateDummy()
@@ -454,7 +499,7 @@ Func _ColorChooserDialog($iColor = 0, $hParent = 0, $iRefType = 0, $iReturnType 
 								EndIf
 								CC_SetBitmap($ccData[5], CC_Capture($Pos[0] - 15, $Pos[1] - 15, 31, 31, 93, 93))
 							Else
-								CC_SetBitmap($ccData[5], CC_Capture($Pos[0] - 20, $Pos[1] - 9, 41, 19, 123, 57))
+								CC_SetBitmap($ccData[5], CC_Capture($Pos[0] - 20, $Pos[1] - 9, 41, 19, 41, 24))
 							EndIf
 							$Xp = $Pos[0]
 							$Yp = $Pos[1]
@@ -698,7 +743,7 @@ EndFunc   ;==>CC_LoadImageFromMem
 Func CC_LoadUserColor()
 	For $i = 1 To UBound($ccPalette) - 1
 		$ccPalette[$i][0] = RegRead($CC_REG_COMMONDATA, StringFormat('#%02d', $i))
-		If (@error) Or (BitAND(0xFF000000, $ccPalette[$i][0])) Then
+		If (@error) Or (BitAND(0xFFFFFF00, $ccPalette[$i][0])) Then
 			$ccPalette[$i][0] = -1
 		EndIf
 	Next
@@ -784,12 +829,12 @@ Func CC_SetColor($RGB)
 
 	Local $hGraphics, $hBrush, $hImage, $hBitmap
 
-	$hBitmap = _WinAPI_CreateBitmap(118, 57, 1, 32)
+	$hBitmap = _WinAPI_CreateBitmap(41, 24, 1, 32)
 	$hImage = _GDIPlus_BitmapCreateFromHBITMAP($hBitmap)
 	_WinAPI_DeleteObject($hBitmap)
 	$hGraphics = _GDIPlus_ImageGetGraphicsContext($hImage)
 	$hBrush = _GDIPlus_BrushCreateSolid(BitOR(0xFF000000, CC_RGB($RGB)))
-	_GDIPlus_GraphicsFillRect($hGraphics, 0, 0, 118, 57, $hBrush)
+	_GDIPlus_GraphicsFillRect($hGraphics, 0, 0, 41, 24, $hBrush)
 	_GDIPlus_BrushDispose($hBrush)
 	_GDIPlus_GraphicsDispose($hGraphics)
 	$hBitmap = _GDIPlus_BitmapCreateHBITMAPFromBitmap($hImage)
@@ -826,11 +871,13 @@ Func CC_SetPicker()
 	Local $hGraphics, $hBrush, $hPicker, $hImage, $hBitmap
 
 	$hBitmap = _WinAPI_CreateBitmap(19, 19, 1, 32)
+	
 	$hImage = _GDIPlus_BitmapCreateFromHBITMAP($hBitmap)
 	_WinAPI_DeleteObject($hBitmap)
 	$hGraphics = _GDIPlus_ImageGetGraphicsContext($hImage)
-	$hBrush = _GDIPlus_BrushCreateSolid(BitOR(0xFF000000, CC_SwitchColor(_WinAPI_GetSysColor($COLOR_3DFACE))))
+	$hBrush = _GDIPlus_BrushCreateSolid(BitOR($BgColorA, CC_SwitchColor($BgColorA)))
 	_GDIPlus_GraphicsFillRect($hGraphics, 0, 0, 19, 19, $hBrush)
+	
 	_GDIPlus_BrushDispose($hBrush)
 	$hPicker = _Image_Picker()
 	_GDIPlus_GraphicsDrawImageRect($hGraphics, $hPicker, 0, 0, 19, 19)
@@ -911,14 +958,18 @@ Func CC_Update($iIndex, $fPalette = 1, $fSkip = 0)
 	EndSwitch
 
 	If $fPalette Then
-		$hBitmap = _WinAPI_CreateBitmap(8, 249, 1, 32)
+		$hBitmap = _WinAPI_CreateBitmap(8, 241, 1, 32)
+		
 		$hImage = _GDIPlus_BitmapCreateFromHBITMAP($hBitmap)
+		
 		_WinAPI_DeleteObject($hBitmap)
 		$hGraphics = _GDIPlus_ImageGetGraphicsContext($hImage)
-		$hBrush = _GDIPlus_BrushCreateSolid(BitOR(0xFF000000, CC_SwitchColor(_WinAPI_GetSysColor($COLOR_3DFACE))))
-		_GDIPlus_GraphicsFillRect($hGraphics, 0, 0, 8, 249, $hBrush)
+		$hBrush = _GDIPlus_BrushCreateSolid(BitOR($BgColorA, CC_SwitchColor(_WinAPI_GetSysColor($COLOR_3DFACE))))
+		
+		_GDIPlus_GraphicsFillRect($hGraphics, 0, 0, 8, 242, $hBrush)
 		_GDIPlus_BrushDispose($hBrush)
-		_GDIPlus_GraphicsDrawImageRect($hGraphics, $ccData[8], 0, Round((359 - $__CC_HSB[0]) / 359 * 240), 8, 9)
+		_GDIPlus_GraphicsDrawImageRect($hGraphics, $ccData[8], 0, Round((359- $__CC_HSB[0]) / 369 * 238), 8, 9)
+		
 		_GDIPlus_GraphicsDispose($hGraphics)
 		$hBitmap = _GDIPlus_BitmapCreateHBITMAPFromBitmap($hImage)
 		CC_SetBitmap($ccData[2], $hBitmap)
@@ -931,15 +982,15 @@ Func CC_Update($iIndex, $fPalette = 1, $fSkip = 0)
 	$HSB[1] = 100
 	$HSB[2] = 100
 	$RGB = _HSB2RGB($HSB)
-	$hBitmap = _WinAPI_CreateBitmap(241, 241, 1, 32)
+	$hBitmap = _WinAPI_CreateBitmap(243, 241, 1, 32)
 	$hImage = _GDIPlus_BitmapCreateFromHBITMAP($hBitmap)
 	_WinAPI_DeleteObject($hBitmap)
 	$hGraphics = _GDIPlus_ImageGetGraphicsContext($hImage)
-	$hBrush = __GDIPlus_LineBrushCreate(0, 0, 241, 0, 0xFFFFFFFF, BitOR(0xFF000000, CC_RGB($RGB)))
-	_GDIPlus_GraphicsFillRect($hGraphics, 0, 0, 241, 241, $hBrush)
+	$hBrush = __GDIPlus_LineBrushCreate(0, 0, 243, 0, 0xFFFFFFFF, BitOR(0xFF000000, CC_RGB($RGB)))
+	_GDIPlus_GraphicsFillRect($hGraphics, 0, 0, 243, 241, $hBrush)
 	_GDIPlus_BrushDispose($hBrush)
-	$hBrush = __GDIPlus_LineBrushCreate(0, 0, 0, 241, 0, 0xFF000000)
-	_GDIPlus_GraphicsFillRect($hGraphics, 0, 0, 241, 241, $hBrush)
+	$hBrush = __GDIPlus_LineBrushCreate(0, 0, 0, 243, 0, 0xFF000000)
+	_GDIPlus_GraphicsFillRect($hGraphics, 0, 0, 243, 241, $hBrush)
 	_GDIPlus_BrushDispose($hBrush)
 	$X = Round($__CC_HSB[1] / 100 * 241)
 	$Y = Round((1 - $__CC_HSB[2] / 100) * 241)
@@ -959,12 +1010,12 @@ Func CC_Update($iIndex, $fPalette = 1, $fSkip = 0)
 	_GDIPlus_ImageDispose($hImage)
 	CC_SetBitmap($ccData[1], $hBitmap)
 	If $ccData[5] Then
-		$hBitmap = _WinAPI_CreateBitmap(123, 57, 1, 32)
+		$hBitmap = _WinAPI_CreateBitmap(41, 24, 1, 32)
 		$hImage = _GDIPlus_BitmapCreateFromHBITMAP($hBitmap)
 		_WinAPI_DeleteObject($hBitmap)
 		$hGraphics = _GDIPlus_ImageGetGraphicsContext($hImage)
 		$hBrush = _GDIPlus_BrushCreateSolid(BitOR(0xFF000000, CC_RGB($__CC_RGB)))
-		_GDIPlus_GraphicsFillRect($hGraphics, 0, 0, 123, 57, $hBrush)
+		_GDIPlus_GraphicsFillRect($hGraphics, 0, 0, 41, 24, $hBrush)
 		_GDIPlus_BrushDispose($hBrush)
 		_GDIPlus_GraphicsDispose($hGraphics)
 		$hBitmap = _GDIPlus_BitmapCreateHBITMAPFromBitmap($hImage)
@@ -1490,7 +1541,9 @@ Func CC_WM_SETCURSOR($hWnd, $iMsg, $wParam, $lParam)
 			EndIf
 	EndSwitch
 	Return $GUI_RUNDEFMSG
-EndFunc   ;==>CC_WM_SETCURSOR
+ EndFunc   ;==>CC_WM_SETCURSOR
+ 
+ 
 
 Func CC_WM_SYSCOMMAND($hWnd, $iMsg, $wParam, $lParam)
 

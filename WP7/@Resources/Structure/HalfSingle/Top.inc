@@ -9,7 +9,7 @@ solidcolor=0,255,0,1
 
 [CLS]
 Meter=Button
-ButtonImage=#@#Common\Panel\Close.png
+ButtonImage=#@#Common\Panel\#PanelIcons#\Close.png
 X=(#Height#-10)
 Y=5
 ButtonCommand=!DeactivateConfig
@@ -17,7 +17,7 @@ Hidden=1
 
 [SZ]
 Meter=Button
-ButtonImage=#@#Common\Panel\size.png
+ButtonImage=#@#Common\Panel\#PanelIcons#\size.png
 X=(#Height#-10)
 Y=(#Height#/2-15)
 
@@ -27,7 +27,7 @@ Hidden=1
 
 [SET]
 Meter=Button
-ButtonImage=#@#Common\Panel\settings.png
+ButtonImage=#@#Common\Panel\#PanelIcons#\settings.png
 X=(#Height#-10)
 Y=20
 ButtonCommand=!Execute ["#@#Common\Config\config.exe" single "#CURRENTCONFIG#" "#CURRENTFILE#" "#SETTINGSPATH#" "#SKINSPATH#"]
@@ -36,7 +36,7 @@ Hidden=1
 
 [NXT]
 Meter=Button
-ButtonImage=#@#Common\Panel\change.png
+ButtonImage=#@#Common\Panel\#PanelIcons#\change.png
 X=(#Height#-10)
 Y=35
 ButtonCommand=!ActivateConfig "#CURRENTCONFIG#"

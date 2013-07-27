@@ -16,13 +16,7 @@ ImageTint=#colorskin#,#opacity#
 ScaleMargins=10,10,10,10
 
 [btnstyle]
-ImageName=#Imagedir#\btn3.png
-X=(5-#Padding#)
-Y=(5-#Padding#)
-W=(#Height#+(#Padding#*2))
-H=(#Height#+(#Padding#*2))
 ImageTint=#colorskin2#,#opacity2#
-ScaleMargins=10,10,10,10
 
 
 [overlay]
@@ -42,7 +36,7 @@ FontFace=#fonttype#
 FontColor=#textcolor2#,#PanelTitleOpacity#
 FontSize=#defaultfontsize#
 StringEffect=#Shadow#
-FontEffectColor=#ItemShadowColor#
+FontEffectColor=#ItemShadowColor#,#ItemShadowOpacity#
 AntiAlias=1
 
 [FullTextStyle]
@@ -64,6 +58,9 @@ Y=(#Height#/7.8+#yposition#+5)
 W=(#Height#/1.5)
 H=(#Height#/1.5)
 AntiAlias=1
+
+[IconStyle2]
+ImageTint=#textcolor2#
 
 [FullStyle]
 X=(5-#Padding#)

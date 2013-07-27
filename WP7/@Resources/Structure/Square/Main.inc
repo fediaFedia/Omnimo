@@ -42,7 +42,7 @@ FontFace=#fonttype#
 FontColor=#textcolor2#,#PanelTitleOpacity#
 FontSize=(#height#/7)
 StringEffect=#Shadow#
-FontEffectColor=#ItemShadowColor#
+FontEffectColor=#ItemShadowColor#,#ItemShadowOpacity#
 AntiAlias=1
 
 [FullTextStyle]
@@ -64,6 +64,9 @@ Y=(#Height#/2)
 W=#Height#
 H=#Height#
 AntiAlias=1
+
+[IconStyle2]
+ImageTint=#textcolor2#
 
 [FullStyle]
 X=(5-#Padding#)

@@ -1,8 +1,8 @@
 Edit the info below:
 
 [variables]
-UpperLine=Windows 8 Consumer Preview
-BottomLine=Evaluation Copy. Build 8250
+UpperLine=Windows 9 Consumer Preview
+BottomLine=Evaluation Copy. Build 9250
 
 FontFace=#FontTypeWP#
 FontSize=11
