@@ -1,6 +1,6 @@
 #NoTrayIcon
 #region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Icon=PanelCreator.ico
+#AutoIt3Wrapper_Icon=Icons\PanelCreator.ico
 #AutoIt3Wrapper_Outfile=..\WP7\@Resources\Common\PanelCreator\PanelCreator.exe
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
