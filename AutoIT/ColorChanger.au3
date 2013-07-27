@@ -1,6 +1,6 @@
 #NoTrayIcon
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_Icon=Icons\ColorChooser.ico
+#AutoIt3Wrapper_Icon=ColorChooser.ico
 #AutoIt3Wrapper_Outfile=..\WP7\@Resources\Common\ColorChanger.exe
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI

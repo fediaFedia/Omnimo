@@ -43,7 +43,7 @@ FontFace=#fonttype#
 FontColor=#textcolor2#,#PanelTitleOpacity#
 FontSize=(#height#/10)
 StringEffect=#Shadow#
-FontEffectColor=#ItemShadowColor#
+FontEffectColor=#ItemShadowColor#,#ItemShadowOpacity#
 AntiAlias=1
 LeftMouseUpAction=!execute ["#PanelAction#"]
 solidcolor=0,0,0,1
@@ -62,11 +62,14 @@ FontFace=#fonttype#
 Antialias=1
 
 [IconStyle]
-X=(#Height#/12+5)
+X=(#Height#/2-(#Height#/3/2)+5)
 Y=(#Height#/12+5)
 W=(#Height#/3)
 ImageTint=#TextColor2#,1
 AntiAlias=1
+
+[IconStyle2]
+ImageTint=#textcolor2#,50
 
 [FullStyle]
 X=(5-#Padding#)

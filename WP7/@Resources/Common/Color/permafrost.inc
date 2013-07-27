@@ -16,7 +16,8 @@ Opacity=1
 Opacity2=255
 
 TextColor=255,255,255
-TextColor2=255,255,255
+TextColor2=50,50,50
+SkinIconTint=50,50,50
 
 
 PanelTitleOpacity=255

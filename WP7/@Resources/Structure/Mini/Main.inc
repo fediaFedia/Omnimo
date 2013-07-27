@@ -42,7 +42,7 @@ StringAlign=#align#
 FontFace=#fonttype#
 FontColor=#textcolor2#,1
 FontSize=#defaultfontsize#
-FontEffectColor=#ItemShadowColor#
+FontEffectColor=#ItemShadowColor#,#ItemShadowOpacity#
 AntiAlias=1
 
 [FullTextStyle]
@@ -64,6 +64,9 @@ Y=(#Height#/5.8+5)
 W=(#Height#/1.5)
 H=(#Height#/1.5)
 AntiAlias=1
+
+[IconStyle2]
+ImageTint=#textcolor2#
 
 [FullStyle]
 X=(5-#Padding#)

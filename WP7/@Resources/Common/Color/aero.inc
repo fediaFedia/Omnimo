@@ -1,5 +1,8 @@
 # PANEL METRICS
 
+Federal regulations require us to warn you that changing these settings may ruin one or all of your Panels. Careful now.
+Changes take effect after saving this file and refreshing items manually.
+
 [Variables]
 Imagedir=#@#Common\Panel\Rounded
 Overlay=Aero

@@ -850,7 +850,6 @@ Func CC_SetPicker()
 	Local $hGraphics, $hBrush, $hPicker, $hImage, $hBitmap
 
 	$hBitmap = _WinAPI_CreateBitmap(19, 19, 1, 32)
-
 	$hImage = _GDIPlus_BitmapCreateFromHBITMAP($hBitmap)
 	_WinAPI_DeleteObject($hBitmap)
 	$hGraphics = _GDIPlus_ImageGetGraphicsContext($hImage)
@@ -938,7 +937,6 @@ Func CC_Update($iIndex, $fPalette = 1, $fSkip = 0)
 
 	If $fPalette Then
 		$hBitmap = _WinAPI_CreateBitmap(8, 241, 1, 32)
-
 		$hImage = _GDIPlus_BitmapCreateFromHBITMAP($hBitmap)
 
 		_WinAPI_DeleteObject($hBitmap)
@@ -1521,8 +1519,6 @@ Func CC_WM_SETCURSOR($hWnd, $iMsg, $wParam, $lParam)
 	EndSwitch
 	Return $GUI_RUNDEFMSG
  EndFunc   ;==>CC_WM_SETCURSOR
-
-
 
 Func CC_WM_SYSCOMMAND($hWnd, $iMsg, $wParam, $lParam)
 
