@@ -1,10 +1,11 @@
 #NoTrayIcon
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+#AutoIt3Wrapper_Icon=Icons\OmnimoApp.ico
 #AutoIt3Wrapper_Outfile=..\WP7\@Resources\Common\OmnimoApp.exe
 #AutoIt3Wrapper_UseUpx=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Made for Omnimo UI
-#AutoIt3Wrapper_Res_Fileversion=6.0
+#AutoIt3Wrapper_Res_Fileversion=6.0.0.0
 #AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2013
 #AutoIt3Wrapper_AU3Check_Parameters=-q -w 1 -w 2 -w 3 -w 4 -w 5 -w 6 -w 7
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
@@ -77,7 +78,7 @@ Case 'SetBrightness'
 ; [3] Skin path
 Case 'Skin'
 	If $CmdLine[0] < 3 Then OmnimoError("Error", "Too few command line arguments specified.")
-    FileCopy($CmdLine[3] & '\WP7\Common\Color\' & $CmdLine[2] & '.inc', $CmdLine[3] & '\WP7\Common\Color\color.inc', 1)
+    FileCopy($CmdLine[3] & '\WP7\@Resources\Common\Color\' & $CmdLine[2] & '.inc', $CmdLine[3] & '\WP7\@Resources\Common\Color\color.inc', 1)
 	SendBang("!Refresh *")
 
 
@@ -87,7 +88,7 @@ Case 'Skin'
 ; [3] Skin path
 Case 'Lang'
 	If $CmdLine[0] < 3 Then OmnimoError("Error", "Too few command line arguments specified.")
-    FileCopy($CmdLine[3] & '\WP7\Common\Variables\Languages\' & $CmdLine[2] & '.inc', $CmdLine[3] & '\WP7\Common\Variables\Languages\lang.inc', 1)
+    FileCopy($CmdLine[3] & '\WP7\@Resources\Common\Variables\Languages\' & $CmdLine[2] & '.inc', $CmdLine[3] & '\WP7\@Resources\Common\Variables\Languages\lang.inc', 1)
 
 
 ; Change tray icon
@@ -169,7 +170,7 @@ Case 'ToggleIcons'
 ; [4] Skins path
 Case 'SetColor'
 	If $CmdLine[0] < 4 Then OmnimoError("Error", "Too few command line arguments specified.")
-    IniWrite($CmdLine[4] & '\WP7\Common\Color\Color.inc', 'Variables', $CmdLine[2], HexToRGB($CmdLine[3]))
+    IniWrite($CmdLine[4] & '\WP7\@Resources\Common\Color\Color.inc', 'Variables', $CmdLine[2], HexToRGB($CmdLine[3]))
 	SendBang("!Refresh *")
 
 
@@ -188,7 +189,7 @@ Case 'ColorizationColor'
 	$Alpha = BitAnd(BitShift($ColorizationHex, 24), 0xFF)
 
 	Const $SkinsPath = $CmdLine[2]
-	Const $ColorInc = $SkinsPath & "\WP7\Common\Color\color.inc"
+	Const $ColorInc = $SkinsPath & "\WP7\@Resources\Common\Color\color.inc"
 
 	IniWrite($ColorInc, "Variables", "Colorskin", $ColorizationRgb)
 	IniWrite($ColorInc, "Variables", "Opacity", $Alpha)
@@ -258,7 +259,7 @@ Case 'Update'
 ; [2] Skins path
 Case 'Screenshot'
 	If $CmdLine[0] < 2 Then OmnimoError("Error", "Too few command line arguments specified.")
-    $config = $CmdLine[2] & '\WP7\Panels\Camera\UserVariables.inc'
+    $config = $CmdLine[2] & '\WP7\@Resources\Config\Panels\Camera\UserVariables.inc'
 
     ; Read variables
     $Delay = IniRead($config, 'Variables', 'Delay', '0')
@@ -269,11 +270,7 @@ Case 'Screenshot'
     $SaveTo = StringReplace($SaveTo, '%USERPROFILE%', @UserProfileDir)
     Sleep(Int($Delay) * 1000)
 
-    If $CaptureCursor = 'False' Then
-        _ScreenCapture_Capture($SaveTo & '\' & @MDAY & '-' & @MON & '-' & @YEAR & '_' & @HOUR & '-' & @MIN & '.' & $FileFormat, Default, Default, @DesktopWidth, @DesktopHeight, False)
-    Else
-        _ScreenCapture_Capture($SaveTo & '\' & @MDAY & '-' & @MON & '-' & @YEAR & '_' & @HOUR & '-' & @MIN & '.' & $FileFormat, Default, Default, @DesktopWidth, @DesktopHeight, True)
-    EndIf
+	_ScreenCapture_Capture($SaveTo & '\' & @MDAY & '-' & @MON & '-' & @YEAR & '_' & @HOUR & '-' & @MIN & '.' & $FileFormat, Default, Default, @DesktopWidth, @DesktopHeight, $CaptureCursor <> "False")
 
     If $OpenImageAfter = 'True' Then
         ShellExecute($SaveTo & '\' & @MDAY & '-' & @MON & '-' & @YEAR & '_' & @HOUR & '-' & @MIN & '.' & $FileFormat)
@@ -290,7 +287,8 @@ Case 'Select'
     If $CmdLine[2] = 'Image' Then
         $file = FileOpenDialog("Choose an image", @UserProfileDir & '\Pictures', "Images (*.png;*.jpg;*.jpeg;*.bmp)", 1)
         If @error Then Exit
-        IniWrite($CmdLine[4] & "\UserVariables.inc", "Variables", $CmdLine[3], $file)
+		$ConfigPath = StringReplace("WP7\", "WP7\@Resources\Config\", $CmdLine[4]) & "\UserVariables.inc"
+        IniWrite($ConfigPath, "Variables", $CmdLine[3], $file)
 		SendBang("!Refresh " & $CmdLine[5])
 
     ; Open a folder select dialog
@@ -299,8 +297,9 @@ Case 'Select'
         If @error Then Exit
         $split = StringSplit($folder, "\")
         $FolderName = UBound($split) - 1
-        IniWrite($CmdLine[4] & "\UserVariables.inc", "Variables", $CmdLine[3], $folder)
-        IniWrite($CmdLine[4] & "\UserVariables.inc", "Variables", "FolderName", $split[$FolderName])
+		$ConfigPath = StringReplace("WP7\", "WP7\@Resources\Config\", $CmdLine[4]) & "\UserVariables.inc"
+        IniWrite($ConfigPath, "Variables", $CmdLine[3], $folder)
+        IniWrite($ConfigPath, "Variables", "FolderName", $split[$FolderName])
         SendBang("!Refresh " & $CmdLine[5])
 
     ; Open an app select dialog
@@ -320,14 +319,15 @@ Case 'Select'
             $info = $TestPath[3]
         EndIf
 
-        IniWrite($CmdLine[7] & "\UserVariables.inc", "Variables", $CmdLine[3], $path)
-        IniWrite($CmdLine[7] & "\UserVariables.inc", "Variables", $CmdLine[4], $info)
+		$ConfigPath = StringReplace("WP7\", "WP7\@Resources\Config\", $CmdLine[7]) & "\UserVariables.inc"
+        IniWrite($ConfigPath, "Variables", $CmdLine[3], $path)
+        IniWrite($ConfigPath, "Variables", $CmdLine[4], $info)
 
         ; Open an icon select dialog
-        $icon = FileOpenDialog("Choose an icon", $CmdLine[6] & '\WP7\Panels\Launcher\Icons', "Images (*.png;*.jpg;*.jpeg;*.bmp)", 1)
+        $icon = FileOpenDialog("Choose an icon", $CmdLine[6] & '\WP7\@Resources\Graphics\Panels\Launcher\Icons', "Images (*.png;*.jpg;*.jpeg;*.bmp)", 1)
         If @error Then Exit
 
-        IniWrite($CmdLine[7] & "\UserVariables.inc", "Variables", $CmdLine[5], $icon)
+        IniWrite($ConfigPath, "Variables", $CmdLine[5], $icon)
 		SendBang("!Refresh " & $CmdLine[8])
     EndIf
 
@@ -365,12 +365,12 @@ Case 'PanelCombos'
     $Checkbox20 = GUICtrlCreateCheckbox("Flickr", 105, 224, 57, 17)
     $Button1 = GUICtrlCreateButton("OK", 8, 250, 186, 33)
 
-    $config = $CmdLine[2] & '\WP7\TextItems\'
+    $config = $CmdLine[2] & '\WP7\@Resources\Config\TextItems\UserVariables.inc'
     GUISetState(@SW_SHOW)
 
     ;I'm an expert on for loops
     For $k = 1 To 7
-        Assign("toggle" & $k, IniRead($config & 'UserVariables.inc', 'Variables', 'Toggle' & $k, ''), 2)
+        Assign("toggle" & $k, IniRead($config, 'Variables', 'Toggle' & $k, ''), 2)
         Check_Enabled(Eval("toggle" & $k))
     Next
     Check_Disable()
@@ -426,83 +426,83 @@ Case 'PanelCombos'
                 ;Oh god, please make it stop
                 If GUICtrlRead($Checkbox1) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "Bing")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "Bing")
                 EndIf
                 If GUICtrlRead($Checkbox2) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "Reader")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "Reader")
                 EndIf
                 If GUICtrlRead($Checkbox3) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "Reader2")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "Reader2")
                 EndIf
                 If GUICtrlRead($Checkbox4) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "Reader3")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "Reader3")
                 EndIf
                 If GUICtrlRead($Checkbox5) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "Launcher")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "Launcher")
                 EndIf
                 If GUICtrlRead($Checkbox6) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "Notes")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "Notes")
                 EndIf
                 If GUICtrlRead($Checkbox7) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "Todolist")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "Todolist")
                 EndIf
                 If GUICtrlRead($Checkbox8) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "Facebook")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "Facebook")
                 EndIf
                 If GUICtrlRead($Checkbox9) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "System")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "System")
                 EndIf
                 If GUICtrlRead($Checkbox10) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "Gmail")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "Gmail")
                 EndIf
                 If GUICtrlRead($Checkbox11) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "Deviantart")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "Deviantart")
                 EndIf
                 If GUICtrlRead($Checkbox12) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "SystemInfo")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "SystemInfo")
                 EndIf
                 If GUICtrlRead($Checkbox13) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "uTorrent")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "uTorrent")
                 EndIf
                 If GUICtrlRead($Checkbox14) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "Weather")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "Weather")
                 EndIf
                 If GUICtrlRead($Checkbox15) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "Movies")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "Movies")
                 EndIf
                 If GUICtrlRead($Checkbox16) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "NowPlaying")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "NowPlaying")
                 EndIf
                 If GUICtrlRead($Checkbox17) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "WorldClock")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "WorldClock")
                 EndIf
                 If GUICtrlRead($Checkbox18) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "Websites")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "Websites")
                 EndIf
                 If GUICtrlRead($Checkbox19) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "Youtube")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "Youtube")
                 EndIf
                 If GUICtrlRead($Checkbox20) = 1 Then
                     $count = $count + 1
-                    IniWrite($config & 'UserVariables.inc', 'Variables', 'Toggle' & $count, "Flickr")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "Flickr")
                 EndIf
 				SendBang("!Refresh WP7\TextItems")
                 Exit
