@@ -1,3 +1,3 @@
 [Variables]
-UserName=Anselmi
+UserName=%1
 PanelAction=none.exe
