@@ -5,3 +5,4 @@ Hotkey=1
 Icons=1
 Startup=0
 Language=English
+RainmeterPath=#PROGRAMPATH#

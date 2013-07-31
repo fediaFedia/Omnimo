@@ -1,7 +1,7 @@
 [Variables]
 HideSystemUsername=0
 HideCustomUsername=1
-CustomUserName=alex
+CustomUserName=%1
 UserFontSize=24
 HideToolTip=0
 User3Picture=keanu.png
