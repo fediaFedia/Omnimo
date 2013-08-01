@@ -5,4 +5,6 @@ Hotkey=1
 Icons=1
 Startup=0
 Language=English
-RainmeterPath=#PROGRAMPATH#
+RainmeterPath=G:\Program Files\Rainmeter\
+
+Languages=English,Russian,German
