@@ -1,0 +1,180 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Function GUICtrlSetState</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="../css/default.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1 class="small">Function Reference</h1>
+<hr style="height:0px">
+<h1>GUICtrlSetState</h1>
+<p class="funcdesc">Changes the state of a control.<br></p>
+
+<p class="codeheader">
+GUICtrlSetState ( controlID, state )<br>
+</p>
+
+<h2>Parameters</h2>
+<table border="1" width="100%" cellspacing="0" cellpadding="3">
+  <tr>
+    <td width="15%">controlID</td>
+    <td width="85%">The control identifier (controlID) as returned by a <a href="GUICtrlCreate Management.htm">GUICtrlCreate...</a> function.</td>
+  </tr>
+  <tr>
+   <td>state</td>
+   <td>See the <a href="#StateTable">State table</a> below.</td>
+  </tr>
+</table>
+
+
+<h2>Return Value</h2>
+<table width="100%">
+  <tr>
+    <td width="10%" valign="top">Success:</td>
+    <td width="90%">Returns 1.</td>
+  </tr>
+  <tr>
+    <td valign="top">Failure:</td>
+    <td>Returns 0.</td>
+  </tr>
+</table>
+
+<h2>Remarks</h2>
+<br>
+&nbsp;&nbsp;&nbsp; <a name="StateTable"></a><b>State table</b><br>
+<table width="100%" border="1" cellspacing="0" cellpadding="3">
+  <tr>
+    <td style="border-bottom-style: solid; border-bottom-width: 1"><b>State</b></td>
+    <td style="border-bottom-style: solid; border-bottom-width: 1"><b>Comments</b></td>
+  </tr>
+  <tr>
+    <td>No Change</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>$GUI_UNCHECKED</td>
+    <td>Radio, Checkbox or ListViewItem will be unchecked.</td>
+  </tr>
+  <tr>
+    <td>$GUI_CHECKED</td>
+    <td>Radio, Checkbox or ListViewItem will be checked.</td>
+  </tr>
+  <tr>
+    <td>$GUI_INDETERMINATE</td>
+    <td>Checkbox having the tristate attribute will be greyed.</td>
+  </tr>
+  <tr>
+    <td>$GUI_AVISTART</td>
+    <td>Avi control will start playing.</td>
+  </tr>
+  <tr>
+    <td>$GUI_AVISTOP</td>
+    <td>Avi control will stop playing.</td>
+  </tr>
+  <tr>
+    <td>$GUI_AVICLOSE</td>
+    <td>Avi control will stop playing and release resource.</td>
+  </tr>
+  <tr>
+    <td>$GUI_DROPACCEPTED</td>
+    <td>Control will accept drop action : from file or from a drag of another control. See remarks.</td>
+  </tr>
+  <tr>
+    <td>$GUI_NODROPACCEPTED</td>
+    <td>Control will  not accept drop action.</td>
+  </tr>
+  <tr>
+    <td>$GUI_SHOW</td>
+    <td>Control will be visible. On Tabitem control will select the first tab to be displayed.</td>
+  </tr>
+  <tr>
+    <td>$GUI_HIDE</td>
+    <td>Control will not be visible.</td>
+  </tr>
+  <tr>
+    <td>$GUI_ENABLE</td>
+    <td>Control will be enabled.</td>
+  </tr>
+  <tr>
+    <td>$GUI_DISABLE</td>
+    <td>Control will be greyed out.</td>
+  </tr>
+  <tr>
+    <td>$GUI_FOCUS</td>
+    <td>Control will be given input/selected focus.</td>
+  </tr>
+  <tr>
+    <td>$GUI_NOFOCUS</td>
+    <td>Listview control will loose focus.</td>
+  </tr>
+  <tr>
+    <td>$GUI_DEFBUTTON</td>
+    <td>Control will be set as the default button on the window. See remark about TreeviewItems.</td>
+  </tr>
+  <tr>
+    <td>$GUI_EXPAND</td>
+    <td>TreeViewItem will expand its child items.</td>
+  </tr>
+  <tr>
+    <td>$GUI_ONTOP</td>
+    <td>Control will be have the ontop attribute for the window (zOrdering).</td>
+  </tr>
+</table><br>
+State values can be summed up as for example $GUI_DISABLE + $GUI_HIDE sets the control in an disabled and hidden state.<br>
+<br>
+If an AVI control has to be hidden with $GUI_HIDE it should be closed with $GUI_AVICLOSE.<br>
+<br>
+State of a "contextmenu" control <b>cannot be changed.</b><br>
+State of a "listviewitem" control can be changed if the associated "listview" control has been created with an extended style $LVS_EX_CHECKBOXES. $GUI_FOCUS and $GUI_NOFOCUS can be used on specific listviewitem provided listview control style allows to display it : $LVS_SHOWSELALWAYS.<br>
+State of a "menu or a ""menuitem" control <b>cannot be hidden.</b><br>
+<br>
+! Important information for $GUI_EXPAND: this state is only used for TreeViewItems. If you want to use this 'action' then at least 1 Sub-TreeViewItem has to exist/created under this item !<br>
+If you want to select another item in a TreeView then you can use $GUI_FOCUS - the parent TreeView gets the window focus and the specified item is marked as selected.<br>
+If you want to set a treeview item as a default item which means painting it bold you can use $GUI_DEFBUTTON - to turn it off just use another value but $GUI_DEFBUTTON, for instance 0. This state will not be returned by GUICtrlGetState.<br>
+<br>
+If $GUI_DROPACCEPTED is set to a visible control a drag&drop can be taken in account. The edit/input control will be set with the filename.<br>
+For other controls on reception of $GUI_EVENT_DROPPED, @GUI_DRAGID will return the controlID from where the drag start (-1 if from a file, @GUI_DRAGFILE contain the filename being dropped) and @GUI_DROPID returns the controlID of the dropped control.<br>
+Only dragging a ListviewItem will start the drag & drop process. The @GUI_DRAGID will be the ListView controlID.<br>
+<br>
+
+<h2>Related</h2>
+<a href="GUICtrlCreate Management.htm">GUICtrlCreate...</a>, <a href="GUICtrlGetState.htm">GUICtrlGetState</a>
+
+<h2>Example</h2>
+<p class="codebox">
+<br>
+<span><span class="S11">#include</span><span class="S0"> </span><span class="S7">&lt;GUIConstantsEx.au3&gt;</span><br>
+<br>
+<span class="S0">Example</span><span class="S8">()</span><br>
+<br>
+<span class="S5">Func</span><span class="S0"> Example</span><span class="S8">()</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S5">Local</span><span class="S0"> </span><span class="S9">$msg</span><br>
+<br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S4">GUICreate</span><span class="S8">(</span><span class="S7">"My GUI state"</span><span class="S8">)</span><span class="S0"> </span><span class="S1">; will create a dialog box that when displayed is centered</span><br>
+<br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S4">GUICtrlCreateLabel</span><span class="S8">(</span><span class="S7">"my disable label"</span><span class="S8">,</span><span class="S0"> </span><span class="S3">10</span><span class="S8">,</span><span class="S0"> </span><span class="S3">20</span><span class="S8">)</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S4">GUICtrlSetState</span><span class="S8">(-</span><span class="S3">1</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$GUI_DISABLE</span><span class="S8">)</span><span class="S0"> </span><span class="S1">; the label is in disable state</span><br>
+<br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S4">GUICtrlCreateButton</span><span class="S8">(</span><span class="S7">"my button"</span><span class="S8">,</span><span class="S0"> </span><span class="S3">50</span><span class="S8">,</span><span class="S0"> </span><span class="S3">50</span><span class="S8">)</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S4">GUICtrlSetState</span><span class="S8">(-</span><span class="S3">1</span><span class="S8">,</span><span class="S0"> </span><span class="S9">$GUI_FOCUS</span><span class="S8">)</span><span class="S0"> </span><span class="S1">; the focus is on this button</span><br>
+<br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S4">GUISetState</span><span class="S8">()</span><br>
+<br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S1">; Run the GUI until the dialog is closed</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S5">While</span><span class="S0"> </span><span class="S3">1</span><br>
+<span class="S0">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="S9">$msg</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S4">GUIGetMsg</span><span class="S8">()</span><br>
+<br>
+<span class="S0">&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="S5">If</span><span class="S0"> </span><span class="S9">$msg</span><span class="S0"> </span><span class="S8">=</span><span class="S0"> </span><span class="S9">$GUI_EVENT_CLOSE</span><span class="S0"> </span><span class="S5">Then</span><span class="S0"> </span><span class="S5">ExitLoop</span><br>
+<span class="S0">&nbsp; &nbsp; </span><span class="S5">WEnd</span><br>
+<span class="S5">EndFunc</span><span class="S0"> &nbsp;&nbsp;</span><span class="S1">;==&gt;Example</span><br>
+<span class="S0"></span></span><br>
+<script type="text/javascript">
+if (document.URL.match(/^mk:@MSITStore:/i))
+document.write('<br><OBJECT id=hhctrl type="application/x-oleobject" classid="clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11" width=58 height=57><PARAM name="Command" value="ShortCut"><PARAM name="Button" value="Text:Open this Script"><PARAM name="Item1" value=",Examples\\HelpFile\\GUICtrlSetState.au3,"><\/OBJECT>');
+</script>
+
+</body>
+</html>
