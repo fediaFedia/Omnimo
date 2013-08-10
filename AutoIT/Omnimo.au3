@@ -103,10 +103,14 @@ TrayCreateItem($Language.Item("Resolution"), $Info)
 TrayItemSetOnEvent(-1, "Resolution")
 TrayCreateItem($Language.Item("ExternalIP"), $Info)
 TrayItemSetOnEvent(-1, "ExternalIP")
-TrayCreateItem("Who am I?", $Info)
-TrayItemSetOnEvent(-1, "WhoAmI")
-TrayCreateItem("Meaning of life", $Info)
-TrayItemSetOnEvent(-1, "MeaningOfLife")
+
+; Show Who am I? and Meaning of life only when language is English
+If IniRead($SettingsVariables, "Variables", "Language", "English") = "English" Then
+	TrayCreateItem("Who am I?", $Info)
+	TrayItemSetOnEvent(-1, "WhoAmI")
+	TrayCreateItem("Meaning of life", $Info)
+	TrayItemSetOnEvent(-1, "MeaningOfLife")
+EndIf
 
 ; Shut down menu
 

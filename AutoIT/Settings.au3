@@ -175,8 +175,8 @@ While 1
 				MsgBox(48, "Warning", "Invalid weather location")
 			EndIf
 
-			; Changing hotkey or icon toggling requires restarting Omnimo.exe
-			If GUICtrlRead($HotkeySelect) <> $Hotkey Or $Icons <> $IconsSelected Then
+			; Changing language, hotkey or icon toggling requires restarting Omnimo.exe
+			If GUICtrlRead($HotkeySelect) <> $Hotkey Or $Icons <> $IconsSelected Or $Lang <> $CurrentLanguage Then
 				If ProcessExists("Omnimo.exe") Then
 					ProcessClose("Omnimo.exe")
 					ProcessWaitClose("Omnimo.exe")
