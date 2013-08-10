@@ -265,7 +265,7 @@ Func Uptime()
 	_TicksToTime($ticksSinceBoot, $iHours, $iMins, $iSecs)
 	$iDays = Int($iHours / 24)
 	$iHours = $iHours - ($iDays * 24)
-	TrayTip($Language.Item("UptimeTitle"), $iDays & " day(s), " & $iHours & " hour(s), " & $iMins & " minute(s)", Default, 1)
+	TrayTip($Language.Item("Uptime"), $iDays & " day(s), " & $iHours & " hour(s), " & $iMins & " minute(s)", Default, 1)
 EndFunc
 
 Func Resolution()

@@ -1,10 +1,9 @@
 [Variables]
-Key=F8
-Updates=0
-Hotkey=1
+FirstRun=0
+Hotkey=F8
 Icons=1
 Startup=0
 Language=English
-RainmeterPath=G:\Program Files\Rainmeter\
-
-Languages=English,Russian,German
+Languages=English|Russian|German
+UpdateURL = http://fediafedia.com/update.dt
+RainmeterPath=C:\Program Files\Rainmeter\
