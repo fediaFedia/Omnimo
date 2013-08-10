@@ -86,6 +86,9 @@
 #Include <WinAPI.au3>
 #Include <WindowsConstants.au3>
 #include <File.au3>
+#include <GuiMenu.au3>
+
+#include "ColorGenerator.au3"
 
 #EndRegion Header
 
@@ -111,7 +114,10 @@ Global Const $CC_WM_NCRBUTTONDOWN = 0x00A4
 Global Const $CC_WM_SETCURSOR = 0x0020
 Global Const $CC_WM_SYSCOMMAND = 0x0112
 
-Global $ccData[29] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, Default, Default, 0, 0]
+Global $ccData[30] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, Default, Default, 0, 0, 0]
+
+Global $colors[17]
+Global $ColorButtons[16]
 
 #cs
 
@@ -302,7 +308,7 @@ Func _ColorChooserDialog($iColor = 0, $hParent = 0, $iRefType = 0, $iReturnType 
 		$ccData[6] = 0
 	EndIf
 	If BitAND($iFlags, $CC_FLAG_CAPTURECOLOR) Then
-		$ccData[7] = GUICtrlCreatePic('', 275, 292, 19 , 19)
+		$ccData[7] = GUICtrlCreatePic('', 275, 275, 19 , 19)
 	Else
 		$ccData[7] = 0
 	EndIf
@@ -339,19 +345,8 @@ Func _ColorChooserDialog($iColor = 0, $hParent = 0, $iRefType = 0, $iReturnType 
 	GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
 	$ccData[12] = GUICtrlCreateInput('', 153 , 360, 34, 19)
 
-	Local $colors[17]
 	_FileReadToArray('..\colors.txt', $colors)
-
-	Local $ColorButtons[16]
-	For $i = 0 To 7
-		$x = $i * 30 + 24
-		For $j = 0 To 1
-			$y = $j * 32 + 272
-			$k = $i * 2 + $j
-			$ColorButtons[$k] = GUICtrlCreateGraphic($x, $y, 24, 24)
-			GUICtrlSetBkColor($ColorButtons[$k], $colors[$k + 1])
-		Next
-	Next
+	_SetColorButtons()
 
 	GUICtrlCreateLabel('#' , 20, 389, 10, 14)
 	GUICtrlSetColor(-1, $_TextColor)
@@ -362,12 +357,23 @@ Func _ColorChooserDialog($iColor = 0, $hParent = 0, $iRefType = 0, $iReturnType 
 	$ccData[24] = GUICtrlCreateDummy()
 	$ccData[27] = GUICtrlCreateDummy()
 
+	$ccData[29] = GUICtrlCreatePic('', 275, 307, 19 , 19)
+
+	Local $hContextMenu = GUICtrlCreateContextMenu($ccData[29])
+	$_Default = GUICtrlCreateMenuItem("Default", $hContextMenu)
+	$_Colorful = GUICtrlCreateMenuItem("Colorful", $hContextMenu)
+	$_Contigious = GUICtrlCreateMenuItem("Contigious", $hContextMenu)
+	$_Contrasting = GUICtrlCreateMenuItem("Contrasting", $hContextMenu)
+	GUICtrlCreateMenuItem("", $hContextMenu)
+	$_ApplyAll = GUICtrlCreateMenuItem("Apply to all panels", $hContextMenu)
+
 	For $i = 10 To 18
 		GUICtrlSetLimit($ccData[$i], 3)
 	Next
 
 	CC_SetPalette()
 	CC_SetPicker()
+	CC_SetWheel()
 	CC_ValidateColor($iColor, $iRefType)
 	CC_Update($ccData[20])
 	CC_SetColor($__CC_RGB)
@@ -516,6 +522,22 @@ Func _ColorChooserDialog($iColor = 0, $hParent = 0, $iRefType = 0, $iReturnType 
 							EndIf
 						Next
 				EndSwitch
+			Case $ccData[29]
+				_GUICtrlMenu_TrackPopupMenu(GUICtrlGetHandle($hContextMenu), $ccData[0])
+			Case $_Default
+				_FileReadToArray("..\defaultcolors.txt", $colors)
+				_SetColorButtons()
+			Case $_Colorful
+				GenerateColorful($colors)
+				_SetColorButtons()
+			Case $_Contigious
+				GenerateContigious($colors)
+				_SetColorButtons()
+			Case $_Contrasting
+				GenerateContrasting($colors)
+				_SetColorButtons()
+			Case $_ApplyAll
+				ApplyColors($colors)
 			Case Else
 				For $i = 1 To 20
 					If $Msg = $ccPalette[$i][1] Then
@@ -555,6 +577,7 @@ Func _ColorChooserDialog($iColor = 0, $hParent = 0, $iRefType = 0, $iReturnType 
 	EndIf
 
 	If $Return Then
+		_FileWriteFromArray("..\colors.txt", $colors, 1)
 		Switch $iReturnType
 			Case 1
 				Return $__CC_HSL
@@ -824,7 +847,7 @@ EndFunc   ;==>CC_SetColor
 Func CC_SetPalette()
 
 	Local $hGraphics, $hPen, $hImage, $hBitmap
-	Local $ARGB, $RGB, $HSB[3]
+	Local $RGB, $HSB[3]
 
 	$hBitmap = _WinAPI_CreateBitmap(20, 241, 1, 32)
 	$hImage = _GDIPlus_BitmapCreateFromHBITMAP($hBitmap)
@@ -864,6 +887,27 @@ Func CC_SetPicker()
 	_GDIPlus_ImageDispose($hPicker)
 	_GDIPlus_ImageDispose($hImage)
 	CC_SetBitmap($ccData[7], $hBitmap)
+EndFunc   ;==>CC_SetPicker
+
+Func CC_SetWheel()
+
+	Local $hGraphics, $hBrush, $hWheel, $hImage, $hBitmap
+
+	$hBitmap = _WinAPI_CreateBitmap(19, 19, 1, 32)
+	$hImage = _GDIPlus_BitmapCreateFromHBITMAP($hBitmap)
+	_WinAPI_DeleteObject($hBitmap)
+	$hGraphics = _GDIPlus_ImageGetGraphicsContext($hImage)
+	$hBrush = _GDIPlus_BrushCreateSolid(BitOR($_BgColorA, CC_SwitchColor($_BgColorA)))
+	_GDIPlus_GraphicsFillRect($hGraphics, 0, 0, 19, 19, $hBrush)
+
+	_GDIPlus_BrushDispose($hBrush)
+	$hWheel = _Image_Wheel()
+	_GDIPlus_GraphicsDrawImageRect($hGraphics, $hWheel, 0, 0, 19, 19)
+	_GDIPlus_GraphicsDispose($hGraphics)
+	$hBitmap = _GDIPlus_BitmapCreateHBITMAPFromBitmap($hImage)
+	_GDIPlus_ImageDispose($hWheel)
+	_GDIPlus_ImageDispose($hImage)
+	CC_SetBitmap($ccData[29], $hBitmap)
 EndFunc   ;==>CC_SetPicker
 
 Func CC_SetUserColor($iIndex, $fSelect = 0)
@@ -1311,6 +1355,51 @@ Func _Image_Picker()
 	Return CC_LoadImageFromMem($bPicker)
 EndFunc   ;==>_Image_Picker
 
+Func _Image_Wheel()
+	Local $bWheel = _
+		  '0x89504E470D0A1A0A0000000D4948445200000013000000130806000000725036' & _
+		    'CC000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000' & _
+			'00097048597300000EC300000EC301C76FA8640000001A74455874536F667477' & _
+			'617265005061696E742E4E45542076332E352E313030F472A100000433494441' & _
+			'54384F7D927B4C53671887ABD3B93F3431CB862EC6A1564A0B722F2BA323DC41' & _
+			'5A6E0246401699024A18E814E754D4854B86A25203DE42B6306F5340A2300601' & _
+			'AC1199530261CE284E4374CADC2677B70262CBB3EF68DDD5ED973C7F9CF7FB7D' & _
+			'4FDE7372642F0AF0B6A048D0293009CC821E41B5205930D35AFDEF88928DE0CC' & _
+			'E0C030F535E7D9BEB690689F64E2D4CBC98C5ECF91E263DCE9BA83D96CEE153D' & _
+			'BDF5DABF230EDF98989878DC72BE0D2F65341E0BF5F82822D02AF484DA450822' & _
+			'89B28B26E24D3DF9A9798C8D8C8A2B1408265915CF220636423476F8D029E4F2' & _
+			'C5A815E1685411C4BA7E448AF35E721C0D643B7FC22A8795E8EDF424DB87B3D6' & _
+			'3D168BD9220953AD9A67118333AD6D5791DB86626F178287EB7AA25C4A8871DE' & _
+			'47AA10E5D81BD8AE3450AA30B05F9947864A4F9ABD8E1CED52CCE34F24A3F2B9' & _
+			'C86BE8D16F2C70F347A509C5C1E3039C5DF6A315A258CD5E32038BF938A894DD' & _
+			'3EFB29B5DFC329F9268E2B3E64834300DBEC7DB9F69551DAEEC47359519DB105' & _
+			'3BCF20546F85F2D2B2BDCCF12BE61DFFDD2C8BD8C31A9DD84A77004364399FEB' & _
+			'F650A9CCC6284FA65295C066A52FF9AE213C191D93B69B2DC93AD71516B0481F' & _
+			'CC6B89194C5EBE139BA49D84ADDC454864112505B59C3FD6C69184322A16E7D2' & _
+			'E0B78E0BF313685B10C32E9586E2B94E0CDEBD276D1726C94CBE49F12C0A0B62' & _
+			'5A560EB275DB51E7E412BCB990FCF2B352E969C6874C9C0BCEA22520851BF302' & _
+			'E8B20DA4C4D19BE2856A7EECB82A55522499D97355248EF1FEBCBC330359613A' & _
+			'DA83DB0839984BD577DF48A53F723D3C950EFF44BAE7AB78304F498D9307F5CE' & _
+			'9EF4B57748C7E992AC276EEB1A16250630232F0D59F16A161C5BCDE2A6AD64B5' & _
+			'6EA377F817A9489FF110DF672EA57345343D6EB63C7C5D4EADC28526211EB876' & _
+			'5DAAC44BB2EA03B547714CF745BE2510D9C9185E391EC5EA7319182EBD4F43E7' & _
+			'2AFAEE2570BF268EEE7D2BB8B1D61553AA9C07EFC9A9D7B9D1E864C7C8C08024' & _
+			'739364C9B77EBE833CD905758A169B139178D7851124286B4DA4A5E35D7A6E2E' & _
+			'E1766D24B73F5532523287C1DCB918639C698A73E34AD1062C16CB5DE1992AC9' & _
+			'665A26267AD3CB36615B1ACADCCA70DCCFEAC86DF5C370D99B2B5D2A1EDE9FCE' & _
+			'D08D29582E4D67F8B3597CBB434553B69AE658074CFD0FA5AD129EFE6752C483' & _
+			'7ED4FC18C5E925CCAAD0A3AF086347632047DB35B477AB300D4C61747832BD0D' & _
+			'AF72F1B013CD1B3D316E74E76E478324EA124CB3AA9E450CF21F5B9EA0AB4D22' & _
+			'AB3A9835D52118AA0229AD0CE4DC192F8C677D693EE8CD85031ABE2E5173DD58' & _
+			'25891E096658157F460C2709D2C6CDE3968BB71AD952B384F22FB594D5F8D252' & _
+			'A7E572A3868B27D55C399DCDA3810792E8E60B457F8D2828055F8C8D8F4CF40F' & _
+			'DDE7A7BE6B0CF67532D4DF85E9D75EF1B1CD3F88F304C1DF5FEDFF22CAB30561' & _
+			'821441BA205EE02E986AADFC2332D9EFCDB52E5311ABC55E0000000049454E44' & _
+			'AE426082'
+
+	Return CC_LoadImageFromMem($bWheel)
+EndFunc   ;==>_Image_Wheel
+
 #EndRegion Internal Image Functions
 
 #Region Windows Message Functions
@@ -1470,6 +1559,22 @@ Func CC_WM_COMMAND($hWnd, $iMsg, $wParam, $lParam)
 	EndSwitch
 	Return $GUI_RUNDEFMSG
 EndFunc   ;==>CC_WM_COMMAND
+
+Func _SetColorButtons()
+	For $i = 0 To 15
+		GUICtrlDelete($ColorButtons[$i])
+	Next
+
+	For $i = 0 To 7
+		$x = $i * 30 + 24
+		For $j = 0 To 1
+			$y = $j * 32 + 272
+			$k = $i * 2 + $j
+			$ColorButtons[$k] = GUICtrlCreateGraphic($x, $y, 24, 24)
+			GUICtrlSetBkColor($ColorButtons[$k], $colors[$k + 1])
+		Next
+	Next
+EndFunc
 
 Func CC_WM_NCRBUTTONDOWN($hWnd, $iMsg, $wParam, $lParam)
 
