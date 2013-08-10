@@ -38,7 +38,7 @@ W=120
 H=30
 X=(#WorkAreaWidth#/2-200+270)
 Y=(#WorkAreaHeight#/2-75+110)
-LeftMouseUpAction=!Execute [!DeactivateConfig]["#@#Common\OmnimoApp.exe" Power #Icon# #Delay# "#PROGRAMPATH#"]
+LeftMouseUpAction=[!DeactivateConfig]["#@#Common\OmnimoApp.exe" Power #Icon# #Delay# "#PROGRAMPATH#"]
 
 
 [Text]
@@ -79,7 +79,7 @@ W=120
 H=30
 X=(#WorkAreaWidth#/2-200+270)
 Y=(#WorkAreaHeight#/2-75+110)
-LeftMouseUpAction=!Execute [!DeactivateConfig]["#@#Common\OmnimoApp.exe" Power #Icon# #Delay# "#PROGRAMPATH#"]
+LeftMouseUpAction=[!DeactivateConfig]["#@#Common\OmnimoApp.exe" Power #Icon# #Delay# "#PROGRAMPATH#"]
 
 
 [cancel]
@@ -89,7 +89,7 @@ W=120
 H=30
 X=(#WorkAreaWidth#/2-200+149)
 Y=(#WorkAreaHeight#/2-75+110)
-LeftMouseUpAction=!Execute ["wscript" "#CURRENTPATH#killtask.js"][!DeactivateConfig]
+LeftMouseUpAction=["wscript" "#CURRENTPATH#killtask.js"][!DeactivateConfig]
 
 [CancelText]
 Meter=String

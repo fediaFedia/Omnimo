@@ -2,8 +2,8 @@
 PicturesFolder=#@#Graphics\Panels\Slideshow\Sample
 SlideshowSpeed=20
 Subfolders=0
-open=!execute ["%USERPROFILE\Pictures"]
-next=!Execute [!Refresh]
+open=["%USERPROFILE\Pictures"]
+next=[!Refresh]
 Action=#open#
 showpicturestext=0
 PicturesFolderText=D:\Users\User\Pictures\150 Top Quality Wallpapers

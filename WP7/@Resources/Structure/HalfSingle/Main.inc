@@ -45,7 +45,7 @@ FontSize=(#height#/10)
 StringEffect=#Shadow#
 FontEffectColor=#ItemShadowColor#,#ItemShadowOpacity#
 AntiAlias=1
-LeftMouseUpAction=!execute ["#PanelAction#"]
+LeftMouseUpAction=["#PanelAction#"]
 solidcolor=0,0,0,1
 
 [FullTextStyle]
