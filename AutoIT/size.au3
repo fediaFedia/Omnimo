@@ -84,6 +84,7 @@ While 1
 			IniWrite($SkinsPath & $Config & "\" & $File, "Variables", "Height", $newsize)
 
 			If $CmdLine[1] = "all" Then
+				MsgBox(48, "Warning", "Resizing all panels might take a while")
 				_ResizeAll(GUICtrlRead($input))
 				SendBang("!Refresh *") ; refresh Rainmeter
 			Else
@@ -104,41 +105,45 @@ Func _ResizeAll($size)
 EndFunc
 
 Func _ResizePanels($path, $size)
-	$files = RecursiveFileSearch($SkinsPath & $path)
+	$files = RecursiveFileSearch($SkinsPath & $path, ".*ini$", ".", 1)
 	If $files = -1 Or Not $files[0] Then Return
 	For $i = 1 To $files[0]
-		IniWrite($files[$i] & "\size.inc", "Variables", "Height", $size)
+		IniWrite($files[$i], "Variables", "Height", $size)
 	Next
 EndFunc
 
-Func RecursiveFileSearch($RFSstartDir, $RFSdepth = 0)
-	;Ensure starting folder has a trailing slash
-	If StringRight($RFSstartDir, 1) <> "\" Then $RFSstartDir &= "\"
+Func RecursiveFileSearch($RFSstartDir, $RFSFilepattern = ".", $RFSFolderpattern = ".", $RFSFlag = 0, $RFSrecurse = true, $RFSdepth = 0)
+     If StringRight($RFSstartDir, 1) <> "\" Then $RFSstartDir &= "\"
 
-	If $RFSdepth = 0 Then
-		;Get count of all files in subfolders for initial array definition
+     If $RFSdepth = 0 Then
 		$RFSfilecount = DirGetSize($RFSstartDir, 1)
-		;File count + folder count (will be resized when the function returns)
-		Global $RFSarray[$RFSfilecount[1] + $RFSfilecount[2] + 1]
-	EndIf
+
+        If IsArray($RFSfilecount) Then
+            Global $RFSarray[$RFSfilecount[1] + $RFSfilecount[2] + 1]
+        Else
+            SetError(1)
+            Return
+        EndIf
+     EndIf
 
 	$RFSsearch = FileFindFirstFile($RFSstartDir & "*.*")
-	If @error Then Return -1
+	If @error Then Return
 
-	;Search through all files and folders in directory
 	While 1
 		$RFSnext = FileFindNextFile($RFSsearch)
 		If @error Then ExitLoop
 
-		;If folder and recurse flag is set and regex matches
 		If StringInStr(FileGetAttrib($RFSstartDir & $RFSnext), "D") Then
-			RecursiveFileSearch($RFSstartDir & $RFSnext, $RFSdepth + 1)
-			;Append folder name to array
-			$inis = _FileListToArray($RFSstartDir & $RFSnext, '*.ini')
-			If $inis <> 0 And $inis[0] Then
-				$RFSarray[$RFSarray[0] + 1] = $RFSstartDir & $RFSnext
-				$RFSarray[0] += 1
+             If $RFSrecurse And StringRegExp($RFSnext, $RFSFolderpattern, 0) Then
+				RecursiveFileSearch($RFSstartDir & $RFSnext, $RFSFilepattern, $RFSFolderpattern, $RFSFlag, $RFSrecurse, $RFSdepth + 1)
+				If $RFSFlag <> 1 Then
+					$RFSarray[$RFSarray[0] + 1] = $RFSstartDir & $RFSnext
+					$RFSarray[0] += 1
+				EndIf
 			EndIf
+		ElseIf StringRegExp($RFSnext, $RFSFilepattern, 0) And $RFSFlag <> 2 Then
+			$RFSarray[$RFSarray[0] + 1] = $RFSstartDir & $RFSnext
+			$RFSarray[0] += 1
 		EndIf
 	WEnd
 	FileClose($RFSsearch)

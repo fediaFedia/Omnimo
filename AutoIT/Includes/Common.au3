@@ -44,7 +44,6 @@ Func SendBang($szBang)
 	EndIf
 EndFunc
 
-; Convert Hex to RGB
 Func HexToRGB($Color)
 	$Blue = BitAND($Color, 0xFF)
 	$Green = BitAND(BitShift($Color, 8), 0xFF)
@@ -52,8 +51,26 @@ Func HexToRGB($Color)
 	Return $Red & ',' & $Green & ',' & $Blue
 EndFunc
 
-; Convert RGB to Hex
 Func RGBToHex($Color)
 	$split = StringSplit($Color, ',')
 	Return '0x' & Hex($split[1], 2) & Hex($split[2], 2) & Hex($split[3], 2)
+EndFunc
+
+Func IconsVisible()
+	Local $hwnd = WinGetHandle("Program Manager")
+	Local $sClass = "[CLASS:SysListView32; INSTANCE:1]"
+	Return ControlCommand($hwnd, "", $sClass, "IsVisible", "")
+EndFunc
+
+Func ShowIcons($show = True)
+	Local $hwnd = WinGetHandle("Program Manager")
+	Local $sClass = "[CLASS:SysListView32; INSTANCE:1]"
+	$iVis = ControlCommand($hwnd, "", $sClass, "IsVisible", "")
+	If $show Then
+		If $iVis Then Return
+		ControlShow($hwnd, "", $sClass)
+	Else
+		If Not $iVis Then Return
+		ControlHide($hwnd, "", $sClass)
+	EndIf
 EndFunc
