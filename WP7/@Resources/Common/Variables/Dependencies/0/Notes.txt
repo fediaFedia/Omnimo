@@ -1,3 +1,0 @@
-<title>secuNotes</title>
-<notes>
-Welcome to SecuNotes. Replace this text with yours. Do NOT delete the title and note tags or it'll ruin this panel. </notes>
