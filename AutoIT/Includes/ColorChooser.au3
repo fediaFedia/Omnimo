@@ -116,8 +116,8 @@ Global Const $CC_WM_SYSCOMMAND = 0x0112
 
 Global $ccData[30] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, Default, Default, 0, 0, 0]
 
-Global $colors[17]
-Global $ColorButtons[16]
+Global $_Colors[17]
+Global $_ColorButtons[16]
 
 #cs
 
@@ -345,7 +345,7 @@ Func _ColorChooserDialog($iColor = 0, $hParent = 0, $iRefType = 0, $iReturnType 
 	GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
 	$ccData[12] = GUICtrlCreateInput('', 153 , 360, 34, 19)
 
-	_FileReadToArray('..\colors.txt', $colors)
+	_FileReadToArray('..\colors.txt', $_Colors)
 	_SetColorButtons()
 
 	GUICtrlCreateLabel('#' , 20, 389, 10, 14)
@@ -525,19 +525,19 @@ Func _ColorChooserDialog($iColor = 0, $hParent = 0, $iRefType = 0, $iReturnType 
 			Case $ccData[29]
 				_GUICtrlMenu_TrackPopupMenu(GUICtrlGetHandle($hContextMenu), $ccData[0])
 			Case $_Default
-				_FileReadToArray("..\defaultcolors.txt", $colors)
+				_FileReadToArray("..\defaultcolors.txt", $_Colors)
 				_SetColorButtons()
 			Case $_Colorful
-				GenerateColorful($colors)
+				GenerateColorful($_Colors)
 				_SetColorButtons()
 			Case $_Contigious
-				GenerateContigious($colors)
+				GenerateContigious($_Colors)
 				_SetColorButtons()
 			Case $_Contrasting
-				GenerateContrasting($colors)
+				GenerateContrasting($_Colors)
 				_SetColorButtons()
 			Case $_ApplyAll
-				ApplyColors($colors)
+				ApplyColors($_Colors)
 			Case Else
 				For $i = 1 To 20
 					If $Msg = $ccPalette[$i][1] Then
@@ -550,8 +550,8 @@ Func _ColorChooserDialog($iColor = 0, $hParent = 0, $iRefType = 0, $iReturnType 
 					EndIf
 				Next
 				For $i = 0 To 15
-					If $Msg = $ColorButtons[$i] Then
-						CC_ValidateColor($colors[$i + 1], $iRefType)
+					If $Msg = $_ColorButtons[$i] Then
+						CC_ValidateColor($_Colors[$i + 1], $iRefType)
 						CC_Update($ccData[20])
 						ExitLoop
 					EndIf
@@ -577,7 +577,7 @@ Func _ColorChooserDialog($iColor = 0, $hParent = 0, $iRefType = 0, $iReturnType 
 	EndIf
 
 	If $Return Then
-		_FileWriteFromArray("..\colors.txt", $colors, 1)
+		_FileWriteFromArray("..\colors.txt", $_Colors, 1)
 		Switch $iReturnType
 			Case 1
 				Return $__CC_HSL
@@ -1562,7 +1562,7 @@ EndFunc   ;==>CC_WM_COMMAND
 
 Func _SetColorButtons()
 	For $i = 0 To 15
-		GUICtrlDelete($ColorButtons[$i])
+		GUICtrlDelete($_ColorButtons[$i])
 	Next
 
 	For $i = 0 To 7
@@ -1570,13 +1570,14 @@ Func _SetColorButtons()
 		For $j = 0 To 1
 			$y = $j * 32 + 272
 			$k = $i * 2 + $j
-			$ColorButtons[$k] = GUICtrlCreateGraphic($x, $y, 24, 24)
-			GUICtrlSetBkColor($ColorButtons[$k], $colors[$k + 1])
+			$_ColorButtons[$k] = GUICtrlCreateGraphic($x, $y, 24, 24)
+			GUICtrlSetBkColor($_ColorButtons[$k], $_Colors[$k + 1])
 		Next
 	Next
 EndFunc
 
 Func CC_WM_NCRBUTTONDOWN($hWnd, $iMsg, $wParam, $lParam)
+	#forceref $iMsg, $lParam
 
 	If Not $ccData[0] Then
 		Return $GUI_RUNDEFMSG
@@ -1626,6 +1627,7 @@ Func CC_WM_SETCURSOR($hWnd, $iMsg, $wParam, $lParam)
  EndFunc   ;==>CC_WM_SETCURSOR
 
 Func CC_WM_SYSCOMMAND($hWnd, $iMsg, $wParam, $lParam)
+	#forceref $iMsg, $lParam
 
 	If Not $ccData[0] Then
 		Return $GUI_RUNDEFMSG

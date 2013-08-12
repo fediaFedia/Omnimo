@@ -9,7 +9,6 @@
 
 Func GenerateColorful(ByRef $colors)
 	Const $numColors = $colors[0]
-	Const $offset = 150
 	Const $mix[3] = [Random(100, 200, 1), Random(100, 200, 1), Random(100, 200, 1)]
 
 	For $i = 1 To $numColors
@@ -43,7 +42,6 @@ EndFunc
 
 Func GenerateContrasting(ByRef $colors)
 	Const $numColors = $colors[0]
-	Const $GoldenRatio = 0.618033988749895 * 240
 
 	Local $HSL[3] = [Random(48, 216, 1), 0, 0]
 	For $i = 1 To $numColors
