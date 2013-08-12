@@ -346,6 +346,7 @@ Func _ColorChooserDialog($iColor = 0, $hParent = 0, $iRefType = 0, $iReturnType 
 	$ccData[12] = GUICtrlCreateInput('', 153 , 360, 34, 19)
 
 	_FileReadToArray('..\colors.txt', $_Colors)
+	_CreateColorButtons()
 	_SetColorButtons()
 
 	GUICtrlCreateLabel('#' , 20, 389, 10, 14)
@@ -1560,19 +1561,20 @@ Func CC_WM_COMMAND($hWnd, $iMsg, $wParam, $lParam)
 	Return $GUI_RUNDEFMSG
 EndFunc   ;==>CC_WM_COMMAND
 
-Func _SetColorButtons()
-	For $i = 0 To 15
-		GUICtrlDelete($_ColorButtons[$i])
-	Next
-
+Func _CreateColorButtons()
 	For $i = 0 To 7
 		$x = $i * 30 + 24
 		For $j = 0 To 1
 			$y = $j * 32 + 272
 			$k = $i * 2 + $j
 			$_ColorButtons[$k] = GUICtrlCreateGraphic($x, $y, 24, 24)
-			GUICtrlSetBkColor($_ColorButtons[$k], $_Colors[$k + 1])
 		Next
+	Next
+EndFunc
+
+Func _SetColorButtons()
+	For $k = 0 To 15
+		GUICtrlSetBkColor($_ColorButtons[$k], $_Colors[$k + 1])
 	Next
 EndFunc
 
