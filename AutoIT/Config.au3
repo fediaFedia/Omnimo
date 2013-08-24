@@ -224,47 +224,47 @@ While 1
 		Case $VariableList
 			_WriteOption()
 			$CurrentVarName = GUICtrlRead($VariableList)
-			If $CurrentVarName == "" Then ContinueCase
+			If $CurrentVarName <> "" Then
+				; Find the new variable's data
+				For $ListCount = 0 To $VarCount - 1
+					If $VarName[$ListCount] = $CurrentVarName Then
+						$CurrentVarDescription = $VarDescription[$ListCount]
+						$CurrentVarType = $VarType[$ListCount]
+						$CurrentVarSection = $VarSection[$ListCount]
+						ExitLoop
+					EndIf
+				Next
 
-			; Find the new variable's data
-			For $ListCount = 0 To $VarCount - 1
-				If $VarName[$ListCount] = $CurrentVarName Then
-					$CurrentVarDescription = $VarDescription[$ListCount]
-					$CurrentVarType = $VarType[$ListCount]
-					$CurrentVarSection = $VarSection[$ListCount]
-					ExitLoop
-				EndIf
-			Next
+				; Show variable description as tooltip
+				ToolTip(_Iif(StringLen($CurrentVarDescription) > 1, $CurrentVarDescription, ""))
 
-			; Show variable description as tooltip
-			ToolTip(_Iif(StringLen($CurrentVarDescription) > 1, $CurrentVarDescription, ""))
+				; Hide previous GUI controls
+				GUICtrlSetState($VariableInput, $GUI_HIDE)
+				GUICtrlSetState($VariableSlider, $GUI_HIDE)
+				GUICtrlSetState($VariableCheckbox, $GUI_HIDE)
+				GUICtrlSetState($VariableColorbox, $GUI_HIDE)
+				GUICtrlSetState($CheckboxLabel, $GUI_HIDE)
+				GUICtrlSetState($ColorLabel, $GUI_HIDE)
+				GUICtrlSetState($BrowseLabel, $GUI_HIDE)
 
-			; Hide previous GUI controls
-			GUICtrlSetState($VariableInput, $GUI_HIDE)
-			GUICtrlSetState($VariableSlider, $GUI_HIDE)
-			GUICtrlSetState($VariableCheckbox, $GUI_HIDE)
-			GUICtrlSetState($VariableColorbox, $GUI_HIDE)
-			GUICtrlSetState($CheckboxLabel, $GUI_HIDE)
-			GUICtrlSetState($ColorLabel, $GUI_HIDE)
-			GUICtrlSetState($BrowseLabel, $GUI_HIDE)
+				$Colorizable = 0
+				$VarOpts = StringSplit($CurrentVarType, ":")
+				$CurrentValue = IniRead($VarFile, $CurrentVarSection, $CurrentVarName, "")
 
-			$Colorizable = 0
-			$VarOpts = StringSplit($CurrentVarType, ":")
-			$CurrentValue = IniRead($VarFile, $CurrentVarSection, $CurrentVarName, "")
-
-			; Create the GUI control
-			Switch $VarOpts[1]
-				Case "Text"
-					_CreateVariableInput($CurrentValue)
-				Case "Slider"
-					_CreateVariableSlider($CurrentValue, Int($VarOpts[2]), Int($VarOpts[3]))
-				Case "Checkbox"
-					_CreateCheckBox($CurrentValue, $VarOpts[4])
-				Case "Color"
-					_CreateColorBox($CurrentValue)
-				Case "Browse"
-					_CreateBrowseButton($CurrentValue)
-			EndSwitch
+				; Create the GUI control
+				Switch $VarOpts[1]
+					Case "Text"
+						_CreateVariableInput($CurrentValue)
+					Case "Slider"
+						_CreateVariableSlider($CurrentValue, Int($VarOpts[2]), Int($VarOpts[3]))
+					Case "Checkbox"
+						_CreateCheckBox($CurrentValue, $VarOpts[4])
+					Case "Color"
+						_CreateColorBox($CurrentValue)
+					Case "Browse"
+						_CreateBrowseButton($CurrentValue)
+				EndSwitch
+			EndIf
 
 		Case $VariableColorbox
 			$Chose = _ColorChooserDialog(_ToColor($ColorData), $Gui)
