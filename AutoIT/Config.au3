@@ -11,6 +11,7 @@
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <SliderConstants.au3>
+#include <GuiEdit.au3>
 #include <GDIPlus.au3>
 #include <Misc.au3>
 
@@ -159,11 +160,12 @@ Else
 	Next
 EndIf
 
-$VariableInput = GUICtrlCreateInput("", 2, $height - $Size / 7.25 - 1, $width - 32, $Size / 7.25, $ES_AUTOHSCROLL, 0)
+$VariableInput = GUICtrlCreateInput("", 2, $height - $Size / 7.25 - 1, $width - 32, $Size / 7.25, BitOR($ES_AUTOHSCROLL, $ES_PASSWORD), 0)
 GUICtrlSetFont(-1, $Size / 15, 400, 0, $Font)
 GUICtrlSetColor(-1, $TextColor)
 GUICtrlSetBkColor(-1, $BgColor2)
 GUICtrlSetState(-1, $GUI_HIDE)
+_GUICtrlEdit_SetPasswordChar($VariableInput, "0") ; "0" as password character means don't hide input
 
 $VariableSlider = GUICtrlCreateSlider(0, $height - $Size / 6.25, $width - $Size / 5, $Size / 6.25, BITOR($TBS_NOTICKS, $TBS_TOOLTIPS))
 GUICtrlSetState(-1, $GUI_HIDE)
@@ -336,6 +338,8 @@ EndFunc
 
 Func _CreateVariableInput($value)
 	_DrawBottom()
+	; Set input field to hide variables with 'password' in them
+	_GUICtrlEdit_SetPasswordChar($VariableInput, _Iif(StringInStr($CurrentVarName, "Password", 2), "*", "0"))
 	GUICtrlSetData($VariableInput, $value)
 	GUICtrlSetState($VariableInput, $GUI_SHOW)
 	$CreatedElement = $INPUT
