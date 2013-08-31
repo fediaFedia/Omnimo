@@ -289,6 +289,8 @@ While 1
 			Switch $VarOpts[2]
 				Case "File"
 					$BrowseData = FileOpenDialog("Select file", $SkinPath & $Config, "All (*.*)")
+				Case "Image"
+					$BrowseData = FileOpenDialog("Select image", $SkinPath & $Config, "All (*.png;*.jpeg;*.jpg;*.bmp)")
 				Case "Folder"
 					$BrowseData = FileSelectFolder("Select folder", "", 1 + 2 + 4, $SkinPath & $Config)
 			EndSwitch
