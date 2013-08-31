@@ -19,7 +19,7 @@ Meter=Button
 ButtonImage=#@#Common\Panel\#PanelIcons#\size.png
 X=(#Height#-10) 
 Y=(#Height#-10)
-ButtonCommand=["#@#Common\Size\size.exe" #PanelType# "#CURRENTCONFIG#" "#SETTINGSPATH#"]
+ButtonCommand=["#@#Common\Size\size.exe" single "#CURRENTCONFIG#" "#CURRENTFILE#" "#SETTINGSPATH#"]
 Hidden=1
 
 

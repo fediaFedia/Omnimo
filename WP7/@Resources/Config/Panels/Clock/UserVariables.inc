@@ -6,4 +6,4 @@ DayLightSavings=0
 12Hour=%I:%M %p
 updatespeed=1
 hidesecondhand=0
-ShowSeconds=0
+ShowSeconds=60
