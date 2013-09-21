@@ -512,5 +512,33 @@ KeepOnScreen=1
 AutoSelectScreen=0
 AlwaysOnTop=0
 
+[WP7\Gallery]
+Active=0
+WindowX=(#ScreenAreaWidth#/2-330)
+WindowY=(#ScreenAreaHeight#/2-137)
+AlphaValue=255
+FadeDuration=250
+ClickThrough=0
+Draggable=1
+HideOnMouseOver=0
+SavePosition=1
+SnapEdges=0
+KeepOnScreen=1
+AutoSelectScreen=0
+AlwaysOnTop=0
 
+[WP7\Gallery\Color]
+Active=0
+WindowX=(#ScreenAreaWidth#/2-240)
+WindowY=(#ScreenAreaHeight#/2-137)
+AlphaValue=255
+FadeDuration=250
+ClickThrough=0
+Draggable=1
+HideOnMouseOver=0
+SavePosition=1
+SnapEdges=0
+KeepOnScreen=1
+AutoSelectScreen=0
+AlwaysOnTop=0
 

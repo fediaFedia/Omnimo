@@ -1,7 +1,7 @@
 [Variables]
-FontSize=48
+FontSize=60
 FontColor=255,255,255
 FontOpacity=255
 FontFace=Segoe UI Light
-Format=%H:%M
+Format=%A, %d
 opacity=22

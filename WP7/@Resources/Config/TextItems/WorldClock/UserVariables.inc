@@ -17,4 +17,4 @@ ClockName=#24Hour#
 DayLightSavings=1
 ChangeWithDay=0
 WorldAlpha=200
-ItemSize=700
+ItemSize=800

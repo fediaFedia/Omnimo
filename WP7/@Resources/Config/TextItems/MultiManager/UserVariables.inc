@@ -20,7 +20,7 @@ HideItem4=0
 HideItem5=1
 HideItem5=1
 
-Item1Do=Load
+Item1Do=Save
 Item2Do=Save
 Item3Do=Save
 Item4Do=Save

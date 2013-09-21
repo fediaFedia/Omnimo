@@ -11,3 +11,4 @@ Rss1Color=120
 Rss2Color=255
 Rss3Color=120
 Rss4Color=120
+ItemSize=730
