@@ -406,17 +406,16 @@ Func ShowToggler()
 EndFunc
 
 Func CheckForUpdates()
-	InetGet($UpdateURL, @ScriptDir & "\update.dt", 1, 0)
+	$sData = BinaryToString(InetRead($UpdateURL, 1))
 	If @error Then
 		TrayTip("Connection error", "Unable to download update file", Default, 3)
 		Return
 	EndIf
 
-	$data = FileRead(@ScriptDir & "\update.dt")
-	$matches = StringRegExp($data, "(?s).*<update>(\d)</update>\s<version>(\d\d?\.\d\d?)</version>.*<link>(.*)</link>", 1)
-	Const $UpdateAvailable = Int($matches[0])
-	Const $NewVersion = $matches[1]
-	Const $Link = $matches[2]
+	$Matches = StringRegExp($sData, "(?s).*<update>(\d)</update>\s<version>(\d\d?\.\d\d?)</version>.*<link>(.*)</link>", 1)
+	Const $UpdateAvailable = Int($Matches[0])
+	Const $NewVersion = $Matches[1]
+	Const $Link = $Matches[2]
 
 	If $UpdateAvailable Then
 		Const $UpdateText = StringReplace(StringReplace($Language.Item("UpdateText"), "%s", $NewVersion), "\n", @CRLF)
