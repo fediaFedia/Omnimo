@@ -19,6 +19,7 @@
 #include <SQLite.au3>
 #include <SQLite.dll.au3>
 #include <Misc.au3>
+#include <File.au3>
 
 #include "Includes\Common.au3"
 #include "Includes\_Startup.au3"
@@ -29,17 +30,31 @@ Const $SettingsVariables = @ScriptDir & "\UserVariables.inc"
 Const $Updates = Int(IniRead($SettingsVariables, "Variables", "Updates", "0"))
 Const $Icons = Int(IniRead($SettingsVariables, "Variables", "Icons", "0"))
 Const $Startup = Int(IniRead($SettingsVariables, "Variables", "Startup", "0"))
+Const $CurrentLanguage = IniRead($SettingsVariables, "Variables", "Language", "English")
+Const $Hotkey = IniRead($SettingsVariables, "Variables", "Hotkey", "F8")
+Const $RainmeterPath = IniRead($SettingsVariables, "Variables", "RainmeterPath", "") & "\Rainmeter.exe"
+Const $LangFile = @ScriptDir & "\Language\" & $CurrentLanguage & ".cfg"
+
+If Not FileExists($LangFile) Then OmnimoError("Error loading language", "Unable to load language file for " & $CurrentLanguage)
+
+$LangCodes = ObjCreate("Scripting.Dictionary")
+$LangCodes.Add("English", "1033")
+$LangCodes.Add("French", "1036")
+$LangCodes.Add("Portuguese", "1046")
+$LangCodes.Add("Russian", "1049")
+$LangCodes.Add("German", "1031")
+$LangCodes.Add("Finnish", "1035")
+$LangCodes.Add("Spanish", "1034")
 
 ; Read language dictionary from file
 $Language = ObjCreate("Scripting.Dictionary")
-$Sections = IniReadSection("Language.cfg", "Variables")
+$Sections = IniReadSection($LangFile, "Variables")
 For $i = 1 To $Sections[0][0]
 	$Language.Add($Sections[$i][0], $Sections[$i][1])
 Next
 
-$Gui = GUICreate("", 340, 400, Default, Default, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX))
+$Gui = GUICreate("Omnimo Settings", 340, 400, Default, Default, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX))
 GUISetBkColor(0xFFFFFF)
-GUISetIcon(@AutoItExe, -2, $Gui)
 
 ; Title
 GUICtrlCreateLabel($Language.Item("Options"), 16, 16, 141, 28)
@@ -54,35 +69,42 @@ GUICtrlSetState(-1, $GUI_DISABLE)
 GUICtrlCreateGraphic(0, 353, 340, 1)
 GUICtrlSetColor(-1, 0x898C95)
 
-$Cancel = GUICtrlCreateButton("Cancel", 248, 365, 81, 25)
+$Cancel = GUICtrlCreateButton($Language.Item("Cancel"), 248, 365, 81, 25)
 $OK = GUICtrlCreateButton("OK", 160, 365, 81, 25)
 
 ; Group labels
-GUICtrlCreateLabel($Language.Item("Interface"), 16, 48, 112, 17)
+$Line1X = StringLen($Language.Item("Interface")) * 5 + 35
+$Line2X = StringLen($Language.Item("Settings")) * 5 + 35
+$Line3X = StringLen($Language.Item("Integration")) * 5 + 35
+
+GUICtrlCreateLabel($Language.Item("Interface"), 16, 48, 200, 17)
 GUICtrlSetColor(-1, 0x636363)
-GUICtrlCreateGraphic(135, 55, 180, 1)
+GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+GUICtrlCreateGraphic($Line1X, 55, 315 - $Line1X, 1)
 GUICtrlSetColor(-1, 0xD8D8D8)
-GUICtrlCreateLabel($Language.Item("Settings"), 16, 112, 42, 17)
+GUICtrlCreateLabel($Language.Item("Settings"), 16, 112, 200, 17)
 GUICtrlSetColor(-1, 0x636363)
-GUICtrlCreateGraphic(65, 119, 250, 1)
+GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+GUICtrlCreateGraphic($Line2X, 119, 315 - $Line2X, 1)
 GUICtrlSetColor(-1, 0xD8D8D8)
-GUICtrlCreateLabel($Language.Item("Integration"), 16, 264, 101, 17)
+GUICtrlCreateLabel($Language.Item("Integration"), 16, 264, 200, 17)
 GUICtrlSetColor(-1, 0x636363)
-GUICtrlCreateGraphic(124, 272, 191, 1)
+GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+GUICtrlCreateGraphic($Line3X, 272, 315 - $Line3X, 1)
 GUICtrlSetColor(-1, 0xD8D8D8)
 
 ; Options
-GUICtrlCreateLabel($Language.Item("Language"), 35, 80, 55, 17)
+GUICtrlCreateLabel($Language.Item("Language"), 35, 80, 125, 17)
 GUICtrlCreateLabel($Language.Item("Location"), 35, 226, 85, 17)
 GUICtrlCreateLabel($Language.Item("Hotkey"), 35, 197, 85, 17)
 
 $LangSelect = GUICtrlCreateCombo("", 165, 80, 123, 25, $CBS_DROPDOWNLIST)
 $LocationSelect = GUICtrlCreateCombo("", 122, 224, 193, 21)
 $HotkeySelect = GUICtrlCreateCombo("", 122, 194, 193, 20)
-$TrayIconOpt = GUICtrlCreateCheckbox($Language.Item("HideTrayIcon"), 35, 142, 185, 17)
-$MetricOpt = GUICtrlCreateCheckbox($Language.Item("Metric"), 35, 167, 169, 17)
-$StartupOpt = GUICtrlCreateCheckbox($Language.Item("Startup"), 35, 292, 169, 17)
-$IconsOpt = GUICtrlCreateCheckbox($Language.Item("Icons"), 35, 314, 161, 25)
+$TrayIconOpt = GUICtrlCreateCheckbox($Language.Item("HideTrayIcon"), 35, 142, 250, 17)
+$MetricOpt = GUICtrlCreateCheckbox($Language.Item("Metric"), 35, 167, 250, 17)
+$StartupOpt = GUICtrlCreateCheckbox($Language.Item("Startup"), 35, 292, 250, 17)
+$IconsOpt = GUICtrlCreateCheckbox($Language.Item("Icons"), 35, 314, 250, 25)
 
 If IniRead($VariablesFile, "Variables", "DisplayAMPM", "1") == "1" Then GUICtrlSetState($MetricOpt, $GUI_CHECKED)
 If IniRead(@AppDataDir & "\Rainmeter\Rainmeter.ini", "Rainmeter", "TrayIcon", "1") == "0" Then GUICtrlSetState($TrayIconOpt, $GUI_CHECKED)
@@ -90,9 +112,12 @@ If $Updates Then GUICtrlSetState($TrayIconOpt, $GUI_CHECKED)
 If $Startup Then GUICtrlSetState($StartupOpt, $GUI_CHECKED)
 If $Icons Then GUICtrlSetState($IconsOpt, $GUI_CHECKED)
 
-Const $Languages = IniRead($SettingsVariables, "Variables", "Languages", "English")
-Const $CurrentLanguage = IniRead($SettingsVariables, "Variables", "Language", "English")
-Const $Hotkey = IniRead($SettingsVariables, "Variables", "Hotkey", "F8")
+$Langlist = _FileListToArray("Language", "*.cfg")
+$Languages = ""
+For $i = 1 To $Langlist[0]
+	$Languages &= StringTrimRight($Langlist[$i], 4) & "|"
+Next
+
 GUICtrlSetData($LangSelect, $Languages, $CurrentLanguage)
 GUICtrlSetData($HotkeySelect, "None|F6|F7|F8|F9|F10", $Hotkey)
 
@@ -153,6 +178,9 @@ While 1
 			Const $LanguageFile = @ScriptDir & "\..\Variables\Languages\" & $Lang & ".inc"
 			FileCopy($LanguageFile, @ScriptDir & "\..\Variables\Languages\lang.inc", 1)
 			IniWrite($SettingsVariables, "Variables", "Language", $Lang)
+			If $LangCodes.Exists($Lang) Then
+				IniWrite(@AppDataDir & "\Rainmeter\Rainmeter.ini", "Rainmeter", "Language", $LangCodes.Item($Lang))
+			EndIf
 
 			If GUICtrlRead($MetricOpt) = $GUI_CHECKED Then
 				IniWrite($VariablesFile, "Variables", "TimeFormat", "%H:%M")
@@ -177,11 +205,19 @@ While 1
 
 			; Changing language, hotkey or icon toggling requires restarting Omnimo.exe
 			If GUICtrlRead($HotkeySelect) <> $Hotkey Or $Icons <> $IconsSelected Or $Lang <> $CurrentLanguage Then
+				If $Lang <> $CurrentLanguage Then
+					SendBang("!Quit")
+					ProcessWaitClose("Rainmeter.exe")
+					Run($RainmeterPath)
+					ProcessWait("Rainmeter.exe")
+				EndIf
+
 				If ProcessExists("Omnimo.exe") Then
 					ProcessClose("Omnimo.exe")
 					ProcessWaitClose("Omnimo.exe")
 					_UpdateTray()
 				EndIf
+
 				ShellExecute(@ScriptDir & "\Omnimo.exe")
 			EndIf
 
