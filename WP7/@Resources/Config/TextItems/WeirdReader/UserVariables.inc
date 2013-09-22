@@ -1,6 +1,6 @@
 [Variables]
-RSS1=http://feeds.gawker.com/lifehacker/full
-RSS1Name=lifehacker
+RSS1=http://lenta.ru/rss
+RSS1Name=Lenta.ru
 RSS2=http://reddit.com/.rss
 RSS2Name=reddit
 RSS3=http://www.engadget.com/rss.xml
@@ -14,10 +14,10 @@ Update=10
 Title=latest
 Subtitle=headlines
 Hidebackground=1
-RSSMain=http://www.engadget.com/rss.xml
-RSS1Color=120
+RSSMain=http://lenta.ru/rss
+RSS1Color=255
 RSS2Color=120
-RSS3Color=255
+RSS3Color=120
 RSS4Color=120
 BackgroundBlur=0
-ItemSize=699
+ItemSize=800

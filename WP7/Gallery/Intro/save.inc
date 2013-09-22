@@ -1,5 +1,5 @@
 [Variables]
-Inter=40,40,40
-InterT=255,255,255,200
-InterB=255,255,255,50
+Inter=240,240,240
+InterT=0,0,0,200
+InterB=0,0,0,50
 40,40,40
