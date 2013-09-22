@@ -26,21 +26,21 @@ Opt("TrayMenuMode", 3)
 
 $Hidden = False
 Const $SettingsVariables = @ScriptDir  & "\UserVariables.inc"
+Const $CurrentLanguage = IniRead($SettingsVariables, "Variables", "Language", "English")
 Const $HideIcons = Int(IniRead($SettingsVariables, "Variables", "Icons", "0"))
 Const $Hotkey = IniRead($SettingsVariables, "Variables", "Hotkey", "F8")
 Const $UpdateURL = IniRead($SettingsVariables, "Variables", "UpdateURL", "http://fediafedia.com/update.dt")
+Const $RainmeterPath = IniRead($SettingsVariables, "Variables", "RainmeterPath", "") & "\Rainmeter.exe"
+Const $LangFile = @ScriptDir & "\Language\" & $CurrentLanguage & ".cfg"
 
-; Launch Rainmeter if it's not running
-If Not ProcessExists("rainmeter.exe") Then
-	Run(IniRead($SettingsVariables, "Variables", "RainmeterPath", "") & "\Rainmeter.exe")
-EndIf
+If Not FileExists($LangFile) Then OmnimoError("Error loading language", "Unable to load language file for " & $CurrentLanguage)
 
 If $Hotkey <> "None" Then HotKeySet("{" & $Hotkey & "}", "ToggleOmnimo")
 If $HideIcons Then ShowIcons(False)
 
 ; Read language dictionary from file
 $Language = ObjCreate("Scripting.Dictionary")
-$Sections = IniReadSection("Language.cfg", "Variables")
+$Sections = IniReadSection($LangFile, "Variables")
 For $i = 1 To $Sections[0][0]
 	$Language.Add($Sections[$i][0], $Sections[$i][1])
 Next
@@ -152,12 +152,17 @@ TraySetOnEvent($TRAY_EVENT_PRIMARYUP, "ToggleOmnimo") ; Toggle omnimo on left-cl
 TraySetClick(16) ; Show tray menu only on right-click
 TraySetState()
 
+; Launch Rainmeter if it's not running
+If Not ProcessExists("rainmeter.exe") And FileExists($RainmeterPath) Then
+	Run($RainmeterPath)
+EndIf
+
 While 1
+	Sleep(2500)
 	If Not ProcessExists("rainmeter.exe") Then
 		If $HideIcons Then ShowIcons(True)
 		Exit
 	EndIf
-	Sleep(2500)
 WEnd
 
 Func ToggleOmnimo()
