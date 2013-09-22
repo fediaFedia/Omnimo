@@ -85,11 +85,20 @@ Case 'Skin'
 
 ; Change language
 ; Command line arguments:
-; [2] Language
-; [3] Skin path
+; [2] Language name
+; [3] Language code
+; [4] Restart Rainmeter (0/1)
+; [5] Skin path
+; [6] Program path
 Case 'Lang'
-	If $CmdLine[0] < 3 Then OmnimoError("Error", "Too few command line arguments specified.")
-    FileCopy($CmdLine[3] & '\WP7\@Resources\Common\Variables\Languages\' & $CmdLine[2] & '.inc', $CmdLine[3] & '\WP7\@Resources\Common\Variables\Languages\lang.inc', 1)
+	If $CmdLine[0] < 7 Then OmnimoError("Error", "Too few command line arguments specified.")
+    FileCopy($CmdLine[5] & "\WP7\@Resources\Common\Variables\Languages\" & $CmdLine[2] & ".inc", $CmdLine[5] & "\WP7\@Resources\Common\Variables\Languages\lang.inc", 1)
+	IniWrite($CmdLine[6] & "Rainmeter.ini", "Rainmeter", "Language", $CmdLine[3])
+	If $CmdLine[4] = "1" Then
+		SendBang("!Quit")
+		ProcessWaitClose("Rainmeter.exe")
+		ShellExecute($CmdLine[7] & "Rainmeter.exe")
+	EndIf
 
 
 ; Change tray icon
@@ -100,7 +109,8 @@ Case 'Lang'
 ; [5] Skins path
 Case 'Tray'
 	If $CmdLine[0] < 5 Then OmnimoError("Error", "Too few command line arguments specified.")
-	IniWriteSection($CmdLine[4] & 'Rainmeter.ini', 'TrayMeasure', IniReadSection($CmdLine[5] & '\WP7\@Resources\Common\Gallery\Tray\' & $CmdLine[2] & '.txt', 'TrayMeasure'))
+	Const $TraySection = IniReadSection($CmdLine[5] & "\WP7\@Resources\Common\Gallery\Tray\" & $CmdLine[2] & ".txt", "TrayMeasure")
+	IniWriteSection($CmdLine[4] & "Rainmeter.ini", "TrayMeasure", $TraySection)
 	SendBang("!Quit")
     ProcessWaitClose("Rainmeter.exe")
     ShellExecute($CmdLine[3] & "Rainmeter.exe")
@@ -117,8 +127,17 @@ Case 'Themes'
     ; Close Rainmeter
 	SendBang("!Quit")
     ProcessWaitClose("Rainmeter.exe")
+
+	$RainmeterSection = IniReadSection($CmdLine[4] & "\Rainmeter.ini", "Rainmeter")
+	$sData = ""
+	For $i = 1 To $RainmeterSection[0][0]
+        $sData &= $RainmeterSection[$i][0] & "=" & $RainmeterSection[$i][1] & @LF
+    Next
+
     ; Replace Rainmeter.ini with new theme
-    FileCopy($CmdLine[5] & '\WP7\@Resources\Common\Gallery\Themes\' & $CmdLine[2] & '.thm', $CmdLine[4] & '\Rainmeter.ini', 1)
+    FileCopy($CmdLine[5] & "\WP7\@Resources\Common\Gallery\Themes\" & $CmdLine[2] & ".thm", $CmdLine[4] & "\Rainmeter.ini", 1)
+	IniWriteSection($CmdLine[4] & "\Rainmeter.ini", "Rainmeter", $sData)
+
     ShellExecute($CmdLine[3] & "Rainmeter.exe")
 
 
@@ -278,59 +297,91 @@ Case 'Screenshot'
     EndIf
 
 
+; Create an extra
+; Command line arguments:
+; [2] Name
+; [3] Path to Extra Builder
+Case 'Create'
+	If $CmdLine[0] < 3 Then OmnimoError("Error", "Too few command line arguments specified.")
+
+	Const $EscapedName = StringRegExpReplace($CmdLine[2], '[\s\\/\*\?\:<>|\"]', "")
+	Const $CreatedDir = $CmdLine[3] & "\Created\" & $EscapedName
+	If FileExists($CreatedDir) Then
+		$answer = MsgBox(52, "Extra Builder", "An extra with the selected name already exists. Overwrite?")
+		If $answer = 7 Then Exit
+	EndIf
+
+	DirCopy($CmdLine[3] & "\Template", $CreatedDir, 1)
+	FileCopy(IniRead($CmdLine[3] & "\Template\UserVariables.inc", "Variables", "ItemImage", ""), $CreatedDir & "\Item.png", 1)
+	SendBang("!RefreshApp")
+	SendBang("!ActivateConfig WP7\TextItems\Extra\ExtraBuilder\Created\" & $EscapedName & " Item.ini")
+
+
 ; File / Folder selector
 ; Command line arguments:
-; [2] Image / Folder / App
+; [2] Image / File / Folder / App
 ; [3] Variable to write
 ; [4] Panel path
 Case 'Select'
-    ; Open an image select dialog
-    If $CmdLine[2] = 'Image' Then
-        $file = FileOpenDialog("Choose an image", @UserProfileDir & '\Pictures', "Images (*.png;*.jpg;*.jpeg;*.bmp)", 1)
-        If @error Then Exit
-		$ConfigPath = StringReplace("WP7\", "WP7\@Resources\Config\", $CmdLine[4]) & "\UserVariables.inc"
-        IniWrite($ConfigPath, "Variables", $CmdLine[3], $file)
-		SendBang("!Refresh " & $CmdLine[5])
+    Switch $CmdLine[2]
+		Case 'File'
+			If $CmdLine[0] > 5 Then
+				$StartingDir = $CmdLine[6]
+			Else
+				$StartingDir = @UserProfileDir
+			EndIf
+			$file = FileOpenDialog("Choose a file", $StartingDir, "All files (*.*)", 1)
+			If @error Then Exit
+			IniWrite($CmdLine[4], "Variables", $CmdLine[3], $file)
 
-    ; Open a folder select dialog
-    ElseIf $CmdLine[2] = 'Folder' Then
-        $folder = FileSelectFolder("Choose a folder", "", 1)
-        If @error Then Exit
-        $split = StringSplit($folder, "\")
-        $FolderName = UBound($split) - 1
-		$ConfigPath = StringReplace("WP7\", "WP7\@Resources\Config\", $CmdLine[4]) & "\UserVariables.inc"
-        IniWrite($ConfigPath, "Variables", $CmdLine[3], $folder)
-        IniWrite($ConfigPath, "Variables", "FolderName", $split[$FolderName])
-        SendBang("!Refresh " & $CmdLine[5])
+		Case 'Image'
+			If $CmdLine[0] > 5 Then
+				$StartingDir = $CmdLine[6]
+			Else
+				$StartingDir = @UserProfileDir & "\Pictures"
+			EndIf
+			$file = FileOpenDialog("Choose an image", $StartingDir, "Images (*.png;*.jpg;*.jpeg;*.bmp)", 1)
+			If @error Then Exit
+			IniWrite($CmdLine[4], "Variables", $CmdLine[3], $file)
+			SendBang("!Refresh " & $CmdLine[5])
 
-    ; Open an app select dialog
-    ElseIf $CmdLine[2] = 'App' Then
-        $file = FileOpenDialog("Choose an application", @DesktopDir, "Apps (*.exe;*.lnk)", 1)
-        If @error Then Exit
-        ; Get file extension, amazingly bullet-proof method
-        $ext = StringRight($file, 3)
-        If $ext = 'exe' Then
-            $info = FileGetVersion($file, "ProductName")  ; Get program's name
-            $path = $file
-        ElseIf $ext = 'lnk' Then
-            Global $szDrive, $szDir, $szFName, $szExt
-            $TestPath = _PathSplit($file, $szDrive, $szDir, $szFName, $szExt)
-            $Shortcut = FileGetShortcut($file)
-            $path = $Shortcut[0]
-            $info = $TestPath[3]
-        EndIf
+		Case 'Folder'
+			$folder = FileSelectFolder("Choose a folder", "", 1)
+			If @error Then Exit
+			$split = StringSplit($folder, "\")
+			$FolderName = UBound($split) - 1
+			$ConfigPath = StringReplace("WP7\", "WP7\@Resources\Config\", $CmdLine[4]) & "\UserVariables.inc"
+			IniWrite($ConfigPath, "Variables", $CmdLine[3], $folder)
+			IniWrite($ConfigPath, "Variables", "FolderName", $split[$FolderName])
+			SendBang("!Refresh " & $CmdLine[5])
 
-		$ConfigPath = StringReplace("WP7\", "WP7\@Resources\Config\", $CmdLine[7]) & "\UserVariables.inc"
-        IniWrite($ConfigPath, "Variables", $CmdLine[3], $path)
-        IniWrite($ConfigPath, "Variables", $CmdLine[4], $info)
+		Case 'App'
+			$file = FileOpenDialog("Choose an application", @DesktopDir, "Apps (*.exe;*.lnk)", 1)
+			If @error Then Exit
+			; Get file extension, amazingly bullet-proof method
+			$ext = StringRight($file, 3)
+			If $ext = 'exe' Then
+				$info = FileGetVersion($file, "ProductName")  ; Get program's name
+				$path = $file
+			ElseIf $ext = 'lnk' Then
+				Global $szDrive, $szDir, $szFName, $szExt
+				$TestPath = _PathSplit($file, $szDrive, $szDir, $szFName, $szExt)
+				$Shortcut = FileGetShortcut($file)
+				$path = $Shortcut[0]
+				$info = $TestPath[3]
+			EndIf
 
-        ; Open an icon select dialog
-        $icon = FileOpenDialog("Choose an icon", $CmdLine[6] & '\WP7\@Resources\Graphics\Panels\Launcher\Icons', "Images (*.png;*.jpg;*.jpeg;*.bmp)", 1)
-        If @error Then Exit
+			$ConfigPath = StringReplace("WP7\", "WP7\@Resources\Config\", $CmdLine[7]) & "\UserVariables.inc"
+			IniWrite($ConfigPath, "Variables", $CmdLine[3], $path)
+			IniWrite($ConfigPath, "Variables", $CmdLine[4], $info)
 
-        IniWrite($ConfigPath, "Variables", $CmdLine[5], $icon)
-		SendBang("!Refresh " & $CmdLine[8])
-    EndIf
+			; Open an icon select dialog
+			$icon = FileOpenDialog("Choose an icon", $CmdLine[6] & '\WP7\@Resources\Graphics\Panels\Launcher\Icons', "Images (*.png;*.jpg;*.jpeg;*.bmp)", 1)
+			If @error Then Exit
+
+			IniWrite($ConfigPath, "Variables", $CmdLine[5], $icon)
+			SendBang("!Refresh " & $CmdLine[8])
+    EndSwitch
 
 
 ; Panel Combos config tool
