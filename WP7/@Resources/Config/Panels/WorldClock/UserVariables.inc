@@ -13,3 +13,4 @@ DayLightSavings2=0
 DayLightSavings3=1
 DayLightSavings=1:00
 hidegrid=1
+ClockName=World Time

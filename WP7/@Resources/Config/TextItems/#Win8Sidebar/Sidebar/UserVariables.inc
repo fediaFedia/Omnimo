@@ -33,3 +33,4 @@ Blur=1
 Hub1=Time
 Hub2=Weather
 Hub3=Mail
+UserName=%USERNAME%

@@ -16,7 +16,6 @@
 #include <Misc.au3>
 
 #include "Includes\Common.au3"
-#include "Includes\MouseOnEvent.au3"
 #include "Includes\DragDropEvent.au3"
 #include "Includes\ColorChooser.au3"
 
@@ -32,8 +31,8 @@ Const $SkinPath   = $CmdLine[5]
 
 Const $Variables  = $SkinPath & "WP7\@Resources\Common\Variables\"
 Const $VarFile    = $SkinPath & "WP7\@Resources\Config" & StringTrimLeft($Config, 3) & "\UserVariables.inc"
-Const $XPosition  = IniRead($DataFolder & "Rainmeter.ini", $Config, "WindowX", "0")
-Const $YPosition  = IniRead($DataFolder & "Rainmeter.ini", $Config, "WindowY", "0")
+Global $XPosition = IniRead($DataFolder & "Rainmeter.ini", $Config, "WindowX", "0")
+Global $YPosition = IniRead($DataFolder & "Rainmeter.ini", $Config, "WindowY", "0")
 Global $Size      = IniRead($SkinPath & $Config & "\" & $File, "Variables", "Height", "150")
 
 Const $BgColor    = IniRead($Variables & "UserVariables.inc", "Variables", "ConfigBackgroundColor", "0xe1e1e1")
@@ -112,6 +111,12 @@ $CommentLimit = $height / 25
 $ResetText = IniRead("Config.cfg", "Variables", "Reset", "[RESET]")
 $BrowseText = IniRead("Config.cfg", "Variables", "Browse", "[Browse]")
 $ColorText = IniRead("Config.cfg", "Variables", "Color", "Color")
+
+; Work around for Rainmeter not properly positioning full-screen skins
+If $YPosition < 0 Then
+	$XPosition = 0
+	$YPosition = 0
+EndIf
 
 ; Create GUI
 $Gui = GUICreate("Configure", $width - 2, $height - 2, $XPosition + 5, $YPosition + 5, $GuiOptions, $WS_EX_TOOLWINDOW)
@@ -200,9 +205,6 @@ GUIRegisterMsg($WM_DRAGENTER, "OnDragDrop")
 GUIRegisterMsg($WM_DRAGOVER, "OnDragDrop")
 GUIRegisterMsg($WM_DRAGLEAVE, "OnDragDrop")
 GUIRegisterMsg($WM_DROP, "OnDragDrop")
-
-; Close on middle-click
-_MouseSetOnEvent($MOUSE_WHEELUP_EVENT , "_Exit", "", "", $Gui, -1)
 
 ; Create colorbox if panel is marked as colorizable
 If $Colorizable = 1 Then

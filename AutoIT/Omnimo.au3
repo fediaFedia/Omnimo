@@ -14,6 +14,11 @@
 #include <Inet.au3>
 #include <String.au3>
 #include <Misc.au3>
+#Include <WinAPI.au3>
+#include <File.au3>
+#include <IE.au3>
+#include <GUIConstants.au3>
+#Include <WindowsConstants.au3>
 
 #include "Includes\Common.au3"
 #include "Includes\_Startup.au3"
@@ -31,8 +36,39 @@ Const $HideIcons = Int(IniRead($SettingsVariables, "Variables", "Icons", "0"))
 Const $Hotkey = IniRead($SettingsVariables, "Variables", "Hotkey", "F8")
 Const $UpdateURL = IniRead($SettingsVariables, "Variables", "UpdateURL", "http://fediafedia.com/update.dt")
 Const $RainmeterPath = IniRead($SettingsVariables, "Variables", "RainmeterPath", "") & "\Rainmeter.exe"
+Const $OmnimoTray = Int(IniRead($SettingsVariables, "Variables", "OmnimoTray", "0"))
 Const $LangFile = @ScriptDir & "\Language\" & $CurrentLanguage & ".cfg"
 
+If $CmdLine[0] > 0 And $CmdLine[1] = "-firstrun" Then
+	Const $OmnimoFolder = @StartMenuDir & "\Programs\Omnimo UI"
+	If DirCreate($OmnimoFolder) = 0 Then
+		OmnimoError("Error", "Unable to create programs folder for Omnimo")
+	EndIf
+
+	FileCreateShortcut(@ScriptDir & "\omnimo.exe", $OmnimoFolder & "\Launch Omnimo.lnk", Default, Default, "Launch Omnimo", @ScriptDir & "\Icons\Omnimo.ico")
+	FileCreateShortcut("http://omnimo.info", $OmnimoFolder & "\Official Website.lnk", Default, Default, "Official Omnimo Website", @ScriptDir & "\Icons\favicon.ico")
+	FileCreateShortcut(@ScriptDir & "\..\..\..\readme.txt", $OmnimoFolder & "\Readme.lnk", Default, Default, "Omnimo ReadMe", @ScriptDir & "\Icons\readme.ico")
+	FileCreateShortcut(@ScriptDir & "\settings.exe", $OmnimoFolder & "\Settings.lnk", Default, Default, "Omnimo Settings", @ScriptDir & "\Icons\Settings.ico")
+	FileCreateShortcut(@ScriptDir & "\omnimo.exe", $OmnimoFolder & "\Uninstall.lnk", Default, "-uninstall", "Uninstall Omnimo", @ScriptDir & "\Icons\uninstall.ico")
+
+	Hub()
+EndIf
+
+If $CmdLine[0] > 0 And $CmdLine[1] = "-uninstall" Then
+	If MsgBox(52, "Uninstall Omnimo UI", "Are you sure you want to remove Omnimo UI?") = 7 Then Exit
+	DirRemove(@StartMenuDir & "\Programs\Omnimo UI", 1)
+	Const $Uninstaller = @TempDir & "\~OmnimoUninstallTmp.exe"
+	FileCopy(@ScriptDir & "\uninstall.exe", $Uninstaller, 1)
+	ShellExecute($Uninstaller, '"' & _PathFull(@ScriptDir & "\..\..\..\") & '"')
+	Exit
+EndIf
+
+; Launch Rainmeter if it's not running
+If Not ProcessExists("rainmeter.exe") And FileExists($RainmeterPath) Then
+	Run($RainmeterPath)
+EndIf
+
+If Not $OmnimoTray Then Exit
 If Not FileExists($LangFile) Then OmnimoError("Error loading language", "Unable to load language file for " & $CurrentLanguage)
 
 If $Hotkey <> "None" Then HotKeySet("{" & $Hotkey & "}", "ToggleOmnimo")
@@ -86,6 +122,8 @@ TrayCreateItem($Language.Item("PingGoogle"), $System)
 TrayItemSetOnEvent(-1, "PingGoogle")
 TrayCreateItem($Language.Item("MonitorOff"), $System)
 TrayItemSetOnEvent(-1, "MonitorOff")
+TrayCreateItem($Language.Item("Screensaver"), $System)
+TrayItemSetOnEvent(-1, "Screensaver")
 TrayCreateItem($Language.Item("Eject"), $System)
 TrayItemSetOnEvent(-1, "Eject")
 
@@ -135,8 +173,12 @@ TrayCreateItem($Language.Item("ChangeStyles"), $Omnimo)
 TrayItemSetOnEvent(-1, "ChangeStyles")
 TrayCreateItem($Language.Item("ShowToggler"), $Omnimo)
 TrayItemSetOnEvent(-1, "ShowToggler")
+TrayCreateItem("Omnimo Hub", $Omnimo)
+TrayItemSetOnEvent(-1, "Hub")
 TrayCreateItem($Language.Item("CheckUpdates"), $Omnimo)
 TrayItemSetOnEvent(-1, "CheckForUpdates")
+TrayCreateItem($Language.Item("AboutTitle"), $Omnimo)
+TrayItemSetOnEvent(-1, "About")
 
 ; Main menu
 
@@ -152,14 +194,9 @@ TraySetOnEvent($TRAY_EVENT_PRIMARYUP, "ToggleOmnimo") ; Toggle omnimo on left-cl
 TraySetClick(16) ; Show tray menu only on right-click
 TraySetState()
 
-; Launch Rainmeter if it's not running
-If Not ProcessExists("rainmeter.exe") And FileExists($RainmeterPath) Then
-	Run($RainmeterPath)
-EndIf
-
 While 1
 	Sleep(2500)
-	If Not ProcessExists("rainmeter.exe") Then
+	If Not ProcessExists("rainmeter.exe") And Not ProcessExists("SkinInstaller.exe") Then
 		If $HideIcons Then ShowIcons(True)
 		Exit
 	EndIf
@@ -248,6 +285,16 @@ Func Eject()
 		CDTray($drive[$i], "open")
 	Next
 	TrayTip($Language.Item("EjectTitle"), $Language.Item("EjectText"), Default, 1)
+EndFunc
+
+Func Screensaver()
+	Local Const $SPI_GETSCREENSAVEACTIVE = 16
+	Local Const $SC_SCREENSAVE = 0xF140
+
+	$Ret = DllCall('user32.dll', 'int', 'SystemParametersInfo', 'uint', $SPI_GETSCREENSAVEACTIVE, 'uint', 0, 'int*', 0, 'uint', 0)
+	If $Ret[3] Then
+		_SendMessage(_WinAPI_GetDesktopWindow(), $WM_SYSCOMMAND, $SC_SCREENSAVE, 0)
+	EndIf
 EndFunc
 
 ;
@@ -424,6 +471,38 @@ Func CheckForUpdates()
 	Else
 		TrayTip($Language.Item("NoUpdateTitle"), $Language.Item("NoUpdateText"), Default, 1)
 	EndIf
+EndFunc
+
+Func Hub()
+	Const $HubURL = IniRead($SettingsVariables, "Variables", "HubURL", "")
+	Const $Version = IniRead($SettingsVariables, "Variables", "Version", "6.0")
+
+	$Gui = GUICreate("Omnimo Information Hub (Version " & $Version & ")", 535, 470, -1, -1, BitOR($GUI_SS_DEFAULT_GUI, $WS_MAXIMIZEBOX, $WS_SIZEBOX, $WS_CLIPCHILDREN))
+	GUISetBkColor(0x7A7A7A)
+
+	_IEErrorHandlerRegister()
+	$oIE = _IECreateEmbedded()
+	GUICtrlCreateObj($oIE, 0, 25, 535, 445)
+	GUICtrlSetResizing(-1, $GUI_DOCKBORDERS)
+	$back = GUICtrlCreateButton("< Back", 3, 3, 60, 20, 0)
+
+	_IENavigate($oIE, $HubURL)
+	GUISetState()
+
+	While 1
+	  $msg = GUIGetMsg()
+	  Switch $msg
+		Case $back
+		  _IEAction($oIE, "back")
+		Case $GUI_EVENT_CLOSE
+		  GUIDelete($Gui)
+		  Return
+	  EndSwitch
+	WEnd
+EndFunc
+
+Func About()
+	TrayTip($Language.Item("AboutTitle"), StringReplace($Language.Item("AboutText"), "\n", @CRLF), Default, 1)
 EndFunc
 
 ;

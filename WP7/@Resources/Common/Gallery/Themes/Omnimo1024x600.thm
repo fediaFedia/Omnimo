@@ -22,6 +22,17 @@ SnapEdges=1
 KeepOnScreen=1
 AutoSelectScreen=0
 AlwaysOnTop=0
+
+[WP7\TextItems\Extra\PowerButtonMenu]
+Active=1
+WindowX=908
+WindowY=337
+ClickThrough=0
+Draggable=1
+SnapEdges=1
+KeepOnScreen=1
+AlwaysOnTop=0
+
 [WP7\Panels\Mail]
 Active=1
 WindowX=211
@@ -85,7 +96,7 @@ Version=0.9.3
 
 [WP7\Background]
 LoadOrder=-1
-Active=1
+Active=2
 WindowX=0
 WindowY=0
 AlphaValue=255

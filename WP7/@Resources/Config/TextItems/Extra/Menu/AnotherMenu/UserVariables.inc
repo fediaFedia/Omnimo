@@ -11,3 +11,4 @@ Name5=Lock PC
 Action5=Lock.lnk
 FontFace=Segoe WP Light
 iconvisibility=180
+Padding=0

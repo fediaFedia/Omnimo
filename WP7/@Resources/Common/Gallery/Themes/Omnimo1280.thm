@@ -35,7 +35,7 @@ KeepOnScreen=1
 AlwaysOnTop=0
 
 [WP7\Background]
-Active=1
+Active=2
 LoadOrder=-1
 WindowX=0
 WindowY=0

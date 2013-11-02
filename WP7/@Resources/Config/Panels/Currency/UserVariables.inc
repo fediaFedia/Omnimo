@@ -1,4 +1,4 @@
 [Variables]
-CurrencyFrom=LTL
+CurrencyFrom=GBP
 CurrencyTo=EUR
 ShowBackground=0

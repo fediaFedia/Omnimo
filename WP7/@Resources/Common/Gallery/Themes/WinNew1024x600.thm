@@ -18,6 +18,21 @@ KeepOnScreen=1
 AutoSelectScreen=0
 AlwaysOnTop=0
 
+[WP7\TextItems\Extra\AltGalleryButtons]
+Active=3
+WindowX=473
+WindowY=145
+AlphaValue=255
+FadeDuration=250
+ClickThrough=0
+Draggable=1
+HideOnMouseOver=0
+SavePosition=1
+SnapEdges=1
+KeepOnScreen=1
+AutoSelectScreen=0
+AlwaysOnTop=0
+
 [WP7\Gallery]
 Active=0
 WindowX=(#ScreenAreaWidth#/2-332)
@@ -33,20 +48,6 @@ KeepOnScreen=1
 AutoSelectScreen=0
 AlwaysOnTop=1
 
-[WP7\TextItems\#Win8Sidebar\Toggle]
-Active=1
-WindowX=1009
-WindowY=0
-AlphaValue=255
-FadeDuration=250
-ClickThrough=0
-Draggable=1
-HideOnMouseOver=0
-SavePosition=1
-SnapEdges=1
-KeepOnScreen=1
-AutoSelectScreen=0
-AlwaysOnTop=0
 
 [WP7]
 Active=1

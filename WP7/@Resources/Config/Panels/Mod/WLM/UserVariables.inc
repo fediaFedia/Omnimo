@@ -1,4 +1,4 @@
 [Variables]
-Title=Windows Live Messenger
-Action=msnmsgr.exe
+Title=Trillian Messenger
+Action=trillian.exe
 IconLocation=#@#Graphics\Panels\Mod\WLM\icon.png

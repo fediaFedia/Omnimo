@@ -27,7 +27,7 @@
 Const $VariablesFile = @ScriptDir & '\..\Variables\UserVariables.inc'
 Const $SettingsVariables = @ScriptDir & "\UserVariables.inc"
 
-Const $Updates = Int(IniRead($SettingsVariables, "Variables", "Updates", "0"))
+Const $OmnimoTray = Int(IniRead($SettingsVariables, "Variables", "OmnimoTray", "0"))
 Const $Icons = Int(IniRead($SettingsVariables, "Variables", "Icons", "0"))
 Const $Startup = Int(IniRead($SettingsVariables, "Variables", "Startup", "0"))
 Const $CurrentLanguage = IniRead($SettingsVariables, "Variables", "Language", "English")
@@ -108,11 +108,11 @@ $IconsOpt = GUICtrlCreateCheckbox($Language.Item("Icons"), 35, 314, 250, 25)
 
 If IniRead($VariablesFile, "Variables", "DisplayAMPM", "1") == "1" Then GUICtrlSetState($MetricOpt, $GUI_CHECKED)
 If IniRead(@AppDataDir & "\Rainmeter\Rainmeter.ini", "Rainmeter", "TrayIcon", "1") == "0" Then GUICtrlSetState($TrayIconOpt, $GUI_CHECKED)
-If $Updates Then GUICtrlSetState($TrayIconOpt, $GUI_CHECKED)
+If $OmnimoTray Then GUICtrlSetState($TrayIconOpt, $GUI_CHECKED)
 If $Startup Then GUICtrlSetState($StartupOpt, $GUI_CHECKED)
 If $Icons Then GUICtrlSetState($IconsOpt, $GUI_CHECKED)
 
-$Langlist = _FileListToArray("Language", "*.cfg")
+$Langlist = _FileListToArray(@ScriptDir & "\Language", "*.cfg")
 $Languages = ""
 For $i = 1 To $Langlist[0]
 	$Languages &= StringTrimRight($Langlist[$i], 4) & "|"
@@ -124,6 +124,9 @@ GUICtrlSetData($HotkeySelect, "None|F6|F7|F8|F9|F10", $Hotkey)
 ; Info buttons
 GUICtrlCreatePic(@ScriptDir & "\info.jpg", 299, 83, 16, 16)
 GUICtrlSetTip(-1, $Language.Item("TranslationsTip"), $Language.Item("TranslationsTipTitle"), 1, 1)
+
+GUICtrlCreatePic(@ScriptDir & "\info.jpg", 299, 146, 16, 16)
+GUICtrlSetTip(-1, $Language.Item("TrayIconTip"), $Language.Item("TrayIconTipTitle"), 1, 1)
 
 GUICtrlCreatePic(@ScriptDir & "\info.jpg", 299, 319, 16, 16)
 GUICtrlSetTip(-1, $Language.Item("IconsTip"), $Language.Item("IconsTipTitle"), 1, 1)
@@ -157,10 +160,11 @@ While 1
 			Exit
 
 		Case $OK
-			Const $TraySelected = _Iif(GUICtrlRead($TrayIconOpt) = $GUI_CHECKED, "0", "1")
+			Const $TraySelected = _Iif(GUICtrlRead($TrayIconOpt) = $GUI_CHECKED, 1, 0)
 			Const $IconsSelected = _Iif(GUICtrlRead($IconsOpt) = $GUI_CHECKED, "1", "0")
 
-			IniWrite(@AppDataDir & "\Rainmeter\Rainmeter.ini", "Rainmeter", "TrayIcon", $TraySelected)
+			IniWrite(@AppDataDir & "\Rainmeter\Rainmeter.ini", "Rainmeter", "TrayIcon", -1 * $TraySelected + 1)
+			IniWrite($SettingsVariables, "Variables", "OmnimoTray", $TraySelected)
 			IniWrite($SettingsVariables, "Variables", "Icons", $IconsSelected)
 			IniWrite($SettingsVariables, "Variables", "Hotkey", GUICtrlRead($HotkeySelect))
 
@@ -219,6 +223,14 @@ While 1
 				EndIf
 
 				ShellExecute(@ScriptDir & "\Omnimo.exe")
+			EndIf
+
+			If GUICtrlRead($TrayIconOpt) = $GUI_CHECKED Then
+				If Not ProcessExists("Omnimo.exe") Then ShellExecute(@ScriptDir & "\Omnimo.exe")
+			Else
+				ProcessClose("Omnimo.exe")
+				ProcessWaitClose("Omnimo.exe")
+				_UpdateTray()
 			EndIf
 
 			SendBang("!RefreshApp")

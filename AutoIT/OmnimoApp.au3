@@ -398,7 +398,7 @@ Case 'PanelCombos'
     $Checkbox1 = GUICtrlCreateCheckbox("Bing", 8, 8, 73, 17)
     $Checkbox2 = GUICtrlCreateCheckbox("Reader", 8, 32, 73, 17)
     $Checkbox3 = GUICtrlCreateCheckbox("Reader2", 8, 56, 81, 17)
-    $Checkbox4 = GUICtrlCreateCheckbox("Reader3", 8, 80, 73, 17)
+    $Checkbox4 = GUICtrlCreateCheckbox("WeirdReader", 8, 80, 89, 17)
     $Checkbox5 = GUICtrlCreateCheckbox("Launcher", 8, 104, 73, 17)
     $Checkbox6 = GUICtrlCreateCheckbox("Notes", 8, 128, 65, 17)
     $Checkbox7 = GUICtrlCreateCheckbox("Todolist", 8, 152, 89, 17)
@@ -414,7 +414,7 @@ Case 'PanelCombos'
     $Checkbox17 = GUICtrlCreateCheckbox("World Clock", 105, 152, 89, 17)
     $Checkbox18 = GUICtrlCreateCheckbox("Websites", 105, 176, 81, 17)
     $Checkbox19 = GUICtrlCreateCheckbox("Youtube", 105, 200, 81, 17)
-    $Checkbox20 = GUICtrlCreateCheckbox("Flickr", 105, 224, 57, 17)
+    $Checkbox20 = GUICtrlCreateCheckbox("Calendar", 105, 224, 57, 17)
     $Button1 = GUICtrlCreateButton("OK", 8, 250, 186, 33)
 
     $config = $CmdLine[2] & '\WP7\@Resources\Config\TextItems\UserVariables.inc'
@@ -490,7 +490,7 @@ Case 'PanelCombos'
                 EndIf
                 If GUICtrlRead($Checkbox4) = 1 Then
                     $count = $count + 1
-                    IniWrite($config, 'Variables', 'Toggle' & $count, "Reader3")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "WeirdReader")
                 EndIf
                 If GUICtrlRead($Checkbox5) = 1 Then
                     $count = $count + 1
@@ -554,7 +554,7 @@ Case 'PanelCombos'
                 EndIf
                 If GUICtrlRead($Checkbox20) = 1 Then
                     $count = $count + 1
-                    IniWrite($config, 'Variables', 'Toggle' & $count, "Flickr")
+                    IniWrite($config, 'Variables', 'Toggle' & $count, "Calendar")
                 EndIf
 				SendBang("!Refresh WP7\TextItems")
                 Exit
@@ -572,7 +572,7 @@ Func Check_Enabled($Toggle)
             GUICtrlSetState($Checkbox2, $GUI_CHECKED)
         Case "Reader2"
             GUICtrlSetState($Checkbox3, $GUI_CHECKED)
-        Case "Reader3"
+        Case "WeirdReader"
             GUICtrlSetState($Checkbox4, $GUI_CHECKED)
         Case "Launcher"
             GUICtrlSetState($Checkbox5, $GUI_CHECKED)
@@ -604,7 +604,7 @@ Func Check_Enabled($Toggle)
             GUICtrlSetState($Checkbox18, $GUI_CHECKED)
         Case "Youtube"
             GUICtrlSetState($Checkbox19, $GUI_CHECKED)
-        Case "Flickr"
+        Case "Calendar"
             GUICtrlSetState($Checkbox20, $GUI_CHECKED)
     EndSwitch
 EndFunc   ;==>Check_Enabled

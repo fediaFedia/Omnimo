@@ -17,7 +17,6 @@
 #include "Includes\Common.au3"
 #include "Includes\ColorChooser.au3"
 #include "Includes\ColorGenerator.au3"
-#include "Includes\MouseOnEvent.au3"
 
 If $CmdLine[0] < 1 Then OmnimoError("Individual Panel Color", "Too few command line arguments specified.")
 
@@ -40,7 +39,7 @@ GUISetBkColor($BgColor2)
 GUICtrlCreateGraphic(0, 0, 165, 240) ; left pane
 GUICtrlSetBkColor(-1, $BgColor)
 GUICtrlSetState(-1, $GUI_DISABLE)
-$PanelList = GUICtrlCreateList("", 8, 10, 145, 190, $ListOptions, 0)
+$PanelList = GUICtrlCreateList("", 8, 10, 145, 175, $ListOptions, 0)
 GUICtrlSetBkColor(-1, $BgColor)
 GUICtrlSetColor(-1, $TextColor)
 $SelectAll = GUICtrlCreateLabel("Select all", 10, 190, 50, 20)
@@ -57,9 +56,6 @@ $NewPalette = GUICtrlCreateButton("New palette", 263, 170, 76, 25)
 GUICtrlSetState(-1, $GUI_HIDE)
 $plus = GUICtrlCreatePic("plus.jpg", 385, 108, 33, 33)
 GUICtrlSetState(-1, $GUI_HIDE)
-
-; Close GUI on middle-click
-_MouseSetOnEvent($MOUSE_WHEELUP_EVENT , "WheelDown", "", "", $hGUI, -1)
 
 GUISetState(@SW_SHOW)
 

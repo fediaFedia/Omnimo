@@ -1,3 +1,3 @@
 [Variables]
-SearchEngine=http://www.google.com/search?q=
-SearchengineT=Google
+SearchEngine=http://en.wikipedia.org/w/index.php?title=Special%3ASearch&searcH=
+SearchengineT=Wikipedia

@@ -1,6 +1,6 @@
 [Variables]
-RSS1=http://lenta.ru/rss
-RSS1Name=Lenta.ru
+RSS1=http://feeds.bbci.co.uk/news/rss.xml
+RSS1Name=BBC
 RSS2=http://reddit.com/.rss
 RSS2Name=reddit
 RSS3=http://www.engadget.com/rss.xml
@@ -14,7 +14,7 @@ Update=10
 Title=latest
 Subtitle=headlines
 Hidebackground=1
-RSSMain=http://lenta.ru/rss
+RSSMain=http://feeds.bbci.co.uk/news/rss.xml
 RSS1Color=255
 RSS2Color=120
 RSS3Color=120
