@@ -1,11 +1,11 @@
-Omnimo UI for Rainmeter
+ iOmnimo UI for Rainmeter
 =======================
 
 
 What is Omnimo?
 ---------------
 
-**Omnimo** is a Windows Phone 7 inspired multifunctional interactive desktop information center based on Rainmeter. This suite will turn your desktop into a productive and attractive work area, delivering only the information you need. Every interactive tile gives you various information/settings at a glance, and can be easily customized to your needs. Unlike the initial Metro design, Omnimo gives you limitless customization potential, you can customize just about every aspect of it!
+**Omnimo** is a Windows Phone 7 inspired multifunctional interactive desktop information center based on Rainmeter. This suite will turn your desktop into a productive and attractive work area, delivering only the information you need. Every interactive tile gives you various information/settings at a glance, and can be easily customized to your needs. Unlike the initial Metro design, Omnimo gives you limitless customization potential, you can customize just about every aspect of it! It was the best when windows 8 wasn't arrived. 
 
 More info on our [website][web].
 
