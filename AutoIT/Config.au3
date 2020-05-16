@@ -8,6 +8,8 @@
 #AutoIt3Wrapper_Res_Fileversion=6.0.0.0
 #AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2013
 #AutoIt3Wrapper_AU3Check_Parameters=-q -w 1 -w 2 -w 3 -w 4 -w 6 -w 7 -w 8
+#AutoIt3Wrapper_res_requestedExecutionLevel=requireAdministrator
+#AutoIt3Wrapper_Run_After=""%scitedir%\tools\SignThisFile\CertSigner.exe" "%out%" /NoPopup /NoLogfile"
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <SliderConstants.au3>
@@ -20,7 +22,26 @@
 #include "Includes\ColorChooser.au3"
 
 ; Check arguments
+
 If $CmdLine[0] < 5 Then OmnimoError("Omnimo Panel Config", "Too few command line arguments specified.")
+
+
+
+Const $CurrentLanguage = IniRead("..\Background\Varrar.inc", "Variables", "Language", "English")
+Const $LangFile = "..\Background\Language\" & $CurrentLanguage & ".cfg"
+
+If Not FileExists($LangFile) Then OmnimoError("Error loading language", "Unable to load language file for " & $CurrentLanguage)
+
+; Read language dictionary from file
+$Language = ObjCreate("Scripting.Dictionary")
+$Sections = IniReadSection($LangFile, "Variables")
+For $i = 1 To $Sections[0][0]
+	$Language.Add($Sections[$i][0], $Sections[$i][1])
+ Next
+
+
+
+
 
 ; Set up variables
 Const $Font       = "Segoe UI"
@@ -29,11 +50,44 @@ Const $File       = $CmdLine[3]
 Const $DataFolder = $CmdLine[4]
 Const $SkinPath   = $CmdLine[5]
 
+Const $scaledpi = IniRead($skinpath & "WP7\@Resources\Common\Variables\UserVariables.inc", "Variables", "ScaleDpi", "1")
+
 Const $Variables  = $SkinPath & "WP7\@Resources\Common\Variables\"
 Const $VarFile    = $SkinPath & "WP7\@Resources\Config" & StringTrimLeft($Config, 3) & "\UserVariables.inc"
-Global $XPosition = IniRead($DataFolder & "Rainmeter.ini", $Config, "WindowX", "0")
-Global $YPosition = IniRead($DataFolder & "Rainmeter.ini", $Config, "WindowY", "0")
-Global $Size      = IniRead($SkinPath & $Config & "\" & $File, "Variables", "Height", "150")
+
+
+Global $XPositionE = IniRead($DataFolder & "Rainmeter.ini", $Config, "WindowX", "0")
+Global $YPositionE = IniRead($DataFolder & "Rainmeter.ini", $Config, "WindowY", "0")
+
+Opt("WinTitleMatchMode", 4)
+$Pos = WinGetPos("classname=Shell_TrayWnd")
+$workareaheight = @DeskTopHeight - $Pos[3]
+
+
+$stringE = $XPositionE
+Global $a_rep[4][2] = [[3], ["#screenareawidth#", @DeskTopWidth], ["#screenareaheight#", @DeskTopHeight], ["#workareaheight#", $workareaheight]]
+For $i = 1 To $a_rep[0][0]
+    $stringE = StringRegExpReplace($stringE, "\Q" & $a_rep[$i][0] & "\E", $a_rep[$i][1])
+ Next
+ 
+ $stringD = $YPositionE
+Global $a_rep[4][2] = [[3], ["#screenareawidth#", @DeskTopWidth], ["#screenareaheight#", @DeskTopHeight], ["#workareaheight#", $workareaheight]]
+For $i = 1 To $a_rep[0][0]
+    $stringD = StringRegExpReplace($stringD, "\Q" & $a_rep[$i][0] & "\E", $a_rep[$i][1])
+ Next
+ 
+
+
+
+
+Global $XPosition = execute($stringE)
+Global $YPosition = execute($stringD)
+
+
+
+
+Global $SizeL      = IniRead($SkinPath & $Config & "\" & $File, "Variables", "Height", "150") 
+Global $Size      = $SizeL * $scaledpi
 
 Const $BgColor    = IniRead($Variables & "UserVariables.inc", "Variables", "ConfigBackgroundColor", "0xe1e1e1")
 Const $BgColor2   = IniRead($Variables & "UserVariables.inc", "Variables", "ConfigBackgroundColor2", "0xd2d2d2")
@@ -54,6 +108,8 @@ Global $ColorData
 Global $BrowseData
 Global $CurrentSection = ""
 Global $ColorSkinReset
+Global $ColorSkinSet
+
 
 ; Enumerated type to keep track of which element was created last
 Global Enum $INPUT, $SLIDER, $CHECKBOX, $COLOR, $BROWSE
@@ -102,27 +158,42 @@ $W  = Int($SizeOptions[1])
 $H  = Int($SizeOptions[2])
 $PW = Int($SizeOptions[3])
 $PH = Int($SizeOptions[4])
-$width  = $Size * $W + $PW
+$width  = $Size * $W + $PW 
 $height = $Size * $H + $PH
-$listH  = $height - $Size / 7.25 - 18
+$listH  = $height - $Size / 3
 $CommentLimit = $height / 25
 
 ; Read label variables from Config.cfg
-$ResetText = IniRead("Config.cfg", "Variables", "Reset", "[RESET]")
-$BrowseText = IniRead("Config.cfg", "Variables", "Browse", "[Browse]")
-$ColorText = IniRead("Config.cfg", "Variables", "Color", "Color")
+$ResetText = IniRead("Config.cfg", "Variables", "Reset", $Language.Item("Reset"))
+$BrowseText = IniRead("Config.cfg", "Variables", "Browse", $Language.Item("Browse"))
+$ColorText = IniRead("Config.cfg", "Variables", "Color", $Language.Item("Color"))
 
 ; Work around for Rainmeter not properly positioning full-screen skins
 If $YPosition < 0 Then
-	$XPosition = 0
-	$YPosition = 0
-EndIf
+	$XPosition = 50
+	$YPosition = 50
+ EndIf
+ 
+   If $xposition > @DeskTopWidth - (150 * $scaledpi) Then
+		$xposition = @DeskTopWidth/1.2
 
+	 EndIf
+
+   If $yposition > @DeskTopHeight -(150 * $scaledpi) Then
+		$yposition = @DeskTopHeight/1.6
+
+	 EndIf
+
+   If $yposition < 50 Then
+		$yposition = 50
+
+	 EndIf
 ; Create GUI
 $Gui = GUICreate("Configure", $width - 2, $height - 2, $XPosition + 5, $YPosition + 5, $GuiOptions, $WS_EX_TOOLWINDOW)
+GUIRegisterMsg(0x0207, "_Exit")
 GUISetBkColor($BgColor)
 GUISetState()
-
+  WinSetTrans($Gui, "", 220)
 ; An empty label to act as activation area for set button
 $SetLabel = GUICtrlCreateLabel("", $width - $Size / 5.77, $height - $Size / 6.75, $Size / 6.5, $Size / 7.5)
 GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
@@ -130,31 +201,34 @@ GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
 ; Set up GDI resources
 _GDIPlus_Startup()
 $Set      = _GDIPlus_ImageLoadFromFile("set.png")
+$bucket      = _GDIPlus_ImageLoadFromFile("bucket.png")
+
 $hGraphic = _GDIPlus_GraphicsCreateFromHWND($Gui)
 $hBrush   = _GDIPlus_BrushCreateSolid("0xFF" & StringTrimLeft($BgColor2, 2))
 $hBrush2  = _GDIPlus_BrushCreateSolid("0xFF" & StringTrimLeft($TextColor, 2))
 $hFormat  = _GDIPlus_StringFormatCreate()
 $hFamily  = _GDIPlus_FontFamilyCreate($Font)
-$hFont    = _GDIPlus_FontCreate($hFamily, $Size / 16.7)
+$hFont    = _GDIPlus_FontCreate($hFamily, $Size / 16.7 / $scaledpi)
 _DrawBottom()
 
 ; Create an edit control for comments if needed
 $opts = BitOR($ES_AUTOVSCROLL, $ES_AUTOHSCROLL, $WS_HSCROLL, $WS_VSCROLL)
 If $Comments <> "" And $VarCount > 0 And $VarCount < $CommentLimit Then
 	$opts = 0
-	$listH = $listH * ($VarCount / ($CommentLimit + 1)) + $Size / 10
-	GUICtrlCreateEdit($Comments, 9, $listH, $width - 18, $height - $Size / 7.25 - 18 - $listH + $Size / 15, $ES_MULTILINE + $ES_AUTOVSCROLL, 0)
+	$listH = $listH * ($VarCount / ($CommentLimit + 1)) + $Size / 7 * $scaledpi
+	GUICtrlCreateEdit($Comments, 9, $listH, $width - 18, $height - $Size / 7.25 - 18 - $listH + $Size / 25, $ES_MULTILINE + $ES_AUTOVSCROLL, 0)
 	GUICtrlSetBkColor(-1, $BgColor)
 	GUICtrlSetColor(-1, $TextColor)
-	GUICtrlSetFont(-1, $Size / 15, 400, 0, $Font)
+	GUICtrlSetFont(-1, $Size / $scaledpi / 20, 400, 0, $Font)
 	GUICtrlSetState(-1, $GUI_DISABLE)
 EndIf
 
 ; Create the list of variables
 $VariableList = GUICtrlCreateList("", 10, 15, $width - 20, $listH, $opts, 0)
+
 GUICtrlSetBkColor(-1, $BgColor)
 GUICtrlSetColor(-1, $TextColor)
-GUICtrlSetFont(-1, $Size / 15, 400, 0, $Font)
+GUICtrlSetFont(-1, $Size / 15 / $scaledpi, 400, 0, $Font)
 
 If $VarCount = 0 Then
 	GUICtrlSetData($VariableList, $ColorText)
@@ -166,7 +240,7 @@ Else
 EndIf
 
 $VariableInput = GUICtrlCreateInput("", 2, $height - $Size / 7.25 - 1, $width - 32, $Size / 7.25, BitOR($ES_AUTOHSCROLL, $ES_PASSWORD), 0)
-GUICtrlSetFont(-1, $Size / 15, 400, 0, $Font)
+GUICtrlSetFont(-1, $Size / 15 / $scaledpi, 400, 0, $Font)
 GUICtrlSetColor(-1, $TextColor)
 GUICtrlSetBkColor(-1, $BgColor2)
 GUICtrlSetState(-1, $GUI_HIDE)
@@ -174,7 +248,7 @@ _GUICtrlEdit_SetPasswordChar($VariableInput, "0") ; "0" as password character me
 
 $VariableSlider = GUICtrlCreateSlider(0, $height - $Size / 6.25, $width - $Size / 5, $Size / 6.25, BITOR($TBS_NOTICKS, $TBS_TOOLTIPS))
 GUICtrlSetState(-1, $GUI_HIDE)
-
+GUICtrlSetBkColor(-1, $BgColor2)
 $VariableCheckbox = GUICtrlCreateCheckbox("", $Size / 30, $height - $Size / 6.25 + 1, $Size / 6.8, $Size / 6.8)
 GUICtrlSetBkColor(-1, $BgColor2)
 GUICtrlSetState(-1, $GUI_HIDE)
@@ -197,14 +271,25 @@ $CheckboxLabel = GUICtrlCreateLabel("", $Size / 7.5, $height - $Size / 6.25 + 3,
 GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
 GUICtrlSetState(-1, $GUI_HIDE)
 
+
+$sliderE = GUICtrlCreateSlider(0, $height - $Size / 3.125, $width, $Size / 6.25, BITOR($TBS_NOTICKS, $TBS_TOOLTIPS))
+GUICtrlSetLimit($sliderE, 300, 70)
+GUICtrlSetData($sliderE, $Size)
+
+
+
+GUICtrlSetBkColor(-1, $BgColor)
 ; Register drag/drop events
 DragDropEvent_Startup()
 DragDropEvent_Register($Gui)
+
+
 
 GUIRegisterMsg($WM_DRAGENTER, "OnDragDrop")
 GUIRegisterMsg($WM_DRAGOVER, "OnDragDrop")
 GUIRegisterMsg($WM_DRAGLEAVE, "OnDragDrop")
 GUIRegisterMsg($WM_DROP, "OnDragDrop")
+
 
 ; Create colorbox if panel is marked as colorizable
 If $Colorizable = 1 Then
@@ -227,6 +312,7 @@ While 1
 
 		Case $VariableList
 			_WriteOption()
+
 			$CurrentVarName = GUICtrlRead($VariableList)
 			If $CurrentVarName <> "" Then
 				; Find the new variable's data
@@ -249,6 +335,7 @@ While 1
 				GUICtrlSetState($VariableColorbox, $GUI_HIDE)
 				GUICtrlSetState($CheckboxLabel, $GUI_HIDE)
 				GUICtrlSetState($ColorLabel, $GUI_HIDE)
+					GUICtrlSetState($SliderE, $GUI_HIDE)
 				GUICtrlSetState($BrowseLabel, $GUI_HIDE)
 
 				$Colorizable = 0
@@ -268,9 +355,15 @@ While 1
 					Case "Browse"
 						_CreateBrowseButton($CurrentValue)
 				EndSwitch
-			EndIf
+			 EndIf
+			 
+		Case $sliderE
 
+				IniWrite($SkinPath & $Config & "\" & $File, "Variables", "Height",  GUICtrlRead($sliderE))
+			
 		Case $VariableColorbox
+		   
+		   $ColorSkinSet = True
 			$Chose = _ColorChooserDialog(_ToColor($ColorData), $Gui)
 			$ColorData = _Iif($Chose <> -1, $Chose, $ColorData)
 			GUICtrlSetBkColor($VariableColorbox, $ColorData)
@@ -301,6 +394,8 @@ While 1
 
 		Case $SetLabel
 			_WriteOption()
+			Sleep(100)
+
 			SendBang("!Refresh " & $CmdLine[2]) ; refresh config
 			_Exit()
 
@@ -330,8 +425,14 @@ Func _WriteOption()
 	If $Colorizable = 1 Then
 		If $ColorSkinReset = True Then
 			IniDelete($SkinPath & $Config & "\" & $File, "Variables", "ColorSkin")
-		Else
+			IniDelete($SkinPath & $Config & "\" & $File, "Variables", "Height")
+		IniWrite($SkinPath & $Config & "\" & $File, "Variables", "Height", "150")
+	
+	
+		ElseIf $ColorSkinSet = True Then
 			IniWrite($SkinPath & $Config & "\" & $File, "Variables", "ColorSkin", $value)
+		Else
+		
 		EndIf
 	Else
 		IniWrite($VarFile, $CurrentVarSection, $CurrentVarName, $value)
@@ -376,6 +477,12 @@ Func _CreateColorBox($value)
 	$ColorData = $value
 	$CreatedElement = $COLOR
 	$ColorSkinReset = False
+	$ColorSkinSet = False
+	
+	
+	
+_GDIPlus_GraphicsDrawImageRect($hGraphic, $bucket, 10, $height - $Size / 6.75, $Size / 4.5, $Size / 7.5)
+	
 EndFunc
 
 Func _CreateBrowseButton($value)
@@ -391,6 +498,8 @@ EndFunc
 Func _DrawBottom()
 	_GDIPlus_GraphicsFillRect($hGraphic, 0, $height - $Size / 6.25, $width, $Size / 6.25, $hBrush)
 	_GDIPlus_GraphicsDrawImageRect($hGraphic, $Set, $width - $Size / 5.77, $height - $Size / 6.75, $Size / 6.5, $Size / 7.5)
+	
+
 EndFunc
 
 Func _DrawText($desc, $x)
@@ -443,8 +552,13 @@ Func OnDragDrop($hWnd, $Msg, $wParam, $lParam)
 EndFunc
 
 Func _Exit()
+   		Sleep(150)
 	_GDIPlus_GraphicsDispose($hGraphic)
 	_GDIPlus_ImageDispose($Set)
 	_GDIPlus_ShutDown()
 	Exit
-EndFunc
+ EndFunc
+ 
+
+    
+    
