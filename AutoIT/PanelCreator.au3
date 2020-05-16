@@ -3,6 +3,7 @@
 #AutoIt3Wrapper_Icon=Icons\PanelCreator.ico
 #AutoIt3Wrapper_Outfile=..\WP7\@Resources\Common\PanelCreator\PanelCreator.exe
 #AutoIt3Wrapper_UseUpx=n
+	#AutoIt3Wrapper_Res_HiDpi=n
 #AutoIt3Wrapper_Res_Comment=Made for Omnimo UI
 #AutoIt3Wrapper_Res_Description=Omnimo Panel Creator
 #AutoIt3Wrapper_Res_Fileversion=6.0.0.0
@@ -21,9 +22,27 @@
 
 Opt("ExpandEnvStrings", 1)
 
+
+
+
+Const $CurrentLanguage = IniRead("..\Background\Varrar.inc", "Variables", "Language", "English")
+Const $LangFile = "..\Background\Language\" & $CurrentLanguage & ".cfg"
+
+If Not FileExists($LangFile) Then OmnimoError("Error loading language", "Unable to load language file for " & $CurrentLanguage)
+
+; Read language dictionary from file
+$Language = ObjCreate("Scripting.Dictionary")
+$Sections = IniReadSection($LangFile, "Variables")
+For $i = 1 To $Sections[0][0]
+	$Language.Add($Sections[$i][0], $Sections[$i][1])
+ Next
+
+
+
 Const $SkinPath = $CmdLine[1]
-Const $PanelsInc = $SkinPath & "WP7\Gallery\MyPanels\panels.inc"
+Const $PanelsInc = $SkinPath & "WP7\Gallery\panels.inc"
 Const $GDIFont = "Segoe UI"
+Const $scaledpi = IniRead($skinpath & "WP7\@Resources\Common\Variables\UserVariables.inc", "Variables", "ScaleDpi", "1")
 
 ; Remove a created panel
 If $CmdLine[0] > 2 And $CmdLine[2] == "Delete" Then
@@ -35,7 +54,7 @@ If $CmdLine[0] > 2 And $CmdLine[2] == "Delete" Then
 	IniDelete($PanelsInc, "Variables", "Path" & $index)
 	IniDelete($PanelsInc, "Variables", "Icon" & $index)
 	SendBang("!DeactivateConfig WP7\Panels\" & $path)
-	SendBang("!Refresh WP7\Gallery\MyPanels")
+	SendBang("!Refresh WP7\Gallery")
 	Exit
 EndIf
 
@@ -60,48 +79,68 @@ Const $Color6 = $ColorVariables[13][1]
 _IconImage_Startup()
 
 ; Create GUI
-$Gui = GUICreate("Panel Creator", 390, 255, -1, -1, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), $WS_EX_ACCEPTFILES)
+$Gui = GUICreate("Panel Creator", 230* $scaledpi, 420* $scaledpi, -1, -1, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX), $WS_EX_ACCEPTFILES)
 GUISetBkColor($GuiBG)
 
+ 
+ 
 ; Panel background
-Const $drop = GUICtrlCreateGraphic(25, 25, 150, 150)
+Const $drop = GUICtrlCreateGraphic(40* $scaledpi, 40 * $scaledpi, 150 * $scaledpi, 150 * $scaledpi)
 GUICtrlSetBkColor(-1, $PanelBG)
 GUICtrlSetState(-1, $GUI_DROPACCEPTED)
 
 ; Browse, select, create and save buttons
-Const $browse = GUICtrlCreateGraphic(196, 99, 84, 24)
-GUICtrlSetBkColor(-1, $BrowseBG)
-Const $select = GUICtrlCreateGraphic(283, 99, 85, 24)
-GUICtrlSetBkColor(-1, $BrowseBG)
-Const $create = GUICtrlCreateGraphic(197, 132, 146, 43)
-GUICtrlSetBkColor(-1, $CreateBG)
-Const $save = GUICtrlCreateGraphic(343, 131, 25, 45)
-GUICtrlSetBkColor(-1, Darken($CreateBG, 0.66))
+Const $loadE = GUICtrlCreateLabel(".....", 110* $scaledpi, 322* $scaledpi, 70* $scaledpi) ; first cell 70 width
+  GUICtrlSetBkColor($loadE, $PanelBG)
+   GUICtrlSetColor($loadE, $CreateBG)
+   	   GUICtrlSetState ( $loadE,   $GUI_HIDE   )
+	   
+
+Const $save = GUICtrlCreateGraphic(40* $scaledpi, 355* $scaledpi, 150* $scaledpi, 20* $scaledpi)
+GUICtrlSetBkColor(-1, $PanelBG)
 
 ; The graphics object needs to be created before the GUI is shown,
 ; otherwise measurements are way off for some strange reason
 Const $hGUIGraphic = _GDIPlus_GraphicsCreateFromHWND($Gui)
 GUISetState()
-
+; Draw footer
+Const $hGUIBrush = _GDIPlus_BrushCreateSolid($FooterBG)
+_GDIPlus_GraphicsFillRect($hGUIGraphic, 0, 205* $scaledpi, 230* $scaledpi, 500* $scaledpi, $hGUIBrush)
 Const $hSaveImage = _GDIPlus_ImageLoadFromFile("Resources\save.png")
 _GDIPlus_GraphicsDrawImage($hGUIGraphic, $hSaveImage, 350, 147)
 
-; Draw footer
-Const $hGUIBrush = _GDIPlus_BrushCreateSolid($FooterBG)
-_GDIPlus_GraphicsFillRect($hGUIGraphic, 0, 200, 390, 55, $hGUIBrush)
+Const $create = GUICtrlCreateGraphic(40* $scaledpi, 310* $scaledpi, 150* $scaledpi, 45* $scaledpi)
+GUICtrlSetBkColor(-1, $CreateBG)
 
 ; Draw the input field backgrounds
 Const $hGUIPen = _GDIPlus_PenCreate(0xFF747474)
 _GDIPlus_BrushSetSolidColor($hGUIBrush, $FieldsBG)
-_GDIPlus_GraphicsFillRect($hGUIGraphic, 197, 26, 169, 27, $hGUIBrush)
-_GDIPlus_GraphicsFillRect($hGUIGraphic, 197, 62, 169, 27, $hGUIBrush)
-_GDIPlus_GraphicsDrawRect($hGUIGraphic, 196, 25, 171, 29, $hGUIPen)
-_GDIPlus_GraphicsDrawRect($hGUIGraphic, 196, 61, 171, 29, $hGUIPen)
-_GDIPlus_GraphicsDrawRect($hGUIGraphic, 196, 131, 172, 44, $hGUIPen)
+_GDIPlus_GraphicsFillRect($hGUIGraphic, 40* $scaledpi, 215* $scaledpi, 150* $scaledpi, 30* $scaledpi, $hGUIBrush)
+_GDIPlus_GraphicsFillRect($hGUIGraphic, 40* $scaledpi, 255* $scaledpi, 150* $scaledpi, 30* $scaledpi, $hGUIBrush)
+
+
+
+
+
+Const $browse = GUICtrlCreateGraphic(145* $scaledpi, 262* $scaledpi, 17* $scaledpi, 17* $scaledpi)
+ GUICtrlSetBkColor($browse, "0xFFFFFF")
+
+Const $select = GUICtrlCreateGraphic(165* $scaledpi, 262* $scaledpi, 17* $scaledpi, 17* $scaledpi)
+ GUICtrlSetBkColor($select, "0xFFFFFF")
+ 
+Const $browseE = _GDIPlus_ImageLoadFromFile("Resources\file.png")
+_GDIPlus_GraphicsDrawImage($hGUIGraphic, $browseE, 145* $scaledpi, 260* $scaledpi)
+
+ 
+Const $selectE = _GDIPlus_ImageLoadFromFile("Resources\folder.png")
+_GDIPlus_GraphicsDrawImage($hGUIGraphic, $selectE, 165* $scaledpi, 260* $scaledpi)
+
+
+ 
 
 ; Create edgeless input fields
-Const $name = GUICtrlCreateInput("Name", 206, 34, 150, 15, -1, $WS_EX_WINDOWEDGE)
-Const $action = GUICtrlCreateInput("Action", 206, 70, 150, 15, -1, $WS_EX_WINDOWEDGE)
+Const $name = GUICtrlCreateInput($Language.Item("Name"), 50* $scaledpi, 223* $scaledpi, 130* $scaledpi, 15* $scaledpi, -1, $WS_EX_WINDOWEDGE)
+Const $action = GUICtrlCreateInput($Language.Item("Action"), 50* $scaledpi, 263* $scaledpi, 65* $scaledpi, 15* $scaledpi, -1, $WS_EX_WINDOWEDGE)
 
 ; Create a double buffer to avoid flickering
 Const $hGraphic = _GDIPlus_GraphicsCreateFromHWND(ControlGetHandle($Gui, "", $drop))
@@ -120,17 +159,23 @@ Const $hFormat = _GDIPlus_StringFormatCreate()
 Const $BrowseFont = _GDIPlus_FontCreate($hFamily, 8)
 
 ; Draw button strings
-_GDIPlus_GraphicsDrawStringEx($hGUIGraphic, "Browse for file", $BrowseFont, _GDIPlus_RectFCreate(200, 103), $hFormat, $hBrush)
-_GDIPlus_GraphicsDrawStringEx($hGUIGraphic, "Select folder", $BrowseFont, _GDIPlus_RectFCreate(290, 103), $hFormat, $hBrush)
-_GDIPlus_GraphicsDrawStringEx($hGUIGraphic, "Create panel", _GDIPlus_FontCreate($hFamily, 14), _GDIPlus_RectFCreate(208, 141), $hFormat, $hBrush)
+
+_GDIPlus_StringFormatSetAlign($hFormat, 1)
+_GDIPlus_GraphicsDrawStringEx($hGUIGraphic, $Language.Item("ExportRmskin"), $BrowseFont, _GDIPlus_RectFCreate(115* $scaledpi,360* $scaledpi), $hFormat, $hBrush)
+
+
+_GDIPlus_GraphicsDrawStringEx($hGUIGraphic, $Language.Item("CreatePanel"), _GDIPlus_FontCreate($hFamily, 14), _GDIPlus_RectFCreate(115* $scaledpi, 320* $scaledpi), $hFormat, $hBrush)
+
+_GDIPlus_StringFormatSetAlign($hFormat, 0)
+
 
 ; Draw color selection rectangles
-$CG1 = DrawColorBox($Color1, 27, 217)
-$CG2 = DrawColorBox($Color2, 52, 217)
-$CG3 = DrawColorBox($Color3, 77, 217)
-$CG4 = DrawColorBox($Color4, 102, 217)
-$CG5 = DrawColorBox($Color5, 127, 217)
-$CG6 = DrawColorBox($Color6, 152, 217)
+;$CG1 = DrawColorBox($Color1, 39, 189)
+;$CG2 = DrawColorBox($Color2, 65, 189)
+;$CG3 = DrawColorBox($Color3, 91, 189)
+;$CG4 = DrawColorBox($Color4, 116, 189)
+;$CG5 = DrawColorBox($Color5, 142, 189)
+;$CG6 = DrawColorBox($Color6, 168, 189)
 
 DrawPanelImage("Resources\droptext.png")
 
@@ -217,19 +262,27 @@ While 1
 			FileChangeDir(@ScriptDir)
 
 		Case $create
+		   
+		 		   GUICtrlSetState ( $create,   $GUI_HIDE   )
+	   GUICtrlSetState ( $loadE,   $GUI_SHOW   )
+
+
+
 			$title = GUICtrlRead($name)
 			$foldername = StringRegExpReplace($title, '[\s\\/\*\?\:<>|\"]', "")
 
 			CreatePanel($title, $foldername, $SkinPath & 'WP7\Panels\' & $foldername)
 
 			; Write panel info to panels.inc
-			For $i = 1 To 40
+			For $i = 1 To 32
 				$iname = IniRead($PanelsInc, "Variables", "Name" & $i, "")
 				If $iname = "" Or $iname = $title Then ExitLoop
 			Next
 
-			If $i = 41 Then
-				$answer = MsgBox(52, "Omnimo Panel Creator", "The My Panels gallery is full. Would you like to overwrite the last panel?")
+
+
+			If $i = 33 Then
+				$answer = MsgBox(52, "Omnimo Panel Creator", "The Custom Panels gallery is full. Would you like to overwrite the last panel?")
 				If $answer = 6 Then $i -= 1
 			EndIf
 
@@ -237,9 +290,20 @@ While 1
 			IniWrite($PanelsInc, "Variables", "Path" & $i, $foldername)
 			IniWrite($PanelsInc, "Variables", "Icon" & $i, $foldername & '.png')
 
+
 			; Activate panel
 			SendBang("!RefreshApp")
 			SendBang("!ActivateConfig WP7\Panels\" & $foldername & " default.ini")
+
+		   		   GUICtrlSetState ( $create,   $GUI_SHOW  )
+				   	   GUICtrlSetState ( $loadE,   $GUI_HIDE   )
+				   _GDIPlus_StringFormatSetAlign($hFormat, 1)
+				   _GDIPlus_GraphicsDrawStringEx($hGUIGraphic, $Language.Item("CreatePanel"), _GDIPlus_FontCreate($hFamily, 14), _GDIPlus_RectFCreate(115* $scaledpi, 320* $scaledpi), $hFormat, $hBrush)
+_GDIPlus_StringFormatSetAlign($hFormat, 0)
+
+		      
+
+
 
 		Case $save
 			Do
@@ -250,7 +314,7 @@ While 1
 				If @error Then ExitLoop
 				FileChangeDir(@ScriptDir)
 
-				$author = InputBox("Author", "Author name displayed in rmskin", @UserName, Default, 120, 125)
+				$author = InputBox("Author", $Language.Item("AuthorName"), @UserName, Default, 120, 125)
 				If @error Then ExitLoop
 
 				If DirCreate("RmskinTemp") = 0 Then OmnimoError("Error", "Unable to create temporary .rmskin directory")
@@ -293,33 +357,33 @@ While 1
 				$preview = StringReplace($dest, ".rmskin", "") & "_preview.png"
 				_GDIPlus_ImageSaveToFile($hBitmap, $preview)
 
-				MsgBox(64, "Success", "Successfully created " & $dest & @CRLF & "Preview generated in " & $preview)
+				MsgBox(64, $Language.Item("Success"), $Language.Item("SuccessfullyCreated") & $dest & @CRLF & $Language.Item("PreviewGeneratedIn") & $preview)
 				ExitLoop
 			Until 1
 
-		Case $CG1
-			$PanelBG = AddAlpha($Color1)
-			DrawPanelImage($oldimg)
-
-		Case $CG2
-			$PanelBG = AddAlpha($Color2)
-			DrawPanelImage($oldimg)
-
-		Case $CG3
-			$PanelBG = AddAlpha($Color3)
-			DrawPanelImage($oldimg)
-
-		Case $CG4
-			$PanelBG = AddAlpha($Color4)
-			DrawPanelImage($oldimg)
-
-		Case $CG5
-			$PanelBG = AddAlpha($Color5)
-			DrawPanelImage($oldimg)
-
-		Case $CG6
-			$PanelBG = AddAlpha($Color6)
-			DrawPanelImage($oldimg)
+	;	Case $CG1
+	;		$PanelBG = AddAlpha($Color1)
+	;		DrawPanelImage($oldimg)
+;
+	;	Case $CG2
+	;		$PanelBG = AddAlpha($Color2)
+	;		DrawPanelImage($oldimg)
+;
+	;	Case $CG3
+	;		$PanelBG = AddAlpha($Color3)
+	;		DrawPanelImage($oldimg)
+;
+	;	Case $CG4
+	;		$PanelBG = AddAlpha($Color4)
+	;		DrawPanelImage($oldimg)
+;
+	;	Case $CG5
+	;		$PanelBG = AddAlpha($Color5)
+	;		DrawPanelImage($oldimg)
+;
+	;	Case $CG6
+	;		$PanelBG = AddAlpha($Color6)
+	;		DrawPanelImage($oldimg)
 
 	EndSwitch
 WEnd
@@ -356,7 +420,7 @@ Func DrawPanelImage($img)
 
 	; Draw title string and panel image
 	_GDIPlus_GraphicsDrawStringEx($hBackbuffer, $tmpname, $hFont, $tLayout, $hFormat, $hBrush)
-	_GDIPlus_GraphicsDrawImageRect($hGraphic, $hBitmap, 0, 0, 150, 150)
+	_GDIPlus_GraphicsDrawImageRect($hGraphic, $hBitmap, 0, 0, 150*$scaledpi, 150*$scaledpi)
 EndFunc   ;==>DrawPanelImage
 
 Func CreatePanel($title, $foldername, $folderpath)
@@ -396,15 +460,17 @@ Func Darken($Color, $factor)
 	Return RGBToHex($Red & ',' & $Green & ',' & $Blue)
 EndFunc   ;==>Darken
 
-Func DrawColorBox($Color, $x, $y)
-	GUICtrlCreateGraphic($x, $y, 22, 22)
-	GUICtrlSetBkColor(-1, 0xFFFFFF)
-	$C = GUICtrlCreateGraphic($x + 1, $y + 1, 20, 20)
-	GUICtrlSetBkColor(-1, $Color)
-	Return $C - 1
-EndFunc   ;==>DrawColorBox
+;Func DrawColorBox($Color, $x, $y)
+;
+;	$C = GUICtrlCreateGraphic($x + 1, $y + 1, 20, 20)
+;	GUICtrlSetBkColor(-1, $Color)
+;	Return $C - 1
+;EndFunc   ;==>DrawColorBox
 
 Func AddAlpha($hex)
 	If StringLen($hex) <> 8 Then Return $hex
 	Return BitOR(0xFF000000, $hex)
-EndFunc   ;==>AddAlpha
+ EndFunc   ;==>AddAlpha
+ 
+ 
+ 
