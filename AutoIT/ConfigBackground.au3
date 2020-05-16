@@ -23,9 +23,13 @@
 #include "Includes\ColorChooser.au3"
 
 Const $VarFile = $CmdLine[1]
+Const $skinpath = $CmdLine[2]
+
 
 Const $CurrentLanguage = IniRead("Varrar.inc", "Variables", "Language", "English")
 Const $LangFile = @ScriptDir & "\Language\" & $CurrentLanguage & ".cfg"
+
+
 
 If Not FileExists($LangFile) Then OmnimoError("Error loading language", "Unable to load language file for " & $CurrentLanguage)
 
@@ -35,6 +39,20 @@ $Sections = IniReadSection($LangFile, "Variables")
 For $i = 1 To $Sections[0][0]
 	$Language.Add($Sections[$i][0], $Sections[$i][1])
 Next
+Const $scaledpi = IniRead($skinpath & "WP7\@Resources\Common\Variables\UserVariables.inc", "Variables", "ScaleDpi", "1")
+
+
+
+; Read GUI colors from Colors.inc
+Const $ColorVariables = IniReadSection("..\PanelCreator\Resources\Colors.inc", "Variables")
+Const $GuiBG = $ColorVariables[1][1]
+Const $BrowseBG = $ColorVariables[3][1]
+Const $CreateBG = $ColorVariables[4][1]
+Const $FontColor = $ColorVariables[7][1]
+
+Const $FooterBG = $ColorVariables[5][1]
+
+
 
 $Color1Value = IniRead($VarFile, "Variables", "Color1", "0,0,0")
 $Color2Value = IniRead($VarFile, "Variables", "Color2", "0,0,0")
@@ -45,6 +63,7 @@ $BorderWidthValue = IniRead($VarFile, "Variables", "borderwidth", "0")
 $WidthValue = IniRead($VarFile, "Variables", "Width", @DesktopWidth)
 $HeightValue = IniRead($VarFile, "Variables", "Height", @DesktopHeight)
 $AeroGlassValue = IniRead($VarFile, "Variables", "EnableAero", "0")
+
 $TopBottomBorderValue = IniRead($VarFile, "Variables", "showbordertopbottom", "0")
 $LeftRightBorderValue = IniRead($VarFile, "Variables", "showborderleftright", "0")
 $ImageValue = IniRead($VarFile, "Variables", "BackgroundImage", "")
@@ -56,8 +75,8 @@ Else
 	$OpacityValue = $Color1Split[4]
 EndIf
 
-$Gui = GUICreate($Language.Item("BackgroundSettings"), 340, 438, Default, Default, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX))
-GUISetBkColor(0xFFFFFF)
+$Gui = GUICreate($Language.Item("BackgroundSettings"), 340*$scaledpi, 438*$scaledpi, Default, Default, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX))
+GUISetBkColor($GuiBG)
 GUISetState()
 
 _GDIPlus_Startup()
@@ -65,112 +84,135 @@ $hGraphic = _GDIPlus_GraphicsCreateFromHWND($Gui)
 Global $hImage
 
 ; Title
-GUICtrlCreateLabel($Language.Item("BackgroundSettings"), 16, 16, 300, 28)
-GUICtrlSetFont(-1, 13, 400, 0, "Segoe UI")
-GUICtrlSetColor(-1, 0x376DD0)
+GUICtrlCreateLabel($Language.Item("BackgroundSettings"), 16*$scaledpi, 16*$scaledpi, 300*$scaledpi, 28*$scaledpi)
+GUICtrlSetFont(-1, 12*$scaledpi, 400*$scaledpi, 0, "Segoe UI Light")
+GUICtrlSetColor(-1, $fontcolor)
 
-; Footer
-GUICtrlCreateGraphic(0, 393, 340, 45)
-GUICtrlSetColor(-1, 0xF0F0F0)
-GUICtrlSetBkColor(-1, 0xF0F0F0)
-GUICtrlSetState(-1, $GUI_DISABLE)
-GUICtrlCreateGraphic(0, 391, 340, 1)
-GUICtrlSetColor(-1, 0x898C95)
 
-$Cancel = GUICtrlCreateButton($Language.Item("Cancel"), 160, 403, 81, 25)
-$OK = GUICtrlCreateButton("OK", 72, 403, 81, 25)
-$Apply = GUICtrlCreateButton("Apply", 248, 403, 81, 25)
+
+$Cancel = GUICtrlCreateButton($Language.Item("Cancel"), 160*$scaledpi, 403*$scaledpi, 81*$scaledpi, 25*$scaledpi)
+$OK = GUICtrlCreateButton("OK", 72*$scaledpi, 403*$scaledpi, 81*$scaledpi, 25*$scaledpi)
+$Apply = GUICtrlCreateButton($Language.Item("Apply"), 248*$scaledpi, 403*$scaledpi, 81*$scaledpi, 25*$scaledpi)
 
 ; Group labels
 $Line1X = StringLen($Language.Item("Appearance")) * 5 + 35
 $Line2X = StringLen($Language.Item("Borders")) * 5 + 35
 $Line3X = StringLen($Language.Item("Advanced")) * 5 + 35
 
-GUICtrlCreateLabel($Language.Item("Appearance"), 16, 48, 200, 17)
-GUICtrlSetColor(-1, 0x636363)
+GUICtrlCreateLabel($Language.Item("Appearance"), 16*$scaledpi, 48*$scaledpi, 200*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
 GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
-GUICtrlCreateGraphic($Line1X, 55, 315 - $Line1X, 1)
-GUICtrlSetColor(-1, 0xD8D8D8)
-GUICtrlCreateLabel($Language.Item("Borders"), 16, 222, 200, 17)
-GUICtrlSetColor(-1, 0x636363)
+GUICtrlCreateGraphic($Line1X*$scaledpi, 55*$scaledpi, (315 - $Line1X)*$scaledpi, 1*$scaledpi)
+GUICtrlSetColor(-1, $FooterBG)
+GUICtrlCreateLabel($Language.Item("Borders"), 16*$scaledpi, 222*$scaledpi, 200*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
 GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
-GUICtrlCreateGraphic($Line2X, 230, 315 - $Line2X, 1)
-GUICtrlSetColor(-1, 0xD8D8D8)
-GUICtrlCreateLabel($Language.Item("Advanced"), 16, 294, 200, 17)
-GUICtrlSetColor(-1, 0x636363)
+GUICtrlCreateGraphic($Line2X*$scaledpi, 230*$scaledpi, (315 - $Line2X)*$scaledpi, 1*$scaledpi)
+GUICtrlSetColor(-1, $FooterBG)
+GUICtrlCreateLabel($Language.Item("Advanced"), 16*$scaledpi, 294*$scaledpi, 200*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
 GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
-GUICtrlCreateGraphic($Line3X, 302, 315 - $Line3X, 1)
-GUICtrlSetColor(-1, 0xD8D8D8)
+GUICtrlCreateGraphic($Line3X*$scaledpi, 302*$scaledpi, (315 - $Line3X)*$scaledpi, 1*$scaledpi)
+GUICtrlSetColor(-1, $FooterBG)
 
-GUICtrlCreateLabel($Language.Item("Color"), 32, 80, 28, 17)
-GUICtrlCreateLabel($Language.Item("Opacity"), 32, 112, 40, 17)
-GUICtrlCreateLabel($Language.Item("Width"), 32, 148, 32, 17)
-GUICtrlCreateLabel($Language.Item("Height"), 32, 182, 35, 17)
+GUICtrlCreateLabel($Language.Item("Color"), 32*$scaledpi, 80*$scaledpi, 28*$scaledpi, 17)
+GUICtrlSetColor(-1, $fontcolor)
+GUICtrlCreateLabel($Language.Item("Opacity"), 32*$scaledpi, 112*$scaledpi, 55*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+GUICtrlCreateLabel($Language.Item("Width"), 32*$scaledpi, 148*$scaledpi, 55*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+GUICtrlCreateLabel($Language.Item("Height"), 32*$scaledpi, 182*$scaledpi, 55*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
 
-$Opacity = GUICtrlCreateInput("0", 80, 110, 49, 21, $ES_NUMBER)
-GUICtrlSetData(-1, $OpacityValue)
-GUICtrlCreateUpdown($Opacity)
+
 
 If $Color1Value Then $Color1Value = RGBToHex($Color1Value)
 If $Color2Value Then $Color2Value = RGBToHex($Color2Value)
 If $Color3Value Then $Color3Value = RGBToHex($Color3Value)
 
-$Color1 = GUICtrlCreateGraphic(80, 78, 40, 21)
-GUICtrlSetColor(-1, 0x000000)
+$Color1 = GUICtrlCreateGraphic(100*$scaledpi, 78*$scaledpi, 30*$scaledpi, 21*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
 GUICtrlSetBkColor(-1, $Color1Value)
-$Color2 = GUICtrlCreateGraphic(119, 78, 40, 21)
-GUICtrlSetColor(-1, 0x000000)
+$Color2 = GUICtrlCreateGraphic(129*$scaledpi, 78*$scaledpi, 30*$scaledpi, 21*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
 GUICtrlSetBkColor(-1, $Color2Value)
-$Color3 = GUICtrlCreateGraphic(148, 252, 40, 21)
-GUICtrlSetColor(-1, 0x000000)
+$Color3 = GUICtrlCreateGraphic(168*$scaledpi, 252*$scaledpi, 30*$scaledpi, 21*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
 GUICtrlSetBkColor(-1, $Color3Value)
 
-$Width = GUICtrlCreateSlider(74, 146, 170, 25, $TBS_NOTICKS)
-GUICtrlSetBkColor(-1, 0xFFFFFF)
+
+$Opacity = GUICtrlCreateSlider(94*$scaledpi, 110*$scaledpi, 150*$scaledpi, 25*$scaledpi, $TBS_NOTICKS)
+GUICtrlSetBkColor(-1, $GuiBG)
+GUICtrlSetLimit(-1, "255")
+GUICtrlSetData(-1, $OpacityValue)
+
+
+$Width = GUICtrlCreateSlider(94*$scaledpi, 146*$scaledpi, 150*$scaledpi, 25*$scaledpi, $TBS_NOTICKS)
+GUICtrlSetBkColor(-1, $GuiBG)
 GUICtrlSetLimit(-1, @DesktopWidth)
 GUICtrlSetData(-1, $WidthValue)
-$Height = GUICtrlCreateSlider(74, 181, 170, 25, $TBS_NOTICKS)
-GUICtrlSetBkColor(-1, 0xFFFFFF)
+$Height = GUICtrlCreateSlider(94*$scaledpi, 181*$scaledpi, 150*$scaledpi, 25*$scaledpi, $TBS_NOTICKS)
+GUICtrlSetBkColor(-1, $GuiBG)
 GUICtrlSetLimit(-1, @DesktopHeight)
 GUICtrlSetData(-1, $HeightValue)
 
-$Image = GUICtrlCreateCheckbox($Language.Item("UseImage"), 170, 110, 81, 25)
-$Browse = GUICtrlCreateButton($Language.Item("Browse"), 253, 112, 62, 22)
+$Image = GUICtrlCreateCheckbox("", 170*$scaledpi, 75*$scaledpi, 17*$scaledpi, 25*$scaledpi)
 
-GUICtrlCreateLabel($Language.Item("Sides"), 32, 254, 30, 17)
-GUICtrlCreateLabel($Language.Item("Width"), 214, 254, 32, 17)
-GUICtrlCreateLabel($Language.Item("GradientAngle"), 175, 360, 74, 17)
+GUICtrlCreateLabel($Language.Item("UseImage"), 188*$scaledpi, 81*$scaledpi, 81*$scaledpi, 25*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
 
-$LeftRight = GUICtrlCreateCheckbox("", 88, 254, 17, 17)
-$TopBottom = GUICtrlCreateCheckbox("", 120, 254, 17, 17)
-$BorderWidth = GUICtrlCreateInput("0", 255, 252, 60, 21, $ES_NUMBER)
+$Browse = GUICtrlCreateButton($Language.Item("Browse"), 253*$scaledpi, 77*$scaledpi, 62*$scaledpi, 22*$scaledpi)
+
+GUICtrlCreateLabel($Language.Item("Sides"), 32*$scaledpi, 254*$scaledpi, 30*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+GUICtrlCreateLabel($Language.Item("Width"), 214*$scaledpi, 254*$scaledpi, 45*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+GUICtrlCreateLabel($Language.Item("GradientAngle"), 175*$scaledpi, 360*$scaledpi, 74*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+
+$LeftRight = GUICtrlCreateCheckbox("", 88*$scaledpi, 254*$scaledpi, 17*$scaledpi, 17*$scaledpi)
+$TopBottom = GUICtrlCreateCheckbox("", 120*$scaledpi, 254*$scaledpi, 17*$scaledpi, 17*$scaledpi)
+$BorderWidth = GUICtrlCreateInput("0", 265*$scaledpi, 252*$scaledpi, 50*$scaledpi, 21*$scaledpi, $ES_NUMBER)
 GUICtrlSetData(-1, $BorderWidthValue)
 GUICtrlCreateUpdown($BorderWidth)
 If $LeftRightBorderValue = "0" Then GUICtrlSetState($LeftRight, $GUI_CHECKED)
 If $TopBottomBorderValue = "0" Then GUICtrlSetState($TopBottom, $GUI_CHECKED)
 
-$AeroGlass = GUICtrlCreateCheckbox($Language.Item("EnableAero"), 32, 328, 129, 17)
-$Gradient = GUICtrlCreateCheckbox($Language.Item("Gradient"), 32, 360, 113, 17)
-$GradientAngle = GUICtrlCreateInput("0", 255, 358, 60, 21, $ES_NUMBER)
+$AeroGlass = GUICtrlCreateCheckbox("", 32*$scaledpi, 328*$scaledpi, 17*$scaledpi, 17*$scaledpi)
+
+
+
+GUICtrlCreateLabel($Language.Item("EnableAero"), 50*$scaledpi, 328*$scaledpi, 129*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+
+
+$Gradient = GUICtrlCreateCheckbox("", 32*$scaledpi, 360*$scaledpi, 17*$scaledpi, 17*$scaledpi)
+
+$GradientA = GUICtrlCreateLabel($Language.Item("Gradient"), 50*$scaledpi, 360*$scaledpi, 113*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+
+$GradientAngle = GUICtrlCreateInput("0", 255*$scaledpi, 358*$scaledpi, 60*$scaledpi, 21*$scaledpi, $ES_NUMBER)
 GUICtrlSetData(-1, $GradientAngleValue)
 GUICtrlCreateUpdown($GradientAngle)
 If $AeroGlassValue = "1" Then GUICtrlSetState($AeroGlass, $GUI_CHECKED)
+
 If $Color1Value <> $Color2Value Then GUICtrlSetState($Gradient, $GUI_CHECKED)
 
-$WidthInput = GUICtrlCreateInput("0", 253, 146, 62, 21, BitOR($ES_NUMBER, $ES_CENTER))
-$HeightInput = GUICtrlCreateInput("0", 253, 182, 62, 21, BitOR($ES_NUMBER, $ES_CENTER))
 
-GUICtrlCreatePic(@ScriptDir & "\info.jpg", 299, 329, 16, 16)
-GUICtrlSetTip(-1, $Language.Item("AeroTooltip"), $Language.Item("AeroTooltipTitle"), 1, 1)
+$OpacityInput = GUICtrlCreateInput("0", 253*$scaledpi, 110*$scaledpi, 62*$scaledpi, 21*$scaledpi, BitOR($ES_NUMBER, $ES_CENTER))
+$WidthInput = GUICtrlCreateInput("0", 253*$scaledpi, 146*$scaledpi, 62*$scaledpi, 21*$scaledpi, BitOR($ES_NUMBER, $ES_CENTER))
+$HeightInput = GUICtrlCreateInput("0", 253*$scaledpi, 182*$scaledpi, 62*$scaledpi, 21*$scaledpi, BitOR($ES_NUMBER, $ES_CENTER))
 
-GUICtrlCreateGraphic(83, 253, 1, 19)
+
+
+GUICtrlCreateGraphic(83*$scaledpi, 253*$scaledpi, 1*$scaledpi, 19*$scaledpi)
 GUICtrlSetBkColor(-1, 0xB0B0B0)
-GUICtrlCreateGraphic(105, 253, 1, 19)
+GUICtrlCreateGraphic(105*$scaledpi, 253*$scaledpi, 1*$scaledpi, 19*$scaledpi)
 GUICtrlSetBkColor(-1, 0xB0B0B0)
 
-GUICtrlCreateGraphic(116, 252, 21, 1)
+GUICtrlCreateGraphic(116*$scaledpi, 252*$scaledpi, 21*$scaledpi, 1*$scaledpi)
 GUICtrlSetBkColor(-1, 0xB0B0B0)
-GUICtrlCreateGraphic(116, 272, 21, 1)
+GUICtrlCreateGraphic(116*$scaledpi, 272*$scaledpi, 21*$scaledpi, 1*$scaledpi)
 GUICtrlSetBkColor(-1, 0xB0B0B0)
 
 
@@ -181,6 +223,7 @@ If $ImageValue Then
 	GUICtrlSetState($Color1, $GUI_DISABLE)
 	If GUICtrlRead($Gradient) = $GUI_CHECKED Then GUICtrlSetState($Color2, $GUI_DISABLE)
 	GUICtrlSetState($AeroGlass, $GUI_DISABLE)
+
 	GUICtrlSetState($Gradient, $GUI_DISABLE)
 	If GUICtrlRead($Gradient) = $GUI_CHECKED Then GUICtrlSetState($GradientAngle, $GUI_DISABLE)
 Else
@@ -208,7 +251,11 @@ While 1
     Else
         GUICtrlSetData($HeightInput, GUICtrlRead($Height))
     EndIf
-
+	If _WinAPI_GetFocus() = ControlGetHandle($Gui, "", $OpacityInput) Then
+		GUICtrlSetData($Opacity, GUICtrlRead($OpacityInput))
+    Else
+        GUICtrlSetData($OpacityInput, GUICtrlRead($Opacity))
+    EndIf
 	$nMsg = GUIGetMsg()
 	Switch $nMsg
 		Case $GUI_EVENT_CLOSE, $Cancel
@@ -242,6 +289,7 @@ While 1
 			GUICtrlSetState($Color1, $State)
 			If GUICtrlRead($Gradient) = $GUI_CHECKED Then GUICtrlSetState($Color2, $State)
 			GUICtrlSetState($AeroGlass, $State)
+		
 			GUICtrlSetState($Gradient, $State)
 			If GUICtrlRead($Gradient) = $GUI_CHECKED Then GUICtrlSetState($GradientAngle, $State)
 			GUICtrlSetState($Browse, _Iif($State == $GUI_ENABLE, $GUI_DISABLE, $GUI_ENABLE))
@@ -273,6 +321,7 @@ Func ApplySettings()
 	IniWrite($VarFile, "Variables", "Width", GUICtrlRead($Width))
 	IniWrite($VarFile, "Variables", "Height",	GUICtrlRead($Height))
 	IniWrite($VarFile, "Variables", "EnableAero", _Iif(GUICtrlRead($AeroGlass) = $GUI_CHECKED, "1", "0"))
+	IniWrite($VarFile, "Variables", "UseWin10Blur", _Iif(GUICtrlRead($AeroGlass) = $GUI_CHECKED, "Blur", ""))
 	IniWrite($VarFile, "Variables", "showborderleftright", _Iif(GUICtrlRead($LeftRight) = $GUI_CHECKED, "0", "1"))
 	IniWrite($VarFile, "Variables", "showbordertopbottom", _Iif(GUICtrlRead($TopBottom) = $GUI_CHECKED, "0", "1"))
 	IniWrite($VarFile, "Variables", "Color1", HexToRGB($Color1Value) & "," & GUICtrlRead($Opacity))
