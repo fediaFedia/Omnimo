@@ -1,5 +1,6 @@
 Omnimo 10 for Rainmeter
 =======================
+![Test Image 4](https://github.com/fediafedia/Omnimo/Rainmeter.bmp)
 
 What is Omnimo?
 ---------------
