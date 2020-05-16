@@ -175,8 +175,11 @@ Case 'ToggleIcons'
 		Case 'Toggle'
 			If $state = '7' Then
 				WinSetState($hListView, '', @SW_HIDE)
+						SendBang("[!Toggle *][!Show 'WP7\Panels\ShowDesktop']")
 			ElseIf $state = '5' Then
 				WinSetState($hListView, '', @SW_SHOW)
+					SendBang("[!Toggle *][!Show 'WP7\Panels\ShowDesktop']")
+			
 			EndIf
 	EndSwitch
 
@@ -301,6 +304,33 @@ Case 'Screenshot'
 ; Command line arguments:
 ; [2] Name
 ; [3] Path to Extra Builder
+
+
+Case 'Browser'
+	$GUI = GUICreate("Omnimo Information Hub", 535, 470, -1, -1, BitOR($GUI_SS_DEFAULT_GUI, $WS_MAXIMIZEBOX, $WS_SIZEBOX, $WS_CLIPCHILDREN))
+	GUISetBkColor(0x7A7A7A)
+
+	_IEErrorHandlerRegister()
+	$oIE = _IECreateEmbedded()
+	$obj = GUICtrlCreateObj($oIE, 0, 25, 535, 445)
+	GUICtrlSetResizing(-1, $GUI_DOCKBORDERS)
+	$back = GUICtrlCreateButton("< Back", 3, 3, 60, 20, 0)
+
+	_IENavigate($oIE, $CmdLine[2])
+	GUISetState()
+
+	While 1
+		$msg = GUIGetMsg()
+		Switch $msg
+			Case $back
+				_IEAction($oIE, "back")
+			Case $GUI_EVENT_CLOSE
+				Exit
+		EndSwitch
+	WEnd
+
+
+
 Case 'Create'
 	If $CmdLine[0] < 3 Then OmnimoError("Error", "Too few command line arguments specified.")
 
