@@ -15,10 +15,11 @@ BUGS & TRANSLATIONS
 ----
 For any bug you may encounter [fill an issue][bug] on [GitHub][ghp]. Fork and send a [pull request][pul] if willing to fix a bug you found! Also if you'd like to help with our Translations, check out the POEditor page.
 
-[![Help Translate](https://img.shields.io/badge/translate-poeditor-brightgreen.svg)](https://poeditor.com/join/project/upp0dfbsjj)
 [bug]: https://github.com/fediaFedia/Omnimo/issues
 [ghp]: https://github.com/fediaFedia/Omnimo/
 [pul]: https://github.com/fediaFedia/Omnimo/pull/new/master
+
+[![Help Translate](https://img.shields.io/badge/translate-poeditor-brightgreen.svg)](https://poeditor.com/join/project/upp0dfbsjj)
 
 LICENSE
 -------
