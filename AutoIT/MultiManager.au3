@@ -13,14 +13,25 @@
 #include <ScreenCapture.au3>
 
 #include "Includes\Common.au3"
-#include "Includes\_Zip.au3"
+
 
 ; Check arguments
 If $CmdLine[0] < 4 Then OmnimoError("Omnimo MultiManager", "Too few command line arguments specified.")
 
 
-Const $CurrentLanguage = IniRead("..\Background\Varrar.inc", "Variables", "Language", "English")
-Const $LangFile = "..\Background\Language\" & $CurrentLanguage & ".cfg"
+
+
+
+Const $settings = $CmdLine[1]
+Const $skins    = $CmdLine[2]
+Const $command  = $CmdLine[3]
+Const $index    = $CmdLine[4]
+Const $wallpaper    = $CmdLine[5]
+Const $saved    = $skins & "WP7\Gallery\MultiManager\Saved\"
+
+
+Const $CurrentLanguage = IniRead($skins & "WP7\@Resources\Common\Background\Varrar.inc", "Variables", "Language", "English")
+Const $LangFile = $skins & "WP7\@Resources\Common\Background\Language\" & $CurrentLanguage & ".cfg"
 
 If Not FileExists($LangFile) Then OmnimoError("Error loading language", "Unable to load language file for " & $CurrentLanguage)
 
@@ -32,53 +43,7 @@ For $i = 1 To $Sections[0][0]
  Next
 
 
-Const $settings = $CmdLine[1]
-Const $skins    = $CmdLine[2]
-Const $command  = $CmdLine[3]
-Const $index    = $CmdLine[4]
-Const $wallpaper    = $CmdLine[5]
-Const $saved    = $skins & "WP7\Gallery\MultiManager\Saved\"
-
 Switch $command
-
- Case "Zip"
-
-_GDIPlus_Startup()
-$hImage = _GDIPlus_ImageLoadFromFile($saved & $index & "\screenshot.png")
-$sCLSID = _GDIPlus_EncodersGetCLSID("BMP")
-_GDIPlus_ImageSaveToFileEx($hImage, $saved & $index & "\Rainstaller.bmp", $sCLSID)
-_GDIPlus_ShutDown()
-
-
-FileCopy($saved & $index & "\Rainmeter.ini", $saved & $index & "\Themes\Omnimo\Rainmeter.thm", 8)
-FileCopy($saved & $index & "\color.inc", $saved & $index & "\Skins\WP7\@Resources\Common\Color\color.inc", 8)
-FileCopy($saved & "Item.ini", $saved & $index & "\Skins\WP7\TextItems\Extra\Missing\Item.ini", 8)
-
-
-
-
-$dir = $saved & $index & "\Themes\"
-$dir2 = $saved & $index & "\Skins\"
-$dir3 = $saved & $index & "\Rainstaller.bmp"
-$dir4 = $saved & "Rainstaller.cfg"
-
-
-
-; create the ZIP
-$file = _Zip_Create(@TempDir & "\test.zip", 1)
-
-
-
-_Zip_AddItem($file, $dir)
-_Zip_AddItem($file, $dir2)
-_Zip_AddItem($file, $dir3)
-_Zip_AddItem($file, $dir4)
-
-
-
- FileMove(@TempDir & "\test.zip", @DesktopDir & "\Theme" & $index & "_by_" & @UserName & ".rmskin", $FC_OVERWRITE + $FC_CREATEPATH)
-	MsgBox($MB_ICONINFORMATION, $Language.Item("ThemePackager"), $Language.Item("CreatedRmskin"))
-Run("Explorer.exe " & @DesktopDir)
 
 
 
