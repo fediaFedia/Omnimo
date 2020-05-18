@@ -9,6 +9,7 @@ DownloadFile/
 # Graphics files
 *.psd
 *.ai
+*.xd
 
 # OS generated files
 Thumbs.db
