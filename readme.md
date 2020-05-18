@@ -24,9 +24,11 @@ For any bug you may encounter [fill an issue][bug] on [GitHub][ghp]. Fork and se
 
 LICENSE
 -------
-Licensed under [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License][lic].
+Software and Components
+[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
-[lic]: http://creativecommons.org/licenses/by-nc-sa/3.0/
+Images and Media 
+[![License: CC BY-NC-SA 3.0](https://licensebuttons.net/l/by-nc-sa/3.0/80x15.png)](https://creativecommons.org/licenses/by-nc-sa/3.0/)
 
 CREDITS
 ------
