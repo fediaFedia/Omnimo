@@ -1,5 +1,6 @@
 [Variables]
-ItemName=ExtraName
+ItemName=ExtraTest
 ItemSize=200
-ItemImage=
+ItemImage
 ItemAction=notepad.exe
+ItemImage=

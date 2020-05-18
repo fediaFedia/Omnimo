@@ -1,5 +1,5 @@
 [Variables]
-SearchWidth=800
+SearchWidth=570
 SearchOpacity=180
 SearchEngineT=Google
 SearchEngine=http://www.google.com/search?q=

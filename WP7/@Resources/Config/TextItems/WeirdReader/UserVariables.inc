@@ -20,4 +20,4 @@ RSS2Color=120
 RSS3Color=120
 RSS4Color=120
 BackgroundBlur=0
-ItemSize=800
+ItemSize=570

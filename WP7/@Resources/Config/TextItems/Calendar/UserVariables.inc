@@ -1,6 +1,6 @@
 [Variables]
 iconsize=100
-width=450
+ItemSize=703
 FontSize=12
 height=450
 Update=600
@@ -11,4 +11,3 @@ Rss1Color=120
 Rss2Color=255
 Rss3Color=120
 Rss4Color=120
-ItemSize=800

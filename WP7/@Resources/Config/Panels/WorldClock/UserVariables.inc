@@ -7,10 +7,12 @@ CityName3=Moscow
 CityZone3=+4.0
 24Hour=%H:%M
 12Hour=%I:%M %p
-TimeFormat=#24Hour#
+
 DayLightSavings1=1
 DayLightSavings2=0
 DayLightSavings3=1
 DayLightSavings=1:00
 hidegrid=1
 ClockName=World Time
+CustomCity=Honolulu
+CustomTimeZone=-11

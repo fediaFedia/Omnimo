@@ -1,10 +1,10 @@
 [Variables]
 
-Width=1920
-Height=800
-Color1=0,0,0,150
+Width=2354
+Height=784
+Color1=0,0,0,181
 BackgroundOpacity1=188
-Color2=0,0,0,150
+Color2=0,0,0,181
 BackgroundOpacity2=249
 gradientangle=90
 
@@ -18,3 +18,4 @@ EnableBlur=0
 BackgroundOpacity=1
 BackgroundImage=
 BackgroundImageHidden=1
+UseWin10Blur=

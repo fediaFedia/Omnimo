@@ -1,2 +1,0 @@
-[Variables]
-width=730

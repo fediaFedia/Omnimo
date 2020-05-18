@@ -9,6 +9,16 @@ Name4=CMD
 Action4="cmd.exe"
 Name5=Lock PC
 Action5=Lock.lnk
-FontFace=Segoe WP Light
+FontFace=#FontFaceLight#
 iconvisibility=180
-Padding=0
+Padding=9
+Show3More=1
+
+Name6=Videos
+Action6=%USERPROFILE%\Videos
+
+Name7=Twitch
+Action7=http://twitch.com
+
+Name8=Calculator
+Action8=calc.exe

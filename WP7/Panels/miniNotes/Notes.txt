@@ -1,3 +1,0 @@
-[Variables]
-Notes=Click to edit. Press ENTER to save. Fixed!
-Notes1=Click to edit. Press ENTER to save. Fixed!

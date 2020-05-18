@@ -9,6 +9,17 @@ Name4=Games
 Action4=shell:games
 Name5=Log off
 Action5=logoff.lnk
-FontFace=Segoe WP Light
+Show3More=1
+
+Name6=Music
+Action6=%USERPROFILE%\Music
+
+Name7=YouTube
+Action7=http://youtube.com
+
+Name8=Notepad
+Action8=notepad.exe
+
+FontFace=#FontFaceLight#
 Iconvisibility=180
-Padding=0
+Padding=9

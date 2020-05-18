@@ -6,4 +6,5 @@ tempfontsize=50
 hidewhitetone=1
 Unit5=m
 UseFahrenheit=f
-OpenWebsite=0
+OpenWebsite=
+IconStyle=0

@@ -1,34 +1,31 @@
-You can change the color of any panel by using Individual Panel Color
+You can change the color of any panel, right-click and go to Settings and press on color
 You can close any panel by middle-clicking it
-Almost every panel is resizable, click the bottom right corner icon to resize
-Right-click any panel and select the Settings item for additional options
+Press CTRL and ALT at the same time on your keyboard, then click something to move items
+Almost every Item is resizable, right-click and go to Settings to resize with the slider
+Right-click any panel and select the Settings item for additional options, like color
 You can create themes in a form of color.inc, located in WP7\Common\Color
 If a panel with rss feed stops working for no reason, restart Rainmeter
 You can hack Omnimo color settings and unlock some unfinished features in color.inc
-If you need icons which have a WP7 feel, google for "ecqlipse 2"
-SecuNotes and SecuLock are not as secure as you think
-Double click the brightness icon in the sidebar to quickly turn off the monitor, and next time lock your door!
-Middle-click the bg config to adjust its settings, you can even enable aero
-Panels can adjust transparency in 2 ways - from skin menu and from color gallery
-If you like your desktop layout, you can save it as a theme in Manage Rainmeter
+There are Secret UI settings in the Settings somewhere...
+Middle-click the background config to adjust its settings, you can even enable aero
+Panels can adjust transparency in 2 ways - from skin menu and from UI settings
+If you like your desktop layout, use the Save Layout tool to save it and even share it
 Create your own panels with Panel Creator
 If you have Speedfan running but the panel doesnt work, set the FanNumber in settings
 Some panels have a help icon with instructions
-Most panels have additional variants, right-click the panel to select a variant
-You can customize every aspect of the panel in the color gallery
-Click the small squares under the text items to toggle through them
-You can download some new panels on deviantart
-Are you a graphics designer? Check out the Kuler panel
+Most panels have additional variants, right-click the panel to select an Alternative
+You can customize many aspects of the Panels in the UI Settings
 Keep rainmeter up to date for better stability
-Omnimo updates are announced on fediafedia.deviantart.com or Omnimo.info
-Re-enable the + button: right-click the Rainmeter tray icon, then Configs\WP7\galleryarrow.ini
+Omnimo updates are announced on omnimo.info
+Re-enable the + button: right-click the Rainmeter tray icon, Skins > WP7 > Launcher.ini
+Right click any Panel and select Close to remove it
 Conserve performance by using less realtime panels
 There are a lot of panels not shown in the gallery, use the context menus to access them
-You can select different themes from the themes gallery
 If your panel doesn't snap very well, hold Shift and drag it for a perfect position
-You can enable blur behind panels on Windows Vista or 7
-If some panels don't show information - try refreshing them
-You can customize the PanelCombos toggler with different functions
-You can change the language of Omnimo in the settings
+Use the Alignment Tool to arrange your Panels to a perfect grid
+You can enable blur behind panels on Windows Vista, Windows 7 or Windows 10
+If some panels don't show information - try refreshing them by right clicking
+You can change the language of Omnimo in the Settings
 Omnimo may or may not have been an inspiration for the actual Windows 8 UI
 Omnimo is Open Source and on github! https://github.com/fediaFedia/Omnimo/
+Interesting fact - you are using the Omnimo 10 year anniversary edition

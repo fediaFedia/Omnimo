@@ -13,7 +13,7 @@ Height=150
 PanelType=single
 
 @include=#@#Common\Variables\UserVariables.inc
-@include1=#@#Common\Variables\Languages\lang.inc
+@include1=#@#Common\Variables\Languages\#MainLanguage#.inc
 @include2=#@#Common\color\color.inc
 @include3=#@#Structure\#PanelType#\Main.inc
 

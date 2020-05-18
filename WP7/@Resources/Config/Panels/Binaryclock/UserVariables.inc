@@ -7,5 +7,5 @@ StaticImage=
 PanelAction=http://time.is/
 SlideshowLocation=#currentpath#\placeholders
 ShowCurlCorner=0
-ShowTitle=0
+ShowTitle=1
 BlocksColor=#textcolor2#

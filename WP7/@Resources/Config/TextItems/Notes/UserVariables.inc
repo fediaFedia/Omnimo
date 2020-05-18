@@ -12,3 +12,5 @@ Hide2Add=1
 Hide6Add=1
 font=Segoe UI
 ItemSize=699
+ShowBackground=0,0,0,1
+ShowBG=0,0,0,1

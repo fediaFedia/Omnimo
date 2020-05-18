@@ -1,7 +1,7 @@
 [Variables]
-SpeedFanName=CPU Temp
-SpeedFanNumber=2
-SpeedFanNumber2=1
-SpeedFanNumber3=3
-ShowBackgroundOn=58
+FanName=CPU Temp
+FanNumber=2
+FanNumber2=1
+FanNumber3=0
+ShowBackgroundOn=69
 HideBackgroundOn=70

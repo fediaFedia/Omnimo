@@ -2,4 +2,4 @@
 Title=#StartText#
 Icon=win7.png
 PanelName=#StartText#
-PanelIcon=win7
+PanelIcon=win8

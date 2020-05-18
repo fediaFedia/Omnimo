@@ -14,4 +14,4 @@ ShowSeconds=0
 ShowSeconds1=0
 12HourTime=%H
 ShowAMPM=0
-LaunchHub=0
+LaunchHub=1

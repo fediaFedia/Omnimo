@@ -1,0 +1,2 @@
+[Variables]
+Language=Russian

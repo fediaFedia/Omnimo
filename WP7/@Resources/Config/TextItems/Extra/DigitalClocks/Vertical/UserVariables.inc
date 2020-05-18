@@ -1,7 +1,7 @@
 [Variables]
 TextColor=255,255,255
 TExtColor2=27,161,226
-FontFace=Segoe UI Light
+FontFace=#FontFaceLight#
 Size=300
 Format=%H
 BackgroundColor=30,30,30

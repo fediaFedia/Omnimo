@@ -35,7 +35,7 @@ function Initialize()
 
 	StartingHours = SKIN:ReplaceVariables("#RemainingHours#")
 	StartingMinutes = SKIN:ReplaceVariables("#RemainingMinutes#")
-	StartingSeconds = SKIN:ReplaceVariables("#RemainingSeconds#")
+	StartingSeconds = SKIN:ReplaceVariables("#ConfirmTimeout#")
 	
 	TotalSeconds = (tonumber(StartingHours) * 3600) + (tonumber(StartingMinutes) * 60) + tonumber(StartingSeconds)
 	

@@ -7,3 +7,4 @@ DayLightSavings=0
 updatespeed=1
 hidesecondhand=0
 ShowSeconds=60
+ShowSecondsDot=1

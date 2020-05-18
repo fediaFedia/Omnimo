@@ -1,0 +1,9 @@
+Make sure Omnimo is set to English
+
+Copy and overwrite the lang.inc file to WP7\@Resources\Common\Variables\Languages
+Copy and overwrite the English.inc file to WP7\@Resources\Common\Background\Language (Make a backup of the origina English.cfg file)
+Restart Rainmeter
+
+You can't apply the readme or homepage translations easily at the moment.
+
+Please email us at omnimosupport@gmail.com if you think your translation is ready.

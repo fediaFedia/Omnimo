@@ -1,13 +1,13 @@
 [Variables]
-RSS1=http://feeds.gawker.com/lifehacker/full
+RSS1=http://feeds.arstechnica.com/arstechnica/everything
 RSS1Name=lifehacker
-RSS2=http://reddit.com/.rss
+RSS2=http://feeds.arstechnica.com/arstechnica/everything
 RSS2Name=reddit
 RSS3=http://pheedo.msnbc.msn.com/id/3032091/device/rss
 RSS3Name=msnbc
 RSS4=http://rss.cnn.com/rss/edition.rss
 RSS4Name=cnn
-width=700
+ItemSize=706
 FontSize=11
 height=450
 Update=60

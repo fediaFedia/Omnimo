@@ -10,7 +10,7 @@ function Initialize()
 		Range = 'month', -- String
 		HideLastWeek = SELF:GetNumberOption('HideLastWeek', 0) > 0, -- Boolean
 		LeadingZeroes = SELF:GetNumberOption('LeadingZeroes', 0) > 0, -- Boolean
-		StartOnMonday = SELF:GetNumberOption('StartOnMonday', 0) > 0, -- Boolean
+		StartOnMonday = SELF:GetNumberOption('StartOnMonday', 1) > 0, -- Boolean
 		LabelFormat = SELF:GetOption('LabelText', '{$MName}, {$Year}'), -- String
 		NextFormat = SELF:GetOption('NextFormat', '{$day}: {$desc}'), -- String
 		Locale = SELF:GetNumberOption('UseLocalMonths', 0) > 0, -- Boolean

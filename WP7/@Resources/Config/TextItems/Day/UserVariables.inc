@@ -1,7 +1,7 @@
 [variables]
 FontSize=80
 FontColor=255,255,255,230
-FontFace=Segoe WP Light
+FontFace=#FontFaceLight#
 Universal=%A, %d   
 Overridewidth=600
 UpdateSpeed=60

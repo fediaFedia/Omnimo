@@ -5,6 +5,6 @@ HideONcenter=0
 HideOFFcenter=1
 HideONrounded=0
 HideOFFrounded=0
-rounded=1
+rounded=0
 center=0
 newhidden=1

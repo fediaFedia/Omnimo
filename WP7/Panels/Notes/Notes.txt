@@ -1,0 +1,12 @@
+[Variables]
+Notes=Notes
+Notes1=#NotesHintDeleteThis#
+LastNote=Notes1
+Notes2=Note 2
+Notes4=Note 4
+Notes3=Note 3
+CurrentNote=Click here to edit Note, press ENTER to Save
+Notes5=Note 5
+Notes6=Note 6
+Notes7=Note 7
+Notes8=Note 8

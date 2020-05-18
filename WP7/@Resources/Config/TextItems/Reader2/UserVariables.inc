@@ -14,8 +14,8 @@ Update=100
 Title=tech
 SubTitle=news
 Hidebackground=1
-RSSMain=http://www.engadget.com/rss.xml
-RSS1Color=255
+RSSMain=http://www.zdnet.com/search?t=1,7&mode=rss
+RSS1Color=120
 RSS2Color=120
 RSS3Color=120
-RSS4Color=120
+RSS4Color=255

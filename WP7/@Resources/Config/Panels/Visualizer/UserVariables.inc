@@ -1,0 +1,2 @@
+[Variables]
+BarsAlpha=52

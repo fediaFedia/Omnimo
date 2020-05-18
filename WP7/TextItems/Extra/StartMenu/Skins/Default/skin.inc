@@ -60,7 +60,7 @@ w=66
 h=16
 FontColor=255,255,255
 Antialias=1
-FontFace=Segoe UI
+FontFace=#FontTypeWP#
 FontSize=9
 Padding=3,3,3,3
 ImageName=#currentpath#\skins\default\Button.png
@@ -86,7 +86,7 @@ x=266
 y=8R
 FontColor=255,255,255
 Antialias=1
-FontFace=Segoe UI
+FontFace=#FontTypeWP#
 FontSize=9
 Padding=8,8,8,8
 
@@ -124,7 +124,7 @@ y=8R
 Antialias=1
 FontColor=0,0,0
 Antialias=1
-FontFace=Segoe UI
+FontFace=#FontTypeWP#
 FontSize=9
 Padding=37,8,8,8
 

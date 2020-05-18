@@ -16,7 +16,8 @@ Action6=%USERPROFILE%\Pictures
 Name7=settings
 Action7=control.exe
 
-FontFace=Segoe WP Light
+FontFace=#FontFaceLight#
 spacing=20
-FontSize=24
+FontSize=23
 fontcolor=255,255,255,255
+Zoom=1

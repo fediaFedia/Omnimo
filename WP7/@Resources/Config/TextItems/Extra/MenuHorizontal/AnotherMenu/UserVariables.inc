@@ -16,7 +16,8 @@ Action6=notepad.exe
 Name7=computer
 Action7=computer.lnk
 
-FontFace=Segoe WP Light
+FontFace=#FontFaceLight#
 spacing=20
 FontSize=20
 fontcolor=255,255,255,200
+Zoom=1

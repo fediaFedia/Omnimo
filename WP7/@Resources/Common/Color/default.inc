@@ -2,7 +2,7 @@
 
 [Variables]
 Imagedir=#@#Common\Panel\Default
-Overlay=W8
+Overlay=none
 
 Globalblurenable=0
 Blurtype=1

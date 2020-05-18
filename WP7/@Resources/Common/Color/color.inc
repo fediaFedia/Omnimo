@@ -2,32 +2,35 @@
 
 [Variables]
 Imagedir=#@#Common\Panel\Default
-Overlay=W8
+Overlay=none
 
-Globalblurenable=0
+Globalblurenable=1
 Blurtype=1
 Blurcornerradius=0
-Padding=3
+Padding=0
 
-ColorSkin=20,150,220
-ColorSkin2=143,191,38
+ColorSkin=30,30,30
+ColorSkin2=50,50,50
 
-Opacity=255
+Opacity=175
 Opacity2=255
 
 TextColor=255,255,255
-TextColor2=255,255,255
+TextColor2=254,254,254
 
 
 PanelTitleOpacity=255
 Shadow=shadow
-ItemShadowColor=0,0,0,50
+ItemShadowColor=0,0,0,20
 Align=left
 Xposition=15
-DefaultFontSize=(#Height#/15-1)
+DefaultFontSize=(#Height#/15)
 Yposition=1.2
 
 FontType=Segoe WP Semibold
 FontTypeWP=Segoe WP
 FontFaceUI=Segoe UI
 FontFaceLight=Segoe WP Light
+win10blur=none
+metric=1
+PanelLabels=0

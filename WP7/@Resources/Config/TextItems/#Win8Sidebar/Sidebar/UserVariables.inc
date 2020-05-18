@@ -16,11 +16,11 @@ hub3name=#Mail#
 
 FolderName1=User Folder
 FolderAction1=%USERPROFILE%
-FolderName2=Desktop
+FolderName2=#Desktop#
 FolderAction2=%USERPROFILE%\Desktop
-FolderName3=Pictures
+FolderName3=#Pictures#
 FolderAction3=%USERPROFILE%\Pictures
-FolderName4=Documents
+FolderName4=#Documents#
 FolderAction4=%USERPROFILE%\Documents
 FolderName5=Program Files
 FolderAction5=%PROGRAMFILES%
@@ -34,3 +34,9 @@ Hub1=Time
 Hub2=Weather
 Hub3=Mail
 UserName=%USERNAME%
+
+Custom1=+
+Custom2=+
+Custom3=+
+Action1=
+Action2=

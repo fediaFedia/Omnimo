@@ -2,7 +2,7 @@
 Player=WMP
 Ncolor=255,255,255,30
 FontSize=12
-Width=650
+Width=700
 HeaderTitle=music info
 Title=now
 Subtitle=playing
@@ -12,4 +12,4 @@ Hide3Add=1
 Hide2Add=1
 Hide6Add=0
 font=Segoe UI
-ItemSize=450
+ItemSize=703

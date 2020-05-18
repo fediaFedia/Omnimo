@@ -1,5 +1,6 @@
 [Variables]
-IconType=icons
+IconType=0
 UseFahrenheit5=c
 WeatherCode=UKXX0085
-ItemSize=699
+ItemSize=700
+OpenWebsite=

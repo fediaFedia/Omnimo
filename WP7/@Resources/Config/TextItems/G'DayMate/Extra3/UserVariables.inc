@@ -1,7 +1,7 @@
 [Variables]
-FontSize=31
+FontSize=50
 FontColor=255,255,255
-FontOpacity=100
-FontFace=Segoe UI Light
-Format=This is my Desktop
+FontOpacity=255
+FontFace=#FontFaceLight#
+Format=%Z
 opacity=22
