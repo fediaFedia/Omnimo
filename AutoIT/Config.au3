@@ -8,8 +8,7 @@
 #AutoIt3Wrapper_Res_Fileversion=6.0.0.0
 #AutoIt3Wrapper_Res_LegalCopyright=Xyrfo 2013
 #AutoIt3Wrapper_AU3Check_Parameters=-q -w 1 -w 2 -w 3 -w 4 -w 6 -w 7 -w 8
-#AutoIt3Wrapper_res_requestedExecutionLevel=requireAdministrator
-#AutoIt3Wrapper_Run_After=""%scitedir%\tools\SignThisFile\CertSigner.exe" "%out%" /NoPopup /NoLogfile"
+
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
 #include <SliderConstants.au3>
@@ -17,27 +16,15 @@
 #include <GDIPlus.au3>
 #include <Misc.au3>
 
-#include "Includes\Common.au3"
-#include "Includes\DragDropEvent.au3"
-#include "Includes\ColorChooser.au3"
+#Include <GUIConstantsEx.au3>
+
+#Include <WindowsConstants.au3>
 
 ; Check arguments
 
 If $CmdLine[0] < 5 Then OmnimoError("Omnimo Panel Config", "Too few command line arguments specified.")
 
 
-
-Const $CurrentLanguage = IniRead("..\Background\Varrar.inc", "Variables", "Language", "English")
-Const $LangFile = "..\Background\Language\" & $CurrentLanguage & ".cfg"
-
-If Not FileExists($LangFile) Then OmnimoError("Error loading language", "Unable to load language file for " & $CurrentLanguage)
-
-; Read language dictionary from file
-$Language = ObjCreate("Scripting.Dictionary")
-$Sections = IniReadSection($LangFile, "Variables")
-For $i = 1 To $Sections[0][0]
-	$Language.Add($Sections[$i][0], $Sections[$i][1])
- Next
 
 
 
@@ -50,10 +37,62 @@ Const $File       = $CmdLine[3]
 Const $DataFolder = $CmdLine[4]
 Const $SkinPath   = $CmdLine[5]
 
+
+
+
+Const $CurrentLanguage = IniRead($skinpath & "WP7\@Resources\Common\Background\Varrar.inc", "Variables", "Language", "English")
+Const $LangFile = $skinpath & "WP7\@Resources\Common\Background\Language\" & $CurrentLanguage & ".cfg"
+
+If Not FileExists($LangFile) Then OmnimoError("Error loading language", "Unable to load language file for " & $CurrentLanguage)
+
+; Read language dictionary from file
+$Language = ObjCreate("Scripting.Dictionary")
+$Sections = IniReadSection($LangFile, "Variables")
+For $i = 1 To $Sections[0][0]
+	$Language.Add($Sections[$i][0], $Sections[$i][1])
+ Next
+
+
+
 Const $scaledpi = IniRead($skinpath & "WP7\@Resources\Common\Variables\UserVariables.inc", "Variables", "ScaleDpi", "1")
 
 Const $Variables  = $SkinPath & "WP7\@Resources\Common\Variables\"
 Const $VarFile    = $SkinPath & "WP7\@Resources\Config" & StringTrimLeft($Config, 3) & "\UserVariables.inc"
+
+
+
+
+
+If $CmdLine[1] = "bg" Then
+;MsgBox($MB_ICONINFORMATION, "Info", "BG Options", 2)
+ BGSettings()
+
+Else
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 Global $XPositionE = IniRead($DataFolder & "Rainmeter.ini", $Config, "WindowX", "0")
@@ -69,13 +108,13 @@ Global $a_rep[4][2] = [[3], ["#screenareawidth#", @DeskTopWidth], ["#screenareah
 For $i = 1 To $a_rep[0][0]
     $stringE = StringRegExpReplace($stringE, "\Q" & $a_rep[$i][0] & "\E", $a_rep[$i][1])
  Next
- 
+
  $stringD = $YPositionE
 Global $a_rep[4][2] = [[3], ["#screenareawidth#", @DeskTopWidth], ["#screenareaheight#", @DeskTopHeight], ["#workareaheight#", $workareaheight]]
 For $i = 1 To $a_rep[0][0]
     $stringD = StringRegExpReplace($stringD, "\Q" & $a_rep[$i][0] & "\E", $a_rep[$i][1])
  Next
- 
+
 
 
 
@@ -86,7 +125,7 @@ Global $YPosition = execute($stringD)
 
 
 
-Global $SizeL      = IniRead($SkinPath & $Config & "\" & $File, "Variables", "Height", "150") 
+Global $SizeL      = IniRead($SkinPath & $Config & "\" & $File, "Variables", "Height", "150")
 Global $Size      = $SizeL * $scaledpi
 
 Const $BgColor    = IniRead($Variables & "UserVariables.inc", "Variables", "ConfigBackgroundColor", "0xe1e1e1")
@@ -158,7 +197,7 @@ $W  = Int($SizeOptions[1])
 $H  = Int($SizeOptions[2])
 $PW = Int($SizeOptions[3])
 $PH = Int($SizeOptions[4])
-$width  = $Size * $W + $PW 
+$width  = $Size * $W + $PW
 $height = $Size * $H + $PH
 $listH  = $height - $Size / 3
 $CommentLimit = $height / 25
@@ -173,7 +212,7 @@ If $YPosition < 0 Then
 	$XPosition = 50
 	$YPosition = 50
  EndIf
- 
+
    If $xposition > @DeskTopWidth - (150 * $scaledpi) Then
 		$xposition = @DeskTopWidth/1.2
 
@@ -280,15 +319,6 @@ GUICtrlSetData($sliderE, $Size)
 
 GUICtrlSetBkColor(-1, $BgColor)
 ; Register drag/drop events
-DragDropEvent_Startup()
-DragDropEvent_Register($Gui)
-
-
-
-GUIRegisterMsg($WM_DRAGENTER, "OnDragDrop")
-GUIRegisterMsg($WM_DRAGOVER, "OnDragDrop")
-GUIRegisterMsg($WM_DRAGLEAVE, "OnDragDrop")
-GUIRegisterMsg($WM_DROP, "OnDragDrop")
 
 
 ; Create colorbox if panel is marked as colorizable
@@ -356,15 +386,15 @@ While 1
 						_CreateBrowseButton($CurrentValue)
 				EndSwitch
 			 EndIf
-			 
+
 		Case $sliderE
 
 				IniWrite($SkinPath & $Config & "\" & $File, "Variables", "Height",  GUICtrlRead($sliderE))
-			
+
 		Case $VariableColorbox
-		   
+
 		   $ColorSkinSet = True
-			$Chose = _ColorChooserDialog(_ToColor($ColorData), $Gui)
+			$Chose = _ChooseColor ( 2 )
 			$ColorData = _Iif($Chose <> -1, $Chose, $ColorData)
 			GUICtrlSetBkColor($VariableColorbox, $ColorData)
 
@@ -396,11 +426,25 @@ While 1
 			_WriteOption()
 			Sleep(100)
 
-			SendBang("!Refresh " & $CmdLine[2]) ; refresh config
+
+Run('"' & $CmdLine[6] & 'Rainmeter.exe" [!Refresh "' & $CmdLine[2] & '"]')
+
+;Run('"C:\Program Files\Rainmeter\Rainmeter.exe" [!Refresh "' & $CmdLine[2] & '"]')
+
+
 			_Exit()
 
 	EndSwitch
-WEnd
+ WEnd
+
+
+
+
+
+
+
+
+EndIf
 
 Func _WriteOption()
 	If $Colorizable = 0 And $CurrentVarName == "" Then Return
@@ -427,12 +471,12 @@ Func _WriteOption()
 			IniDelete($SkinPath & $Config & "\" & $File, "Variables", "ColorSkin")
 			IniDelete($SkinPath & $Config & "\" & $File, "Variables", "Height")
 		IniWrite($SkinPath & $Config & "\" & $File, "Variables", "Height", "150")
-	
-	
+
+
 		ElseIf $ColorSkinSet = True Then
 			IniWrite($SkinPath & $Config & "\" & $File, "Variables", "ColorSkin", $value)
 		Else
-		
+
 		EndIf
 	Else
 		IniWrite($VarFile, $CurrentVarSection, $CurrentVarName, $value)
@@ -478,11 +522,11 @@ Func _CreateColorBox($value)
 	$CreatedElement = $COLOR
 	$ColorSkinReset = False
 	$ColorSkinSet = False
-	
-	
-	
+
+
+
 _GDIPlus_GraphicsDrawImageRect($hGraphic, $bucket, 10, $height - $Size / 6.75, $Size / 4.5, $Size / 7.5)
-	
+
 EndFunc
 
 Func _CreateBrowseButton($value)
@@ -498,7 +542,7 @@ EndFunc
 Func _DrawBottom()
 	_GDIPlus_GraphicsFillRect($hGraphic, 0, $height - $Size / 6.25, $width, $Size / 6.25, $hBrush)
 	_GDIPlus_GraphicsDrawImageRect($hGraphic, $Set, $width - $Size / 5.77, $height - $Size / 6.75, $Size / 6.5, $Size / 7.5)
-	
+
 
 EndFunc
 
@@ -514,42 +558,7 @@ Func _ToColor($str)
 	Return "0xFFFFFF"
 EndFunc
 
-Func OnDragDrop($hWnd, $Msg, $wParam, $lParam)
-	#forceref $hWnd, $lParam
-    Static $DropAccept
 
-	If $CreatedElement <> $INPUT Then Return
-    Switch $Msg
-        Case $WM_DRAGENTER, $WM_DROP
-            Select
-                Case DragDropEvent_IsFile($wParam)
-                    If $Msg = $WM_DROP Then
-                        Local $FileList = DragDropEvent_GetFile($wParam)
-						GUICtrlSetData($VariableInput, StringReplace($FileList, "|", @LF))
-                    EndIf
-                    $DropAccept = $DROPEFFECT_COPY
-
-                Case DragDropEvent_IsText($wParam)
-                    If $Msg = $WM_DROP Then
-						GUICtrlSetData($VariableInput, DragDropEvent_GetText($wParam))
-                    EndIf
-                    $DropAccept = $DROPEFFECT_COPY
-
-                Case Else
-                    $DropAccept = $DROPEFFECT_NONE
-
-            EndSelect
-            Return $DropAccept
-
-        Case $WM_DRAGOVER
-            GUICtrlSetData($VariableInput, "Drop file here")
-            Return $DropAccept
-
-        Case $WM_DRAGLEAVE
-			GUICtrlSetData($VariableInput, IniRead($VarFile, $CurrentVarSection, $CurrentVarName, ""))
-
-    EndSwitch
-EndFunc
 
 Func _Exit()
    		Sleep(150)
@@ -558,7 +567,387 @@ Func _Exit()
 	_GDIPlus_ShutDown()
 	Exit
  EndFunc
- 
 
-    
-    
+
+; #FUNCTION# ====================================================================================================================
+; Name...........: _Iif
+; Description ...: Perform a boolean test within an expression.
+; Syntax.........: _Iif($fTest, $vTrueVal, $vFalseVal)
+; Parameters ....: $fTest     - Boolean test.
+;                  $vTrueVal  - Value to return if $fTest is true.
+;                  $vFalseVal - Value to return if $fTest is false.
+; Return values .: True         - $vTrueVal
+;                  False        - $vFalseVal
+; Author ........: Dale (Klaatu) Thompson
+; Modified.......:
+; Remarks .......:
+; Related .......:
+; Link ..........:
+; Example .......: Yes
+; ===============================================================================================================================
+Func _Iif($fTest, $vTrueVal, $vFalseVal)
+	If $fTest Then
+		Return $vTrueVal
+	Else
+		Return $vFalseVal
+	EndIf
+ EndFunc   ;==>_Iif
+
+
+
+
+
+
+ Func BGSettings()
+; Read GUI colors from Colors.inc
+Const $ColorVariables = IniReadSection("..\PanelCreator\Resources\Colors.inc", "Variables")
+Const $GuiBG = $ColorVariables[1][1]
+Const $BrowseBG = $ColorVariables[3][1]
+Const $CreateBG = $ColorVariables[4][1]
+Const $FontColor = $ColorVariables[7][1]
+
+Const $FooterBG = $ColorVariables[5][1]
+
+
+
+$Color1Value = IniRead($VarFile, "Variables", "Color1", "0,0,0")
+$Color2Value = IniRead($VarFile, "Variables", "Color2", "0,0,0")
+$Color3Value = IniRead($VarFile, "Variables", "ColorBorder", "0,0,0")
+$GradientAngleValue = IniRead($VarFile, "Variables", "gradientangle", "0")
+$ColorBorderValue = IniRead($VarFile, "Variables", "ColorBorder", "0,0,0")
+$BorderWidthValue = IniRead($VarFile, "Variables", "borderwidth", "0")
+$WidthValue = IniRead($VarFile, "Variables", "Width", @DesktopWidth)
+$HeightValue = IniRead($VarFile, "Variables", "Height", @DesktopHeight)
+$AeroGlassValue = IniRead($VarFile, "Variables", "EnableAero", "0")
+
+$TopBottomBorderValue = IniRead($VarFile, "Variables", "showbordertopbottom", "0")
+$LeftRightBorderValue = IniRead($VarFile, "Variables", "showborderleftright", "0")
+$ImageValue = IniRead($VarFile, "Variables", "BackgroundImage", "")
+
+$Color1Split = StringSplit($Color1Value, ",")
+If $Color1Split[0] < 4 Then
+	$OpacityValue = 255
+Else
+	$OpacityValue = $Color1Split[4]
+EndIf
+
+$Gui = GUICreate($Language.Item("BackgroundSettings"), 340*$scaledpi, 438*$scaledpi, Default, Default, BitXOR($GUI_SS_DEFAULT_GUI, $WS_MINIMIZEBOX))
+GUISetBkColor($GuiBG)
+GUISetState()
+
+_GDIPlus_Startup()
+$hGraphic = _GDIPlus_GraphicsCreateFromHWND($Gui)
+Global $hImage
+
+; Title
+GUICtrlCreateLabel($Language.Item("BackgroundSettings"), 16*$scaledpi, 16*$scaledpi, 300*$scaledpi, 28*$scaledpi)
+GUICtrlSetFont(-1, 12*$scaledpi, 400*$scaledpi, 0, "Segoe UI Light")
+GUICtrlSetColor(-1, $fontcolor)
+
+
+
+$Cancel = GUICtrlCreateButton($Language.Item("Cancel"), 160*$scaledpi, 403*$scaledpi, 81*$scaledpi, 25*$scaledpi)
+$OK = GUICtrlCreateButton("OK", 72*$scaledpi, 403*$scaledpi, 81*$scaledpi, 25*$scaledpi)
+$Apply = GUICtrlCreateButton($Language.Item("Apply"), 248*$scaledpi, 403*$scaledpi, 81*$scaledpi, 25*$scaledpi)
+
+; Group labels
+$Line1X = StringLen($Language.Item("Appearance")) * 5 + 35
+$Line2X = StringLen($Language.Item("Borders")) * 5 + 35
+$Line3X = StringLen($Language.Item("Advanced")) * 5 + 35
+
+GUICtrlCreateLabel($Language.Item("Appearance"), 16*$scaledpi, 48*$scaledpi, 200*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+GUICtrlCreateGraphic($Line1X*$scaledpi, 55*$scaledpi, (315 - $Line1X)*$scaledpi, 1*$scaledpi)
+GUICtrlSetColor(-1, $FooterBG)
+GUICtrlCreateLabel($Language.Item("Borders"), 16*$scaledpi, 222*$scaledpi, 200*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+GUICtrlCreateGraphic($Line2X*$scaledpi, 230*$scaledpi, (315 - $Line2X)*$scaledpi, 1*$scaledpi)
+GUICtrlSetColor(-1, $FooterBG)
+GUICtrlCreateLabel($Language.Item("Advanced"), 16*$scaledpi, 294*$scaledpi, 200*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+GUICtrlCreateGraphic($Line3X*$scaledpi, 302*$scaledpi, (315 - $Line3X)*$scaledpi, 1*$scaledpi)
+GUICtrlSetColor(-1, $FooterBG)
+
+GUICtrlCreateLabel($Language.Item("Color"), 32*$scaledpi, 80*$scaledpi, 28*$scaledpi, 17)
+GUICtrlSetColor(-1, $fontcolor)
+GUICtrlCreateLabel($Language.Item("Opacity"), 32*$scaledpi, 112*$scaledpi, 55*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+GUICtrlCreateLabel($Language.Item("Width"), 32*$scaledpi, 148*$scaledpi, 55*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+GUICtrlCreateLabel($Language.Item("Height"), 32*$scaledpi, 182*$scaledpi, 55*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+
+
+
+If $Color1Value Then $Color1Value = RGBToHex($Color1Value)
+If $Color2Value Then $Color2Value = RGBToHex($Color2Value)
+If $Color3Value Then $Color3Value = RGBToHex($Color3Value)
+
+$Color1 = GUICtrlCreateGraphic(100*$scaledpi, 78*$scaledpi, 30*$scaledpi, 21*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+GUICtrlSetBkColor(-1, $Color1Value)
+$Color2 = GUICtrlCreateGraphic(129*$scaledpi, 78*$scaledpi, 30*$scaledpi, 21*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+GUICtrlSetBkColor(-1, $Color2Value)
+$Color3 = GUICtrlCreateGraphic(168*$scaledpi, 252*$scaledpi, 30*$scaledpi, 21*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+GUICtrlSetBkColor(-1, $Color3Value)
+
+
+$Opacity = GUICtrlCreateSlider(94*$scaledpi, 110*$scaledpi, 150*$scaledpi, 25*$scaledpi, $TBS_NOTICKS)
+GUICtrlSetBkColor(-1, $GuiBG)
+GUICtrlSetLimit(-1, "255")
+GUICtrlSetData(-1, $OpacityValue)
+
+
+$Width = GUICtrlCreateSlider(94*$scaledpi, 146*$scaledpi, 150*$scaledpi, 25*$scaledpi, $TBS_NOTICKS)
+GUICtrlSetBkColor(-1, $GuiBG)
+GUICtrlSetLimit(-1, @DesktopWidth)
+GUICtrlSetData(-1, $WidthValue)
+$Height = GUICtrlCreateSlider(94*$scaledpi, 181*$scaledpi, 150*$scaledpi, 25*$scaledpi, $TBS_NOTICKS)
+GUICtrlSetBkColor(-1, $GuiBG)
+GUICtrlSetLimit(-1, @DesktopHeight)
+GUICtrlSetData(-1, $HeightValue)
+
+$Image = GUICtrlCreateCheckbox("", 170*$scaledpi, 75*$scaledpi, 17*$scaledpi, 25*$scaledpi)
+
+GUICtrlCreateLabel($Language.Item("UseImage"), 188*$scaledpi, 81*$scaledpi, 81*$scaledpi, 25*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+
+$Browse = GUICtrlCreateButton($Language.Item("Browse"), 253*$scaledpi, 77*$scaledpi, 62*$scaledpi, 22*$scaledpi)
+
+GUICtrlCreateLabel($Language.Item("Sides"), 32*$scaledpi, 254*$scaledpi, 30*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+GUICtrlCreateLabel($Language.Item("Width"), 214*$scaledpi, 254*$scaledpi, 45*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+GUICtrlCreateLabel($Language.Item("GradientAngle"), 175*$scaledpi, 360*$scaledpi, 74*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+
+$LeftRight = GUICtrlCreateCheckbox("", 88*$scaledpi, 254*$scaledpi, 17*$scaledpi, 17*$scaledpi)
+$TopBottom = GUICtrlCreateCheckbox("", 120*$scaledpi, 254*$scaledpi, 17*$scaledpi, 17*$scaledpi)
+$BorderWidth = GUICtrlCreateInput("0", 265*$scaledpi, 252*$scaledpi, 50*$scaledpi, 21*$scaledpi, $ES_NUMBER)
+GUICtrlSetData(-1, $BorderWidthValue)
+GUICtrlCreateUpdown($BorderWidth)
+If $LeftRightBorderValue = "0" Then GUICtrlSetState($LeftRight, $GUI_CHECKED)
+If $TopBottomBorderValue = "0" Then GUICtrlSetState($TopBottom, $GUI_CHECKED)
+
+$AeroGlass = GUICtrlCreateCheckbox("", 32*$scaledpi, 328*$scaledpi, 17*$scaledpi, 17*$scaledpi)
+
+
+
+GUICtrlCreateLabel($Language.Item("EnableAero"), 50*$scaledpi, 328*$scaledpi, 129*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+
+
+$Gradient = GUICtrlCreateCheckbox("", 32*$scaledpi, 360*$scaledpi, 17*$scaledpi, 17*$scaledpi)
+
+$GradientA = GUICtrlCreateLabel($Language.Item("Gradient"), 50*$scaledpi, 360*$scaledpi, 113*$scaledpi, 17*$scaledpi)
+GUICtrlSetColor(-1, $fontcolor)
+
+$GradientAngle = GUICtrlCreateInput("0", 255*$scaledpi, 358*$scaledpi, 60*$scaledpi, 21*$scaledpi, $ES_NUMBER)
+GUICtrlSetData(-1, $GradientAngleValue)
+GUICtrlCreateUpdown($GradientAngle)
+If $AeroGlassValue = "1" Then GUICtrlSetState($AeroGlass, $GUI_CHECKED)
+
+If $Color1Value <> $Color2Value Then GUICtrlSetState($Gradient, $GUI_CHECKED)
+
+
+$OpacityInput = GUICtrlCreateInput("0", 253*$scaledpi, 110*$scaledpi, 62*$scaledpi, 21*$scaledpi, BitOR($ES_NUMBER, $ES_CENTER))
+$WidthInput = GUICtrlCreateInput("0", 253*$scaledpi, 146*$scaledpi, 62*$scaledpi, 21*$scaledpi, BitOR($ES_NUMBER, $ES_CENTER))
+$HeightInput = GUICtrlCreateInput("0", 253*$scaledpi, 182*$scaledpi, 62*$scaledpi, 21*$scaledpi, BitOR($ES_NUMBER, $ES_CENTER))
+
+
+
+GUICtrlCreateGraphic(83*$scaledpi, 253*$scaledpi, 1*$scaledpi, 19*$scaledpi)
+GUICtrlSetBkColor(-1, 0xB0B0B0)
+GUICtrlCreateGraphic(105*$scaledpi, 253*$scaledpi, 1*$scaledpi, 19*$scaledpi)
+GUICtrlSetBkColor(-1, 0xB0B0B0)
+
+GUICtrlCreateGraphic(116*$scaledpi, 252*$scaledpi, 21*$scaledpi, 1*$scaledpi)
+GUICtrlSetBkColor(-1, 0xB0B0B0)
+GUICtrlCreateGraphic(116*$scaledpi, 272*$scaledpi, 21*$scaledpi, 1*$scaledpi)
+GUICtrlSetBkColor(-1, 0xB0B0B0)
+
+
+Global $ImageFile
+
+If $ImageValue Then
+	GUICtrlSetState($Image, $GUI_CHECKED)
+	GUICtrlSetState($Color1, $GUI_DISABLE)
+	If GUICtrlRead($Gradient) = $GUI_CHECKED Then GUICtrlSetState($Color2, $GUI_DISABLE)
+	GUICtrlSetState($AeroGlass, $GUI_DISABLE)
+
+	GUICtrlSetState($Gradient, $GUI_DISABLE)
+	If GUICtrlRead($Gradient) = $GUI_CHECKED Then GUICtrlSetState($GradientAngle, $GUI_DISABLE)
+Else
+	GUICtrlSetState($Browse, $GUI_DISABLE)
+EndIf
+
+If $Color1Value = $Color2Value Then
+	GUICtrlSetState($GradientAngle, $GUI_DISABLE)
+	GUICtrlSetState($Color2, $GUI_DISABLE)
+EndIf
+
+If GUICtrlRead($Gradient) = $GUI_UNCHECKED Then GUICtrlSetBkColor($Color2, $Color1Value)
+
+While 1
+	Sleep(50)
+
+	If _WinAPI_GetFocus() = ControlGetHandle($Gui, "", $WidthInput) Then
+		GUICtrlSetData($Width, GUICtrlRead($WidthInput))
+    Else
+        GUICtrlSetData($WidthInput, GUICtrlRead($Width))
+    EndIf
+
+	If _WinAPI_GetFocus() = ControlGetHandle($Gui, "", $HeightInput) Then
+		GUICtrlSetData($Height, GUICtrlRead($HeightInput))
+    Else
+        GUICtrlSetData($HeightInput, GUICtrlRead($Height))
+    EndIf
+	If _WinAPI_GetFocus() = ControlGetHandle($Gui, "", $OpacityInput) Then
+		GUICtrlSetData($Opacity, GUICtrlRead($OpacityInput))
+    Else
+        GUICtrlSetData($OpacityInput, GUICtrlRead($Opacity))
+    EndIf
+	$nMsg = GUIGetMsg()
+	Switch $nMsg
+		Case $GUI_EVENT_CLOSE, $Cancel
+			Exit
+
+		Case $Apply
+
+
+
+
+				IniWrite($VarFile, "Variables", "Width", GUICtrlRead($Width))
+	IniWrite($VarFile, "Variables", "Height",	GUICtrlRead($Height))
+	IniWrite($VarFile, "Variables", "EnableAero", _Iif(GUICtrlRead($AeroGlass) = $GUI_CHECKED, "1", "0"))
+	IniWrite($VarFile, "Variables", "UseWin10Blur", _Iif(GUICtrlRead($AeroGlass) = $GUI_CHECKED, "Blur", ""))
+	IniWrite($VarFile, "Variables", "showborderleftright", _Iif(GUICtrlRead($LeftRight) = $GUI_CHECKED, "0", "1"))
+	IniWrite($VarFile, "Variables", "showbordertopbottom", _Iif(GUICtrlRead($TopBottom) = $GUI_CHECKED, "0", "1"))
+	IniWrite($VarFile, "Variables", "Color1", HexToRGB($Color1Value) & "," & GUICtrlRead($Opacity))
+	If GUICtrlRead($Gradient) = $GUI_CHECKED Then
+		IniWrite($VarFile, "Variables", "Color2", HexToRGB($Color2Value) & "," & GUICtrlRead($Opacity))
+	Else
+		IniWrite($VarFile, "Variables", "Color2", HexToRGB($Color1Value) & "," & GUICtrlRead($Opacity))
+	EndIf
+	IniWrite($VarFile, "Variables", "gradientangle", GUICtrlRead($GradientAngle))
+	IniWrite($VarFile, "Variables", "ColorBorder", HexToRGB($Color3Value))
+	IniWrite($VarFile, "Variables", "borderwidth", GUICtrlRead($BorderWidth))
+	If GUICtrlRead($Image) = $GUI_CHECKED Then
+		IniWrite($VarFile, "Variables", "BackgroundImage", $ImageFile)
+		IniWrite($VarFile, "Variables", "BackgroundImageHidden", "0")
+	Else
+		IniWrite($VarFile, "Variables", "BackgroundImageHidden", "1")
+	EndIf
+	SendBang("!Refresh WP7\Background") ; refresh background
+
+
+
+		Case $OK
+
+
+
+				IniWrite($VarFile, "Variables", "Width", GUICtrlRead($Width))
+	IniWrite($VarFile, "Variables", "Height",	GUICtrlRead($Height))
+	IniWrite($VarFile, "Variables", "EnableAero", _Iif(GUICtrlRead($AeroGlass) = $GUI_CHECKED, "1", "0"))
+	IniWrite($VarFile, "Variables", "UseWin10Blur", _Iif(GUICtrlRead($AeroGlass) = $GUI_CHECKED, "Blur", ""))
+	IniWrite($VarFile, "Variables", "showborderleftright", _Iif(GUICtrlRead($LeftRight) = $GUI_CHECKED, "0", "1"))
+	IniWrite($VarFile, "Variables", "showbordertopbottom", _Iif(GUICtrlRead($TopBottom) = $GUI_CHECKED, "0", "1"))
+	IniWrite($VarFile, "Variables", "Color1", HexToRGB($Color1Value) & "," & GUICtrlRead($Opacity))
+	If GUICtrlRead($Gradient) = $GUI_CHECKED Then
+		IniWrite($VarFile, "Variables", "Color2", HexToRGB($Color2Value) & "," & GUICtrlRead($Opacity))
+	Else
+		IniWrite($VarFile, "Variables", "Color2", HexToRGB($Color1Value) & "," & GUICtrlRead($Opacity))
+	EndIf
+	IniWrite($VarFile, "Variables", "gradientangle", GUICtrlRead($GradientAngle))
+	IniWrite($VarFile, "Variables", "ColorBorder", HexToRGB($Color3Value))
+	IniWrite($VarFile, "Variables", "borderwidth", GUICtrlRead($BorderWidth))
+	If GUICtrlRead($Image) = $GUI_CHECKED Then
+		IniWrite($VarFile, "Variables", "BackgroundImage", $ImageFile)
+		IniWrite($VarFile, "Variables", "BackgroundImageHidden", "0")
+	Else
+		IniWrite($VarFile, "Variables", "BackgroundImageHidden", "1")
+	EndIf
+	SendBang("!Refresh WP7\Background") ; refresh background
+
+
+
+
+			Exit
+
+		Case $Color1
+			$Chose = _ChooseColor ( 2 )
+			GUICtrlSetBkColor($Color1, $Chose)
+			$Color1Value = $Chose
+			If GUICtrlRead($Gradient) = $GUI_UNCHECKED Then GUICtrlSetBkColor($Color2, $Color1Value)
+
+		Case $Color2
+			$Chose = _ChooseColor ( 2 )
+			GUICtrlSetBkColor($Color2, $Chose)
+			$Color2Value = $Chose
+
+		Case $Color3
+
+
+
+			$Chose = _ChooseColor ( 2 )
+			GUICtrlSetBkColor($Color3, $SelectColor)
+			$Color3Value = $SelectColor
+
+		Case $Image
+			$State = _Iif(GUICtrlRead($Image) = $GUI_CHECKED, $GUI_DISABLE, $GUI_ENABLE)
+			GUICtrlSetState($Color1, $State)
+			If GUICtrlRead($Gradient) = $GUI_CHECKED Then GUICtrlSetState($Color2, $State)
+			GUICtrlSetState($AeroGlass, $State)
+
+			GUICtrlSetState($Gradient, $State)
+			If GUICtrlRead($Gradient) = $GUI_CHECKED Then GUICtrlSetState($GradientAngle, $State)
+			GUICtrlSetState($Browse, _Iif($State == $GUI_ENABLE, $GUI_DISABLE, $GUI_ENABLE))
+
+		Case $Gradient
+			$State = _Iif(GUICtrlRead($Gradient) = $GUI_CHECKED, $GUI_ENABLE, $GUI_DISABLE)
+			GUICtrlSetState($GradientAngle, $State)
+			GUICtrlSetState($Color2, $State)
+			If GUICtrlRead($Gradient) = $GUI_CHECKED Then
+				GUICtrlSetBkColor($Color2, $Color2Value)
+			Else
+				GUICtrlSetBkColor($Color2, $Color1Value)
+			EndIf
+
+		Case $Browse
+			$ImageFile = FileOpenDialog("Choose an image", @UserProfileDir & "\Pictures", "Images (*.png;*.jpg;*.jpeg;*.bmp)", 1)
+			If @error Then ContinueCase
+			_GDIPlus_ImageDispose($hImage)
+			$hImage = _GDIPlus_ImageLoadFromFile($ImageFile)
+			_GDIPlus_GraphicsDrawImageRect($hGraphic, $hImage, 254, 72, 60, 35)
+	EndSwitch
+WEnd
+
+_GDIPlus_GraphicsDispose($hGraphic)
+_GDIPlus_ImageDispose($hImage)
+_GDIPlus_ShutDown()
+
+EndFunc
+
+
+Func HexToRGB($Color)
+	$Blue = BitAND($Color, 0xFF)
+	$Green = BitAND(BitShift($Color, 8), 0xFF)
+	$Red = BitAND(BitShift($Color, 16), 0xFF)
+	Return $Red & ',' & $Green & ',' & $Blue
+EndFunc
+
+Func RGBToHex($Color)
+	$split = StringSplit($Color, ',')
+	Return '0x' & Hex($split[1], 2) & Hex($split[2], 2) & Hex($split[3], 2)
+ EndFunc
+
+Func SendBang($szBang)
+
+Run('"' & $CmdLine[4] & 'Rainmeter.exe" [' & $szBang & ']')
+
+EndFunc
