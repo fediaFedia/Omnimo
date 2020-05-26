@@ -10,11 +10,12 @@ param (
 
 
 # Edit these values, possible variants: light, dark, lightwithpanels, darkwithpanels (the with variant also makes the panels dark or light)
-# Make sure to specify your Rainmeter path
+# Make sure to specify your Rainmeter path and Rainmeter Program Path
 
 
 
 $rainmeterPath = "C:\Users\User\Documents\Rainmeter\Skins\"
+$rainmeterProgramPath = "C:\Program Files\Rainmeter\"
 $daymode = "lightwithpanels"
 $nightmode = "darkwithpanels"
 
@@ -27,9 +28,9 @@ $omnimoMode = switch ( $daySegment2 )
 
 
 
-$apppath = "WP7\@Resources\Common\Config\ActivePanels.exe"
+$apppath = "WP7\@Resources\Common\OmnimoApp.exe"
 $both = join-path -path $rainmeterPath -childpath $apppath
 
 
 
-Start-Process -NoNewWindow -FilePath $both -ArgumentList $rainmeterPath,"0","0","0",$omnimoMode
+Start-Process -NoNewWindow -FilePath $both -ArgumentList $omnimoMode, $rainmeterPath, $rainmeterProgramPath
