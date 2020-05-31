@@ -11,6 +11,7 @@ This project has been started on March 18th, 2010
 More info on our [website][web].
 
 [web]: http://omnimo.info/
+[![Join Our Discord](https://img.shields.io/discord/715641944390238348)](https://discord.gg/ujJhZND)
 
 BUGS & TRANSLATIONS
 ----
